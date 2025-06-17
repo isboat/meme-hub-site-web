@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MemeTokenHub - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+
+    header {
+      background-color: #1a202e;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .main {
+      display: flex;
+      max-width: 1200px;
+      margin: 30px auto;
+      gap: 30px;
+      padding: 0 20px;
+    }
+
+    .left {
+      flex: 3;
+    }
+
+    .hero {
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .box {
+      background-color: #1e293b;
+      padding: 30px 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .box:hover {
+      background-color: #273549;
+      transform: translateY(-3px);
+    }
+
+    .box h2 {
+      font-size: 1.2rem;
+      color: #60a5fa;
+    }
+
+    .box p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .box a {
+      text-decoration: none;
+      color: #3b82f6;
+      font-weight: 600;
+    }
+
+    .right {
+      flex: 1;
+    }
+
+    .ad {
+      background-color: #3b82f6;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .mini-card {
+      background-color: #1e293b;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .mini-card img {
+      width: 100%;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .mini-card a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+<header>
+<div class="logo">MEMETOKENHUB</div>
+<nav>
+<a href="#">Connect Wallet</a>
+<a href="tokens.html">Tokens</a>
+<a href="claim.html">Claim</a>
+<a href="ctos.html">CTOs</a>
+<a href="directory.html">Directory</a>
+</nav>
+</header>
+<div style="background-color:#1e293b; padding:10px 0; overflow:hidden; border-bottom:1px solid #334155;">
+<div style="white-space:nowrap; animation: scroll-left 30s linear infinite;">
+<span style="display:inline-block; padding: 0 50px; color:#fbbf24;">🚀 Boosted: $PEPE | $FROG | $MOON | $BASEINU | $SHIBX | $TRONPUMP | $DOGEVERSE</span>
+</div>
+</div>
+<style>
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+<div class="main">
+<div class="left">
+<div class="hero">
+<h1>Welcome to MemeTokenHub</h1>
+<p>Track, discover and follow meme token trends. Explore live listings, community takeovers, and newly claimed profiles.</p>
+</div>
+<div class="grid">
+<div class="box">
+<h2>🔥 Community Takeovers</h2>
+<p>See which teams are reviving failed meme coins.</p>
+<a href="ctos.html">View CTOs →</a>
+</div>
+<div class="box">
+  <h2>✅ Recently Claimed</h2>
+  <p>Freshly claimed tokens updating social info.</p>
+  <a href="claimed-tokens.html">See Claims →</a>
+</div>
+<div class="box">
+<h2>🌐 Network Directory</h2>
+<p>Explore tokens by chain — ETH, SOL, TRON, BASE.</p>
+<a href="directory.html">Browse →</a>
+</div>
+<div class="box">
+<h2>⚡ Live Feed</h2>
+<p>See unclaimed tokens appearing in real time.</p>
+<a href="unclaimed.html">Watch Now →</a>
+</div>
+</div>
+</div>
+<div class="right">
+<div class="ad">🚀 Ad: MoonShiba - "To the Moon in 7 Days!"</div>
+<h3>📈 Recent Claims</h3>
+<div class="mini-card">
+<img alt="FomoDuck" src="https://placehold.co/300x60/1e293b/ffffff?text=FomoDuck+Banner"/>
+<strong>FomoDuck</strong><br/>
+<a href="#">@fomoduck</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="SolNeko" src="https://placehold.co/300x60/1e293b/ffffff?text=SolNeko+Claimed"/>
+<strong>SolNeko</strong><br/>
+<a href="#">@solneko</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="BaseRocket" src="https://placehold.co/300x60/1e293b/ffffff?text=BaseRocket+Banner"/>
+<strong>BaseRocket</strong><br/>
+<a href="#">@baserocket</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="PepeEgg" src="https://placehold.co/300x60/1e293b/ffffff?text=PepeEgg+Banner"/>
+<strong>PepeEgg</strong><br/>
+<a href="#">@pepeegg</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="MoonDuck" src="https://placehold.co/300x60/1e293b/ffffff?text=MoonDuck+Live"/>
+<strong>MoonDuck</strong><br/>
+<a href="#">@moonduck</a> | <a href="#">TG</a>
+</div>
+<h3>🔥 Latest CTO</h3>
+<div class="mini-card">
+<img alt="RocketBase" src="https://placehold.co/300x60/1e293b/ffffff?text=RocketBase+CTO"/>
+<strong>RocketBase</strong><br/>
+      Taken over 3 days ago<br/>
+      MC at time: $850K
+    </div>
+</div>
+</div>
+<footer>
+  © 2025 MEMETOKENHUB. All rights reserved.
+</footer>
+</body>
+</html>

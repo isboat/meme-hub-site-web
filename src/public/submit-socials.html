@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MemeTokenHub - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+
+    header {
+      background-color: #1a202e;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .main {
+      display: flex;
+      max-width: 1200px;
+      margin: 30px auto;
+      gap: 30px;
+      padding: 0 20px;
+    }
+
+    .left {
+      flex: 3;
+    }
+
+    .hero {
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .box {
+      background-color: #1e293b;
+      padding: 30px 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .box h2 {
+      font-size: 1.2rem;
+      color: #60a5fa;
+    }
+
+    .box p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .box a {
+      text-decoration: none;
+      color: #3b82f6;
+      font-weight: 600;
+    }
+
+    .right {
+      flex: 1;
+    }
+
+    .ad {
+      background-color: #3b82f6;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .mini-card {
+      background-color: #1e293b;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .mini-card img {
+      width: 100%;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .mini-card a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 40px;
+    }
+    form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #273549;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
+
+  </style>
+</head>
+<body>
+<header>
+<div class="logo">MEMETOKENHUB</div>
+<nav>
+<a href="tokens.html">Tokens</a>
+<a href="claim.html">Claim</a>
+<a href="ctos.html">CTOs</a>
+<a href="directory.html">Directory</a>
+</nav>
+</header>
+<div style="background-color:#1e293b; padding:10px 0; overflow:hidden; border-bottom:1px solid #334155;">
+<div style="white-space:nowrap; animation: scroll-left 30s linear infinite;">
+<span style="display:inline-block; padding: 0 50px; color:#fbbf24;">🚀 Boosted: $PEPE | $FROG | $MOON | $BASEINU | $SHIBX | $TRONPUMP | $DOGEVERSE</span>
+</div>
+</div>
+<style>
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+<div class="main">
+<div class="left">
+<div class="hero">
+<h1>Welcome to MemeTokenHub</h1>
+<p>Track, discover and follow meme token trends. Explore live listings, community takeovers, and newly claimed profiles.</p>
+</div>
+<div class="grid">
+  <div class="box">
+    <h2>📝 Submit Claim</h2>
+    <p>Fill in the details to claim the token on MemeTokenHub.</p>
+    <form id="submitClaimForm" enctype="multipart/form-data">
+      <label for="tokenName">Token Name:</label>
+      <input type="text" id="tokenName" name="TokenName" required>
+  
+      <label for="ticker">Ticker Symbol:</label>
+      <input type="text" id="ticker" name="Ticker" required>
+  
+      <label for="contract">Contract Address:</label>
+      <input type="text" id="contract" name="Contract" required>
+  
+      <label for="socials">Twitter Social Media Link:</label>
+      <input type="url" id="twitter" name="Twitter" placeholder="Twitter...">
+  
+      <label for="socials">Telegram Media Links:</label>
+      <input type="url" id="telegram" name="Telegram" placeholder="Telegram...">
+  
+      <label for="socials">Email</label>
+      <input type="email" id="email" name="Email" placeholder="project@email.com">
+  
+  
+      <label for="socials">Banner</label>
+      <pre>Image (3:1)*: 600 x 200 (px) image format. Max 2000kb. Reduce and compress the image before uploading.</pre>
+      <input type="file" name="Banner">
+      
+      
+      <p>Before submitting images, please confirm that you have read and accepted the terms below by checking the corresponding boxes.</p>
+  
+      <label for="socials">Submission Terms: The assets (brands, images, logos,...) do not infringe any trademarks or copyrights. </label>
+      <input type="checkbox" id="infrigement" name="Infrigement">
+  
+      <label for="socials">I own or have the necessary rights to use these assets.</label>
+      <input type="checkbox" id="assertOwned" name="AssertOwned">
+
+      <p>Important: By checking these boxes, you confirm that you comply with these terms.</p>
+  
+
+      <button class="submit-claim-btn" type="submit">Submit Claim</button>
+    </form>
+  </div>
+  
+</div>
+</div>
+<div class="right">
+<div class="ad">🚀 Ad: MoonShiba - "To the Moon in 7 Days!"</div>
+<h3>📈 Recent Claims</h3>
+<div class="mini-card">
+<img alt="FomoDuck" src="https://placehold.co/300x60/1e293b/ffffff?text=FomoDuck+Banner"/>
+<strong>FomoDuck</strong><br/>
+<a href="#">@fomoduck</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="SolNeko" src="https://placehold.co/300x60/1e293b/ffffff?text=SolNeko+Claimed"/>
+<strong>SolNeko</strong><br/>
+<a href="#">@solneko</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="BaseRocket" src="https://placehold.co/300x60/1e293b/ffffff?text=BaseRocket+Banner"/>
+<strong>BaseRocket</strong><br/>
+<a href="#">@baserocket</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="PepeEgg" src="https://placehold.co/300x60/1e293b/ffffff?text=PepeEgg+Banner"/>
+<strong>PepeEgg</strong><br/>
+<a href="#">@pepeegg</a> | <a href="#">TG</a>
+</div>
+<div class="mini-card">
+<img alt="MoonDuck" src="https://placehold.co/300x60/1e293b/ffffff?text=MoonDuck+Live"/>
+<strong>MoonDuck</strong><br/>
+<a href="#">@moonduck</a> | <a href="#">TG</a>
+</div>
+<h3>🔥 Latest CTO</h3>
+<div class="mini-card">
+<img alt="RocketBase" src="https://placehold.co/300x60/1e293b/ffffff?text=RocketBase+CTO"/>
+<strong>RocketBase</strong><br/>
+      Taken over 3 days ago<br/>
+      MC at time: $850K
+    </div>
+</div>
+</div>
+<footer>
+  © 2025 MEMETOKENHUB. All rights reserved.
+</footer>
+<script src="scripts/backend.js"></script>
+<script src="scripts/token.js"></script>
+<script src="scripts/connect-wallet.js"></script>
+<script src="scripts/submit-socials.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Newly Claimed Tokens - MemeTokenHub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #1a202e;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .filters select {
+      padding: 10px;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .token-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .token-card {
+      background-color: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MEMETOKENHUB</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="claim.html">Claim</a>
+    <a href="tokens.html">Tokens</a>
+    <a href="innovation.html">Innovation</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>🆕 Newly Claimed Tokens / Updated Socials</h1>
+
+  <div class="filters">
+    <select id="networkFilter">
+      <option value="all">All Networks</option>
+      <option value="Ethereum">Ethereum</option>
+      <option value="Solana">Solana</option>
+      <option value="Tron">Tron</option>
+      <option value="Base">Base</option>
+    </select>
+
+    <select id="timeFilter">
+      <option value="all">All Time</option>
+      <option value="24h">Last 24 Hours</option>
+      <option value="7d">Last 7 Days</option>
+      <option value="30d">Last 30 Days</option>
+    </select>
+  </div>
+
+  <div class="token-list" id="tokenList">
+    <!-- JavaScript Injects Tokens Here -->
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 MEMETOKENHUB. All rights reserved.
+</footer>
+
+<script>
+  const tokenData = [
+    { name: "PepeX", network: "Ethereum", listed: "2025-06-10", address: "0xabc...123" },
+    { name: "BaseRocket", network: "Base", listed: "2025-06-09", address: "0xdef...456" },
+    { name: "SolMoon", network: "Solana", listed: "2025-06-08", address: "4k9x...yt7" },
+    { name: "TronDuck", network: "Tron", listed: "2025-06-07", address: "T99x...tRt" },
+    { name: "EthFomo", network: "Ethereum", listed: "2025-06-01", address: "0xdee...110" },
+    { name: "DegenBase", network: "Base", listed: "2025-05-30", address: "0xde4...ace" }
+  ];
+
+  const tokenListEl = document.getElementById('tokenList');
+  const networkFilter = document.getElementById('networkFilter');
+  const timeFilter = document.getElementById('timeFilter');
+
+  function filterTokens() {
+    const networkVal = networkFilter.value;
+    const timeVal = timeFilter.value;
+    const now = new Date();
+
+    const filtered = tokenData.filter(token => {
+      const tokenDate = new Date(token.listed);
+      const daysAgo = (now - tokenDate) / (1000 * 60 * 60 * 24);
+
+      let networkMatch = (networkVal === "all" || token.network === networkVal);
+      let timeMatch =
+        timeVal === "all" ||
+        (timeVal === "24h" && daysAgo <= 1) ||
+        (timeVal === "7d" && daysAgo <= 7) ||
+        (timeVal === "30d" && daysAgo <= 30);
+
+      return networkMatch && timeMatch;
+    });
+
+    renderTokens(filtered);
+  }
+
+  function renderTokens(tokens) {
+    tokenListEl.innerHTML = '';
+    tokens.forEach(token => {
+      const card = document.createElement('div');
+      card.className = 'token-card';
+      card.innerHTML = `
+        <strong>${token.name}</strong><br/>
+        Network: ${token.network}<br/>
+        Address: ${token.address}<br/>
+        Listed: ${token.listed}
+      `;
+      tokenListEl.appendChild(card);
+    });
+  }
+
+  networkFilter.addEventListener('change', filterTokens);
+  timeFilter.addEventListener('change', filterTokens);
+
+  renderTokens(tokenData);
+</script>
+
+</body>
+</html>

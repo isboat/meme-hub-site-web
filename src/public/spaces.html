@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upcoming Twitter Spaces | MemeTokenHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+
+    header {
+      padding: 20px 40px;
+      background-color: #1a202e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .space-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .space-card {
+      background-color: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #3b82f6;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .space-card h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .space-card p {
+      margin: 6px 0;
+      color: #cbd5e1;
+    }
+
+    .space-card a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .promo {
+      margin-top: 60px;
+      padding: 30px;
+      text-align: center;
+      background-color: #0ea5e9;
+      border-radius: 12px;
+      color: white;
+    }
+
+    .promo h2 {
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MEMETOKENHUB</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#">Claim</a>
+    <a href="#">Unclaimed</a>
+    <a href="spaces.html">Spaces</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>🎙 Upcoming Twitter Spaces</h1>
+
+  <div class="space-list" id="spaceList">
+    <!-- JS will insert fake space cards here -->
+  </div>
+
+  <div class="promo">
+    <h2>🚀 Promote Your Space</h2>
+    <p>Reach more eyes! Reserve a top banner slot for your upcoming space — contact us to get listed.</p>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 MEMETOKENHUB — Built for Meme Communities
+</footer>
+
+<script>
+  const spaceList = document.getElementById("spaceList");
+
+  const fakeSpaces = [
+    { token: "$PEPE", title: "Pepe & the Meme Economy", host: "@pepearmy", time: "Today at 6:00 PM", link: "#" },
+    { token: "$FROG", title: "Community Takeover Plan", host: "@frogdev", time: "Today at 8:00 PM", link: "#" },
+    { token: "$WOJAK", title: "Wojak DAO AMA", host: "@wojakleader", time: "Tomorrow at 1:00 PM", link: "#" },
+    { token: "$SHIBA", title: "Shiba Collabs & Hype", host: "@shibarmy", time: "Tomorrow at 5:00 PM", link: "#" },
+    { token: "$MOON", title: "Moon Missions Q&A", host: "@moonteam", time: "Friday at 3:00 PM", link: "#" },
+  ];
+
+  let i = 0;
+
+  function addSpaceCard() {
+    if (i >= fakeSpaces.length) return;
+    const space = fakeSpaces[i];
+    const card = document.createElement("div");
+    card.className = "space-card";
+    card.innerHTML = `
+      <h3>${space.token} – ${space.title}</h3>
+      <p><strong>Host:</strong> ${space.host}</p>
+      <p><strong>Time:</strong> ${space.time}</p>
+      <p><a href="${space.link}" target="_blank">Join Space</a></p>
+    `;
+    spaceList.appendChild(card);
+    i++;
+  }
+
+  // Simulate adding new spaces every 3 seconds
+  setInterval(addSpaceCard, 3000);
+  addSpaceCard();
+</script>
+
+</body>
+</html>

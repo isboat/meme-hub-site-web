@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select a Launchpad - MemeTokenHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+
+    header {
+      background-color: #1a202e;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .launchpad-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .launchpad {
+      background-color: #1e293b;
+      padding: 16px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    .launchpad:hover {
+      background-color: #273549;
+      transform: translateY(-4px);
+    }
+
+    .launchpad img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .launchpad a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      display: block;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      margin-top: 50px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MEMETOKENHUB</div>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="launch-token.html">Launch</a>
+    <a href="launchpad-options.html">Launchpads</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Choose a Launchpad</h1>
+  <p>Select from meme-friendly launchpads to create your token. You'll be redirected off-site.</p>
+
+  <div class="launchpad-grid">
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/3b82f6/ffffff?text=Pump.fun+Banner" alt="Pump.fun">
+      <a href="https://pump.fun" target="_blank">🚀 Pump.fun</a>
+    </div>
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/f97316/ffffff?text=Believe+Launchpad" alt="Believe">
+      <a href="https://believe.com" target="_blank">✨ Believe</a>
+    </div>
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/0ea5e9/ffffff?text=AI+Virtuals" alt="AIVirtuals">
+      <a href="https://aivirtuals.io" target="_blank">🤖 AIVirtuals</a>
+    </div>
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/facc15/000000?text=SunPump" alt="SunPump">
+      <a href="https://sunpump.xyz" target="_blank">🌞 SunPump</a>
+    </div>
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/10b981/ffffff?text=MemeSprout" alt="MemeSprout">
+      <a href="#" target="_blank">💥 MemeSprout</a>
+    </div>
+    <div class="launchpad">
+      <img src="https://placehold.co/400x100/a855f7/ffffff?text=TokenCrafter" alt="TokenCrafter">
+      <a href="#" target="_blank">🧪 TokenCrafter</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 MEMETOKENHUB. All rights reserved.
+</footer>
+
+</body>
+</html>

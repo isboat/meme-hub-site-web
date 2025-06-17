@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Unclaimed Meme Tokens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121826;
+      color: #e2e8f0;
+    }
+    header {
+      background-color: #1a202e;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    nav a {
+      margin: 0 10px;
+      color: #cbd5e1;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .search-bar {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .search-bar input {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border: none;
+      border-radius: 6px;
+    }
+    .token-feed {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .card {
+      background-color: #1e293b;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    }
+    .card-image {
+      display: block;
+      float: left;
+      margin-right: 10px;
+      width: 70px;
+    }
+
+    .card-claim-now {
+      text-decoration: none;
+    color: #3b82f6;
+    font-weight: 600;
+    }
+    .hidden {
+      display: none;
+    }
+    footer {
+      text-align: center;
+      color: #64748b;
+      margin-top: 40px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MEMETOKENHUB</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="claim.html">Claim</a>
+    <a href="unclaimed.html">Unclaimed</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>⚡ Live Unclaimed Meme Tokens (Solana)</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by token address...">
+  </div>
+  <div id="tokenFeed" class="token-feed"></div>
+</div>
+
+<footer>&copy; 2025 MEMETOKENHUB</footer>
+<script src="scripts/backend.js"></script>
+<script src="scripts/unclaimed.js"></script>
+
+</body>
+</html>
