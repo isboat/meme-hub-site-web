@@ -6,6 +6,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>MemeTokenHub - Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="styles/base.css" rel="stylesheet"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -23,12 +24,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: white;
     }
 
     nav a {
@@ -178,7 +173,7 @@ button:hover {
 </head>
 <body>
 <header>
-<div class="logo">MEMETOKENHUB</div>
+<div class="mth-logo"><a href="/">MEMETOKENHUB</a></div>
 <nav>
 <a href="tokens.html">Tokens</a>
 <a href="claim.html">Claim</a>
@@ -217,11 +212,23 @@ button:hover {
       <label for="contract">Contract Address:</label>
       <input type="text" id="contract" name="Contract" required>
   
-      <label for="socials">Twitter Social Media Link:</label>
+      <label for="socials">Twitter Link:</label>
       <input type="url" id="twitter" name="Twitter" placeholder="Twitter...">
   
-      <label for="socials">Telegram Media Links:</label>
+      <label for="socials">Telegram Links:</label>
       <input type="url" id="telegram" name="Telegram" placeholder="Telegram...">
+  
+      <label for="socials">Dextools Links:</label>
+      <input type="url" id="dextools" name="Dextools" placeholder="Dextools...">
+  
+      <label for="socials">Dexscreener Links:</label>
+      <input type="url" id="dexscreener" name="Dexscreener" placeholder="Dexscreener...">
+  
+      <label for="socials">Website Links:</label>
+      <input type="url" id="website" name="Website" placeholder="https://www.Website.com">
+  
+      <label for="socials">Docs Links:</label>
+      <input type="url" id="docs" name="Docs" placeholder="https://www.docs.com">
   
       <label for="socials">Email</label>
       <input type="email" id="email" name="Email" placeholder="project@email.com">
@@ -290,7 +297,7 @@ button:hover {
   © 2025 MEMETOKENHUB. All rights reserved.
 </footer>
 <script src="scripts/backend.js"></script>
-<script src="scripts/token.js"></script>
+<script src="scripts/get-token.js"></script>
 <script src="scripts/connect-wallet.js"></script>
 <script src="scripts/submit-socials.js"></script>
 </body>

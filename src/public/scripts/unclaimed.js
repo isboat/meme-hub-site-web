@@ -29,7 +29,7 @@ let tokenIndex = 0;
     div.setAttribute('data-address', token.rawData.mint);
     div.innerHTML = `<strong>${token.name}</strong><br/>InitialBuy: ${token.rawData.initialBuy}<br/>MC: $${token.rawData.marketCapSol}<br/>` + 
       `<a class="card-claim-now" href="token.html?token-addr=${token.rawData.mint}">Details</a><span> | </span>` + 
-      `<a class="card-claim-now" href="submit-claim.html?token-addr=${token.rawData.mint}">Update Socials</a>`;
+      `<a class="card-claim-now" href="submit-socials.html?token-addr=${token.rawData.mint}">Update Socials</a>`;
 
     const image = document.createElement('img')
     image.className = 'card-image';

@@ -1,1 +1,1 @@
-apiBaseUrl = "https://localhost:7192";
+apiBaseUrl = "https://memehubsiteapi-ekeca9fua6h9h2fy.uksouth-01.azurewebsites.net";

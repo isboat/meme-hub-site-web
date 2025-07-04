@@ -1,30 +1,3 @@
-var token = {};
-
-function getToken() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenAdd = urlParams.get('token-addr');
-
-  if (!tokenAdd) {
-    // do something
-    return;
-  }
-
-  $.ajax({
-    url: apiBaseUrl + "/token/details/" + tokenAdd,
-    type: "get", //send it through get method
-    success: function (response) {
-      //Do Something
-      if (response) {
-        token = response;
-        renderToken()
-      }
-    },
-    error: function (xhr) {
-      //Do Something to handle error
-    }
-  });
-}
-
 function renderToken() {
   var $tokenName = $('#tokenName');
   $tokenName.val(token.name)
@@ -58,4 +31,4 @@ $(document).ready(function () {
 
   });
 });
-getToken();
+getToken({callbk:renderToken});
