@@ -33,23 +33,43 @@ const SearchBar = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.large};
 `;
 
+// UPDATED: TokenFeed now uses CSS Grid for 3 columns
 const TokenFeed = styled.div`
-  display: flex;
-  flex-direction: column; /* Tokens appear stacked vertically, newest at top */
-  gap: ${({ theme }) => theme.spacing.medium};
+  display: grid; /* Changed from flex */
+  grid-template-columns: repeat(3, 1fr); /* 3 columns, each taking equal fraction of space */
+  gap: ${({ theme }) => theme.spacing.medium}; /* Space between cards */
   width: 100%;
-  max-width: 800px; /* Adjust max width for the feed */
+  max-width: 1200px; /* Increased max width to accommodate 3 columns */
+  justify-items: center; /* Center items within their grid cells */
+
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: ${({ theme }) => theme.breakpoints.large}) { /* Example: 992px */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+    max-width: 800px; /* Adjust max width for 2 columns */
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.medium}) { /* Example: 768px */
+    grid-template-columns: 1fr; /* 1 column on smaller screens */
+    max-width: 400px; /* Adjust max width for 1 column */
+  }
 `;
 
 const TokenCard = styled.div`
   display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.medium};
+  flex-direction: row; /* Changed to row so image is on the left of details */
+  align-items: center; /* Center content horizontally within the card */
+  gap: ${({ theme }) => theme.spacing.small}; /* Smaller gap inside the card */
   background-color: ${({ theme }) => theme.colors.cardBackground};
   padding: ${({ theme }) => theme.spacing.medium};
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: ${({ theme }) => theme.boxShadow};
   transition: transform 0.2s ease-in-out;
+  width: 100%; /* Ensure card takes full width of its grid cell */
+  text-align: center; /* Center text inside card details */
+
+  &:hover {
+    transform: translateY(-5px); /* Simple hover effect */
+  }
 
   &.hidden {
     display: none; /* Used for filtering */
@@ -65,16 +85,17 @@ const TokenCard = styled.div`
 `;
 
 const CardImage = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 100px; /* Slightly larger image */
+  height: 100px;
   border-radius: 8px;
   object-fit: cover;
   border: 2px solid ${({ theme }) => theme.colors.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.small}; /* Space between image and details */
 `;
 
 const CardDetails = styled.div`
   flex-grow: 1;
-  text-align: left;
+  text-align: center; /* Centered text for details within the card */
   strong {
     font-size: 1.2em;
     color: ${({ theme }) => theme.colors.primary};
@@ -89,6 +110,7 @@ const CardDetails = styled.div`
     &:hover {
       text-decoration: underline;
     }
+    margin: 0 ${({ theme }) => theme.spacing.extraSmall}; /* Space between links */
   }
 `;
 
@@ -107,11 +129,9 @@ const UnclaimedTokensFeed: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // useRef to keep track of the current index for adding tokens
   const tokenIndexRef = useRef(0);
-  const maxDisplayedTokens = 15; // As per your original script
+  const maxDisplayedTokens = 15; // Number of tokens to keep in the feed
 
-  // Function to fetch initial data
   const getUnclaimedTokens = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -119,9 +139,18 @@ const UnclaimedTokensFeed: React.FC = () => {
       const response = await api.get<UnclaimedToken[]>('/memetoken/latestunclaimed');
       if (response.data && response.data.length > 0) {
         setAllUnclaimedTokens(response.data);
-        // Initialize displayed tokens with the first few or all if less than maxDisplayedTokens
-        setDisplayedTokens(response.data.slice(0, maxDisplayedTokens).reverse()); // Reverse to add oldest first, so new ones come to top
-        tokenIndexRef.current = response.data.length < maxDisplayedTokens ? response.data.length : maxDisplayedTokens;
+        // Initialize displayed tokens with a subset, reversing so the *latest* ones from the API
+        // appear at the beginning of the `allUnclaimedTokens` array, making `addNewTokenToFeed`
+        // consistently add the truly "newest" from the backend's perspective.
+        // For initial display, we want to show the first few.
+        // If the API returns them newest first, we slice from the beginning.
+        // If it returns oldest first, we'd slice from the end and reverse.
+        // Assuming API returns newest first, so we just take the first N.
+        setDisplayedTokens(response.data.slice(0, maxDisplayedTokens));
+        tokenIndexRef.current = maxDisplayedTokens; // Start adding from the next token
+        if (response.data.length < maxDisplayedTokens) {
+             tokenIndexRef.current = response.data.length; // Don't go out of bounds
+        }
       } else {
         setAllUnclaimedTokens([]);
         setDisplayedTokens([]);
@@ -134,18 +163,21 @@ const UnclaimedTokensFeed: React.FC = () => {
     }
   }, []);
 
-  // Function to add a new token to the displayed feed
   const addNewTokenToFeed = useCallback(() => {
     if (allUnclaimedTokens.length === 0) return;
 
-    // Reset index if we've gone through all available tokens
+    // Loop through tokens
     if (tokenIndexRef.current >= allUnclaimedTokens.length) {
-      tokenIndexRef.current = 0; // Loop back to the start
+      tokenIndexRef.current = 0;
     }
 
     const nextToken = allUnclaimedTokens[tokenIndexRef.current];
     if (nextToken) {
       setDisplayedTokens(prevTokens => {
+        // Only add if not already present (to avoid duplicates if interval runs fast)
+        if (prevTokens.some(t => t.rawData.mint === nextToken.rawData.mint)) {
+            return prevTokens;
+        }
         const newTokens = [nextToken, ...prevTokens]; // Add new token to the beginning
         return newTokens.slice(0, maxDisplayedTokens); // Keep only the latest 15
       });
@@ -153,22 +185,20 @@ const UnclaimedTokensFeed: React.FC = () => {
     }
   }, [allUnclaimedTokens]);
 
-  // Initial data fetch on component mount
   useEffect(() => {
     getUnclaimedTokens();
   }, [getUnclaimedTokens]);
 
-  // Set up the interval for adding new tokens
   useEffect(() => {
     if (allUnclaimedTokens.length > 0) {
       const intervalId = setInterval(addNewTokenToFeed, 2000); // Add a new token every 2 seconds
       return () => clearInterval(intervalId); // Cleanup on unmount
     }
-  }, [allUnclaimedTokens, addNewTokenToFeed]); // Depend on allUnclaimedTokens to ensure interval starts after data is loaded
+  }, [allUnclaimedTokens, addNewTokenToFeed]);
 
-  // Filter logic based on search input
   const filteredTokens = displayedTokens.filter(token =>
-    token.rawData.mint.toUpperCase().includes(searchInput.toUpperCase())
+    token.rawData.mint.toUpperCase().includes(searchInput.toUpperCase()) ||
+    token.name.toUpperCase().includes(searchInput.toUpperCase()) // Also allow searching by name
   );
 
   return (
@@ -180,7 +210,7 @@ const UnclaimedTokensFeed: React.FC = () => {
         <SearchBar theme={theme}>
           <Input
             type="text"
-            placeholder="Search by token address..."
+            placeholder="Search by token address or name..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -190,7 +220,7 @@ const UnclaimedTokensFeed: React.FC = () => {
         {error && <p style={{ color: theme.colors.error }}>{error}</p>}
 
         {!loading && !error && filteredTokens.length === 0 && (
-          <p>No tokens found matching your search or no unclaimed tokens available.</p>
+          <p style={{ color: theme.colors.text }}>No tokens found matching your search or no unclaimed tokens available.</p>
         )}
 
         <TokenFeed theme={theme}>
@@ -199,8 +229,8 @@ const UnclaimedTokensFeed: React.FC = () => {
               <CardImage src={token.image} alt={token.name} theme={theme} />
               <CardDetails theme={theme}>
                 <strong>{token.name}</strong><br />
-                InitialBuy: {token.rawData.initialBuy}<br />
-                MC: ${token.rawData.marketCapSol}<br />
+                <span>InitialBuy: ${token.rawData.initialBuy.toFixed(4)}</span><br />
+                <span>MC: ${token.rawData.marketCapSol.toFixed(2)} SOL</span><br />
                 <Link className="card-claim-now" to={`/token/${token.rawData.mint}`}>Details</Link>
                 <span> | </span>
                 <Link className="card-claim-now" to={`/submit-socials?token-addr=${token.rawData.mint}`}>Update Socials</Link>

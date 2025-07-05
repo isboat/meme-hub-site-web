@@ -36,7 +36,7 @@ const App: React.FC = () => {
       {/* Public Routes (accessible to all) */}
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} /> {/* Anonymous can view profiles */}
-      <Route path="/" element={authenticated ? <Layout><Dashboard /></Layout> : <Layout><Home /></Layout>} />
+      <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/unclaimed-tokens" element={<Layout><UnclaimedTokensFeed /></Layout>} /> {/* <--- ADD NEW ROUTE */}
       <Route path="/token/:tokenAddr" element={<Layout><div>Token Details Page (Coming Soon) for {":tokenAddr"}</div></Layout>} />
       {/* Route for submitting socials - adjust as per your backend route */}
@@ -53,7 +53,7 @@ const App: React.FC = () => {
         // Redirect non-authenticated users from protected routes
         <Route path="*" element={<Layout><Home /></Layout> } />
       )}
-
+      
       {/* Catch-all for 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -12,12 +12,18 @@ export const darkTheme = {
       error: '#ef4444',
     },
     spacing: {
+      extraSmall: '4px',
       small: '8px',
       medium: '16px',
       large: '24px',
     },
     borderRadius: '8px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
+    breakpoints: {
+      small: '576px', // Example: for phones
+      medium: '768px', // Example: for tablets
+      large: '992px', // Example: for desktops
+    }
   };
   
   export type Theme = typeof darkTheme;
