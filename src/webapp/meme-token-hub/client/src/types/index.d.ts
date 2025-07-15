@@ -21,6 +21,11 @@ export interface User {
     };
   }
   
+  export interface ProfileProps {
+    user: User;
+    isCurrentUser: boolean;
+  }
+  
   export interface Post {
     _id: string;
     userId: string; // ID of the user who posted

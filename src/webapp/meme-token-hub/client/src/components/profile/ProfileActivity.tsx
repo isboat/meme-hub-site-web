@@ -1,7 +1,7 @@
 // client/src/components/profile/ProfileOverview.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { User } from '../../types';
+import { ProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 
 const OverviewCard = styled.div`
@@ -13,12 +13,7 @@ const OverviewCard = styled.div`
 `;
 
 
-interface ProfileActivityProps {
-  user: User;
-  isCurrentUser: boolean;
-}
-
-const ProfileActivity: React.FC<ProfileActivityProps> = ({ user, isCurrentUser }) => {
+const ProfileActivity: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   

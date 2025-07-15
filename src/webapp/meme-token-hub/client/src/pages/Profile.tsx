@@ -9,10 +9,10 @@ import Button from '../components/common/Button';
 import api from '../api/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ProfileOverview from '../components/profile/ProfileOverview';
-import ProfileFollows from '../components/profile/ProfileFollows';
-import ProfileLinks from '../components/profile/ProfileLinks';
 import axios, { AxiosError } from 'axios'; // Import axios and AxiosError
 import ProfileActivity from '../components/profile/ProfileActivity';
+import ProfileHubSpot from '../components/profile/ProfileHubSpot';
+import ProfileHubSocials from '../components/profile/ProfileHubSocials';
 
 const ProfileContainer = styled.div`
   max-width: 800px;
@@ -256,10 +256,10 @@ const Profile: React.FC = () => {
           <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'hubSpot' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileHubSpot user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'hubSocials' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileHubSocials user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'polls' && (
           <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
