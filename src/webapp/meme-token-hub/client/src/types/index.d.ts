@@ -3,6 +3,7 @@
 export interface User {
     _id: string;
     privyId: string;
+    createdAt: string;
     username: string;
     email: string;
     bio?: string;

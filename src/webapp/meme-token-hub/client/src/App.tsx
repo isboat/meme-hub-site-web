@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { usePrivy } from '@privy-io/react-auth';
-import AuthPage from './pages/Auth';
+import AuthPage from './pages/AuthOld';
 import { Layout } from './components/layout/Layout';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
@@ -10,6 +10,7 @@ import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import UnclaimedTokensFeed from './pages/UnclaimedTokensFeed';
+import CreateProfile from './pages/CreateProfile';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -46,6 +47,7 @@ const App: React.FC = () => {
       {authenticated ? (
         <>
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/create-profile" element={<Layout><CreateProfile /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
           {/* Add more authenticated routes here */}
         </>

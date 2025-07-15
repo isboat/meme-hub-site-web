@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
@@ -11,8 +11,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ProfileOverview from '../components/profile/ProfileOverview';
 import ProfileFollows from '../components/profile/ProfileFollows';
 import ProfileLinks from '../components/profile/ProfileLinks';
-import axios, { AxiosError } from 'axios'; // Import axios and AxiosError
-import ProfileActivity from '../components/profile/ProfileActivity';
+
 
 const ProfileContainer = styled.div`
   max-width: 800px;
@@ -22,7 +21,6 @@ const ProfileContainer = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: ${({ theme }) => theme.boxShadow};
   color: ${({ theme }) => theme.colors.text};
-  text-align: center; /* Center content for error/loading states */
 `;
 
 const ProfileHeader = styled.div`
@@ -75,6 +73,7 @@ const StatItem = styled.div`
 
 const TabsContainer = styled.div`
   display: flex;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   margin-bottom: ${({ theme }) => theme.spacing.large};
 `;
 
@@ -85,8 +84,6 @@ const TabButton = styled(Button)<{ active: boolean }>`
     ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
   color: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.text)};
   font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  border-radius: 0px;
-  background-color: ${({ theme }) => theme.colors.background} !important;
   transition: all 0.2s ease-in-out;
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
@@ -96,10 +93,8 @@ const TabButton = styled(Button)<{ active: boolean }>`
 const FollowButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.secondary};
-  /* Note: darken(5%) is SASS syntax. For pure CSS, you'd calculate this manually or use CSS variables */
-  /* Example for hover with hex color manipulation (concept, not actual CSS fn) */
   &:hover {
-    background-color: ${({ theme }) => theme.colors.secondary + 'E0'}; /* Slightly darker if secondary is a hex */
+    background-color: ${({ theme }) => theme.colors.secondary} darken(5%);
   }
 `;
 
@@ -118,9 +113,8 @@ const UnfollowButton = styled(Button)`
 const Profile: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const theme = useTheme();
-  const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
-  const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'hubSpot' | 'hubSocials' | 'polls'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'follows' | 'links'>('overview');
 
   const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${userId}`);
   const { data: currentUser, refetch: refetchCurrentUser } = useApi<User>(
@@ -129,7 +123,7 @@ const Profile: React.FC = () => {
     null,
     null,
     !authenticated
-  );
+  ); // Fetch current user details if logged in
 
   const isCurrentUserProfile = authenticated && privyUser?.id === userId;
   const isFollowing = authenticated && currentUser?.following?.includes(profileUser?._id || '');
@@ -145,55 +139,17 @@ const Profile: React.FC = () => {
       } else {
         await api.post(`/users/${profileUser?._id}/follow`);
       }
-      refetch();
-      refetchCurrentUser();
+      refetch(); // Refresh profile user data
+      refetchCurrentUser(); // Refresh current user's following list
     } catch (err) {
       console.error('Follow/Unfollow error:', err);
       alert('Failed to update follow status.');
     }
   };
 
-  if (loading) {
-    return (
-      <ProfileContainer theme={theme}>
-        <LoadingSpinner />
-        <p>Loading profile...</p>
-      </ProfileContainer>
-    );
-  }
-
-  // Handle error (including 404 specifically)
-  if (error != null && error.indexOf("status code 404") > -1) {
-    if (isCurrentUserProfile) {
-      return (
-        <ProfileContainer theme={theme}>
-          <p style={{ color: theme.colors.text }}>
-            It looks like you haven't set up your profile yet.
-          </p>
-          <Button onClick={() => navigate('/create-profile')} style={{ marginTop: theme.spacing.medium }}>
-            Create Your Profile
-          </Button>
-        </ProfileContainer>
-      );
-    } else {
-      return (
-        <ProfileContainer theme={theme}>
-          <p style={{ color: theme.colors.text }}>
-            Profile not found for this user.
-          </p>
-        </ProfileContainer>
-      );
-    }
-  }
-
-  // If profileUser is null/undefined after loading and no specific error, it means profile not found
-  if (!profileUser) {
-    return (
-      <ProfileContainer theme={theme}>
-        <p style={{ color: theme.colors.text }}>Profile data is unavailable.</p>
-      </ProfileContainer>
-    );
-  }
+  if (loading) return <ProfileContainer theme={theme}><LoadingSpinner /></ProfileContainer>;
+  if (error) return <ProfileContainer theme={theme}><p>Error loading profile: {error}</p></ProfileContainer>;
+  if (!profileUser) return <ProfileContainer theme={theme}><p>Profile not found.</p></ProfileContainer>;
 
   return (
     <ProfileContainer theme={theme}>
@@ -234,17 +190,11 @@ const Profile: React.FC = () => {
         <TabButton onClick={() => setActiveTab('overview')} active={activeTab === 'overview'} theme={theme}>
           Overview
         </TabButton>
-        <TabButton onClick={() => setActiveTab('activity')} active={activeTab === 'activity'} theme={theme}>
-        activity
+        <TabButton onClick={() => setActiveTab('follows')} active={activeTab === 'follows'} theme={theme}>
+          Follows
         </TabButton>
-        <TabButton onClick={() => setActiveTab('hubSpot')} active={activeTab === 'hubSpot'} theme={theme}>
-        hubSpot
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('hubSocials')} active={activeTab === 'hubSocials'} theme={theme}>
-        hubSocials
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('polls')} active={activeTab === 'polls'} theme={theme}>
-        polls
+        <TabButton onClick={() => setActiveTab('links')} active={activeTab === 'links'} theme={theme}>
+          Links
         </TabButton>
       </TabsContainer>
 
@@ -252,17 +202,11 @@ const Profile: React.FC = () => {
         {activeTab === 'overview' && (
           <ProfileOverview user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
-        {activeTab === 'activity' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+        {activeTab === 'follows' && (
+          <ProfileFollows userId={profileUser._id} isCurrentUser={isCurrentUserProfile} />
         )}
-        {activeTab === 'hubSpot' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
-        )}
-        {activeTab === 'hubSocials' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
-        )}
-        {activeTab === 'polls' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+        {activeTab === 'links' && (
+          <ProfileLinks user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
       </div>
     </ProfileContainer>
