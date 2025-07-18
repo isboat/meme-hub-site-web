@@ -22,7 +22,6 @@ const TickerWrapper = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   white-space: nowrap; /* Prevent text from wrapping */
   box-shadow: ${({ theme }) => theme.boxShadow};
-  margin-top: ${({ theme }) => theme.spacing.medium}; /* Add some margin from top */
 `;
 
 const TickerContent = styled.div<{ duration: number }>`
@@ -40,10 +39,10 @@ const TickerItemStyled = styled.span`
   margin-right: ${({ theme }) => theme.spacing.large}; /* Space between items */
   font-size: 0.9em;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.ticker};
 
   a {
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.ticker};
     text-decoration: none;
     &:hover {
       text-decoration: underline;

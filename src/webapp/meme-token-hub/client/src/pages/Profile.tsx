@@ -47,9 +47,9 @@ const Username = styled.h1`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const Bio = styled.p`
+const Verification = styled.p`
   font-size: 1em;
-  color: ${({ theme }) => theme.colors.placeholder};
+  color: ${({ theme }) => theme.colors.success};
   text-align: center;
   max-width: 600px;
   margin-bottom: ${({ theme }) => theme.spacing.medium};
@@ -116,42 +116,12 @@ const UnfollowButton = styled(Button)`
 
 
 const Profile: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
   const theme = useTheme();
   const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'hubSpot' | 'hubSocials' | 'polls'>('overview');
 
-  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${userId}`);
-  const { data: currentUser, refetch: refetchCurrentUser } = useApi<User>(
-    `/users/${privyUser?.id}`,
-    'get',
-    null,
-    null,
-    !authenticated
-  );
-
-  const isCurrentUserProfile = authenticated && privyUser?.id === userId;
-  const isFollowing = authenticated && currentUser?.following?.includes(profileUser?._id || '');
-
-  const handleFollowToggle = async () => {
-    if (!authenticated) {
-      alert('You must be logged in to follow users.');
-      return;
-    }
-    try {
-      if (isFollowing) {
-        await api.post(`/users/${profileUser?._id}/unfollow`);
-      } else {
-        await api.post(`/users/${profileUser?._id}/follow`);
-      }
-      refetch();
-      refetchCurrentUser();
-    } catch (err) {
-      console.error('Follow/Unfollow error:', err);
-      alert('Failed to update follow status.');
-    }
-  };
+  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${privyUser?.id}`);
 
   if (loading) {
     return (
@@ -163,27 +133,17 @@ const Profile: React.FC = () => {
   }
 
   // Handle error (including 404 specifically)
-  if (error != null && error.indexOf("status code 404") > -1) {
-    if (isCurrentUserProfile) {
-      return (
-        <ProfileContainer theme={theme}>
-          <p style={{ color: theme.colors.text }}>
-            It looks like you haven't set up your profile yet.
-          </p>
-          <Button onClick={() => navigate('/create-profile')} style={{ marginTop: theme.spacing.medium }}>
-            Create Your Profile
-          </Button>
-        </ProfileContainer>
-      );
-    } else {
-      return (
-        <ProfileContainer theme={theme}>
-          <p style={{ color: theme.colors.text }}>
-            Profile not found for this user.
-          </p>
-        </ProfileContainer>
-      );
-    }
+  if (error != null && error.indexOf("status code 404") > -1) {    
+    return (
+      <ProfileContainer theme={theme}>
+        <p style={{ color: theme.colors.text }}>
+          It looks like you haven't set up your profile yet.
+        </p>
+        <Button onClick={() => navigate('/create-profile')} style={{ marginTop: theme.spacing.medium }}>
+          Create Your Profile
+        </Button>
+      </ProfileContainer>
+    );
   }
 
   // If profileUser is null/undefined after loading and no specific error, it means profile not found
@@ -203,10 +163,10 @@ const Profile: React.FC = () => {
           alt={`${profileUser.username}'s profile`}
           theme={theme}
         />
-        <Username theme={theme}>{profileUser.username}</Username>
-        <Bio theme={theme}>{profileUser.bio || 'No bio available.'}</Bio>
-
-        <Stats theme={theme}>
+        <Username theme={theme}>{profileUser.username || '#Username'}</Username>
+        <Verification theme={theme}>{profileUser.bio || '✔️ Verified by MemeTokenHub.'}</Verification>
+ 
+        {/*<Stats theme={theme}>
           <StatItem theme={theme}>
             <span>{profileUser.followers.length}</span>
             <small>Followers</small>
@@ -215,19 +175,7 @@ const Profile: React.FC = () => {
             <span>{profileUser.following.length}</span>
             <small>Following</small>
           </StatItem>
-        </Stats>
-
-        {!isCurrentUserProfile && authenticated && (
-          isFollowing ? (
-            <UnfollowButton onClick={handleFollowToggle} theme={theme}>
-              Following
-            </UnfollowButton>
-          ) : (
-            <FollowButton onClick={handleFollowToggle} theme={theme}>
-              Follow
-            </FollowButton>
-          )
-        )}
+        </Stats> */}
       </ProfileHeader>
 
       <TabsContainer theme={theme}>
@@ -250,19 +198,19 @@ const Profile: React.FC = () => {
 
       <div>
         {activeTab === 'overview' && (
-          <ProfileOverview user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileOverview user={profileUser} isCurrentUser={true} />
         )}
         {activeTab === 'activity' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileActivity user={profileUser} isCurrentUser={true} />
         )}
         {activeTab === 'hubSpot' && (
-          <ProfileHubSpot user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileHubSpot user={profileUser} isCurrentUser={true} />
         )}
         {activeTab === 'hubSocials' && (
-          <ProfileHubSocials user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileHubSocials user={profileUser} isCurrentUser={true} />
         )}
         {activeTab === 'polls' && (
-          <ProfileActivity user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileActivity user={profileUser} isCurrentUser={true} />
         )}
       </div>
     </ProfileContainer>

@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import UnclaimedTokensFeed from './pages/UnclaimedTokensFeed';
 import CreateProfile from './pages/CreateProfile';
+import UserProfile from './pages/userprofile';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -37,6 +38,7 @@ const App: React.FC = () => {
       {/* Public Routes (accessible to all) */}
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} /> {/* Anonymous can view profiles */}
+      <Route path="/user-profile/:profileId" element={<Layout><UserProfile /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/unclaimed-tokens" element={<Layout><UnclaimedTokensFeed /></Layout>} /> {/* <--- ADD NEW ROUTE */}
       <Route path="/token/:tokenAddr" element={<Layout><div>Token Details Page (Coming Soon) for {":tokenAddr"}</div></Layout>} />

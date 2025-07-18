@@ -81,6 +81,10 @@ const Home: React.FC = () => {
     navigate('/unclaimed-tokens')
   }
 
+  const handleProfile = () => {
+    navigate('/user-profile/did:privy:cmcooe9w802a3i50mn80qrefl')
+  }
+
   return (
     <HomeContainer theme={theme}>
       <TopContent theme={theme}>
@@ -101,6 +105,9 @@ const Home: React.FC = () => {
           </CardDescription>
           <Button onClick={handleUnclaimed} style={{ backgroundColor: theme.colors.primary }}>
             Watch Now
+          </Button>
+          <Button onClick={handleProfile} style={{ backgroundColor: theme.colors.primary }}>
+            View Profile
           </Button>
         </ContentCard>
         <ContentCard theme={theme}>
@@ -126,13 +133,12 @@ const Home: React.FC = () => {
         </ContentCard>
 
         <ContentCard theme={theme}>
-          <CardTitle theme={theme}>Explore & Discover</CardTitle>
+          <CardTitle theme={theme}>🔥 Community Takeovers</CardTitle>
           <CardDescription theme={theme}>
-            Browse public profiles, discover trending topics, and explore content even before you sign up.
-            See what the community is talking about!
+          See which teams are reviving failed meme coins.
           </CardDescription>
           <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
-            Discover
+          View CTOs →
           </Button>
         </ContentCard>
       </ContentCardsWrapper>

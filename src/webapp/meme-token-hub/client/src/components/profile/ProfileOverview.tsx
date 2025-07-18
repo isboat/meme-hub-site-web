@@ -20,7 +20,6 @@ const DetailItem = styled.p`
   }
 `;
 
-
 const ProfileImage = styled.img`
   width: 120px;
   height: 120px;
@@ -28,6 +27,9 @@ const ProfileImage = styled.img`
   object-fit: cover;
   margin-bottom: ${({ theme }) => theme.spacing.medium};
   border: 3px solid ${({ theme }) => theme.colors.primary};
+`;
+const ProfileImageDiv = styled.div`
+  display: flex;
 `;
 
 const Username = styled.h1`
@@ -48,8 +50,10 @@ const ProfileOverview: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   
-      <h2>About: {user.username }</h2> 
-      <ProfileImage src={user.profileImage || '/default-avatar.png'} alt={`${user.username}'s profile`} theme={theme} />
+      <h2>About {user.username || '#Username' }</h2> 
+      <ProfileImageDiv>
+        <ProfileImage src={user.profileImage || '/default-avatar.png'} alt={`${user.username}'s profile`} theme={theme} />
+      </ProfileImageDiv>
       <Bio theme={theme}>{user.bio || 'No bio available.'}</Bio>
       <Username theme={theme}>{user.username}</Username>
       <DetailItem theme={theme}>

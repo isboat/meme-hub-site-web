@@ -7,7 +7,7 @@ import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 
 const Nav = styled.nav`
-  background-color: ${({ theme }) => theme.colors.cardBackground};
+  background-color: ${({ theme }) => theme.colors.navBarBackground};
   padding: ${({ theme }) => theme.spacing.medium};
   display: flex;
   justify-content: space-between;
@@ -16,8 +16,8 @@ const Nav = styled.nav`
 `;
 
 const Logo = styled(Link)`
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: 1.8em;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: 24px;
   font-weight: bold;
   text-decoration: none;
 `;
@@ -61,14 +61,14 @@ const Navbar: React.FC = () => {
   return (
     <Nav theme={theme}>
       <Logo to="/" theme={theme}>
-      MemeTokenHub
+      MEMETOKENHUB
       </Logo>
       <NavLinks theme={theme}>
         {authenticated ? (
           <>
-            <NavLink to="/dashboard" theme={theme}>
+            {/* <NavLink to="/dashboard" theme={theme}>
               Dashboard
-            </NavLink>
+            </NavLink> */}
             <NavLink to={`/profile/${user?.id}`} theme={theme}>
               My Profile
             </NavLink>

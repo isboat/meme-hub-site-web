@@ -110,13 +110,13 @@ const UnfollowButton = styled(Button)`
 `;
 
 
-const Profile: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
+const UserProfile: React.FC = () => {
+  const { profileId } = useParams<{ profileId: string }>();
   const theme = useTheme();
   const { user: privyUser, authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'overview' | 'follows' | 'links'>('overview');
 
-  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${userId}`);
+  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${profileId}`);
   const { data: currentUser, refetch: refetchCurrentUser } = useApi<User>(
     `/users/${privyUser?.id}`,
     'get',
@@ -125,7 +125,7 @@ const Profile: React.FC = () => {
     !authenticated
   ); // Fetch current user details if logged in
 
-  const isCurrentUserProfile = authenticated && privyUser?.id === userId;
+  const isCurrentUserProfile = authenticated && privyUser?.id === profileId;
   const isFollowing = authenticated && currentUser?.following?.includes(profileUser?._id || '');
 
   const handleFollowToggle = async () => {
@@ -213,4 +213,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

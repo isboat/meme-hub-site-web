@@ -3,8 +3,11 @@ export const darkTheme = {
     colors: {
       background: '#1a202c',
       cardBackground: '#2d3748',
+      navBarBackground: '#1a202e',
       text: '#e2e8f0',
       primary: '#3b82f6',
+      white: '#ffffff',
+      ticker: '#fbbf24',
       secondary: '#6366f1',
       border: '#4a5568',
       placeholder: '#a0aec0',
