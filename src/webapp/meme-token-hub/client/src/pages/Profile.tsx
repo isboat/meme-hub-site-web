@@ -159,7 +159,7 @@ const Profile: React.FC = () => {
     <ProfileContainer theme={theme}>
       <ProfileHeader theme={theme}>
         <ProfileImage
-          src={profileUser.profileImage || '/default-avatar.png'}
+          src={profileUser.profileImage  || '/default-avatar.JPG'}
           alt={`${profileUser.username}'s profile`}
           theme={theme}
         />

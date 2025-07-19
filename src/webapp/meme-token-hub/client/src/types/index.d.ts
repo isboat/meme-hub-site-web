@@ -1,4 +1,24 @@
 // client/src/types/index.d.ts
+export interface UserProfile {
+  id: string;
+  privyId: string;
+  createdAt: string;
+  username: string;
+  email: string;
+  bio?: string;
+  profileImage?: string;
+  socialLinks?: {
+    facebook?: string;
+    twitter?: string;
+    // Add more as needed
+  };
+  followers: string[]; // Array of user IDs
+  following: string[]; // Array of user IDs
+  settings?: {
+    anonymousBrowseAllowed?: boolean;
+    // ... more settings
+  };
+}
 
 export interface User {
     _id: string;
@@ -62,3 +82,26 @@ export interface UnclaimedToken {
   rawData: RawTokenData;
   // Add other properties if your backend sends them
 }
+
+
+
+// Root object
+export interface TrendingData {
+  data: TokenData;
+}
+
+// Main data shape where keys like "eth", "bsc", "sol", etc. map to arrays of TokenInfo
+export interface TokenData {
+  [chain: string]: TokenInfo[];
+}
+
+// Individual token info
+export interface TokenInfo {
+  name: string;
+  symbol: string;
+  slug: string;
+  logo: string;
+  chain_logo: string;
+  h24: number;
+}
+

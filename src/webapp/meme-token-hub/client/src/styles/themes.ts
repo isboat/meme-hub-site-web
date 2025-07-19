@@ -14,6 +14,11 @@ export const darkTheme = {
       success: '#10b981',
       error: '#ef4444',
     },
+    button: {
+      size : {
+        medium: '200px'
+      }
+    },
     spacing: {
       extraSmall: '4px',
       small: '8px',

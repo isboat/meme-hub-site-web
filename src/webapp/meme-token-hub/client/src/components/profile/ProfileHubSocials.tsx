@@ -13,6 +13,10 @@ const OverviewCard = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: ${({ theme }) => theme.boxShadow};
 `;
+const SocialBtn = styled.div`
+  text-align: center;
+  margin-bottom: ${({ theme }) => theme.spacing.medium};
+`;
 
 
 const ProfileHubSocials: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
@@ -20,24 +24,32 @@ const ProfileHubSocials: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
   const theme = useTheme();
 
   const handleGetStarted = () => {
+    console.log(isCurrentUser)
     //navigate('/auth');
   };
-  
+
   return (
-    <OverviewCard theme={theme}>   
-      <h2>HubSocials {user._id}</h2>
-      <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
+    <OverviewCard theme={theme}>
+      <SocialBtn theme={theme}>
+        <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
           x.com
         </Button>
-      <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
-          Telegram
-        </Button>
-      <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
+      </SocialBtn>
+      <SocialBtn theme={theme}> <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
+        Telegram
+      </Button>
+      </SocialBtn>
+      <SocialBtn theme={theme}>
+        <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
           Instagram
         </Button>
-      <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
+      </SocialBtn>
+      <SocialBtn theme={theme}>
+        <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
           Youtube
         </Button>
+      </SocialBtn>
+
     </OverviewCard>
   );
 };

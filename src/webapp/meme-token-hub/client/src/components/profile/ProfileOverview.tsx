@@ -52,7 +52,7 @@ const ProfileOverview: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
     <OverviewCard theme={theme}>   
       <h2>About {user.username || '#Username' }</h2> 
       <ProfileImageDiv>
-        <ProfileImage src={user.profileImage || '/default-avatar.png'} alt={`${user.username}'s profile`} theme={theme} />
+        <ProfileImage src={user.profileImage  || '/default-avatar.JPG'} alt={`${user.username}'s profile`} theme={theme} />
       </ProfileImageDiv>
       <Bio theme={theme}>{user.bio || 'No bio available.'}</Bio>
       <Username theme={theme}>{user.username}</Username>

@@ -82,7 +82,7 @@ const Home: React.FC = () => {
   }
 
   const handleProfile = () => {
-    navigate('/user-profile/did:privy:cmcooe9w802a3i50mn80qrefl')
+    navigate('/kol-profiles')
   }
 
   return (
@@ -107,7 +107,7 @@ const Home: React.FC = () => {
             Watch Now
           </Button>
           <Button onClick={handleProfile} style={{ backgroundColor: theme.colors.primary }}>
-            View Profile
+            View KOL Profiles
           </Button>
         </ContentCard>
         <ContentCard theme={theme}>
