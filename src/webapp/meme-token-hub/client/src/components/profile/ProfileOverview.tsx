@@ -1,7 +1,7 @@
 // client/src/components/profile/ProfileOverview.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { ProfileProps, User } from '../../types';
+import { ProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 
 const OverviewCard = styled.div`

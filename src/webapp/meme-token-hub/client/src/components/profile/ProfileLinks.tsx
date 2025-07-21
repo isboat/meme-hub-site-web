@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { User } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
-import { FaFacebook, FaTwitter, FaLink } from 'react-icons/fa'; // Example icons
+import { FaFacebook, FaTwitter } from 'react-icons/fa'; // Example icons
 
 const LinksCard = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBackground};

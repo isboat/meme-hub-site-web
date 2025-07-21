@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
@@ -126,7 +126,7 @@ const UserProfile: React.FC = () => {
   ); // Fetch current user details if logged in
 
   const isCurrentUserProfile = authenticated && privyUser?.id === profileId;
-  const isFollowing = authenticated && currentUser?.following?.includes(profileUser?._id || '');
+  const isFollowing = authenticated && profileUser?.followers?.includes(currentUser?.privyId || '');
 
   const handleFollowToggle = async () => {
     if (!authenticated) {
@@ -135,9 +135,9 @@ const UserProfile: React.FC = () => {
     }
     try {
       if (isFollowing) {
-        await api.post(`/users/${profileUser?._id}/unfollow`);
+        await api.post(`/profile/${profileId}/unfollow`);
       } else {
-        await api.post(`/users/${profileUser?._id}/follow`);
+        await api.post(`/profile/${profileId}/follow`);
       }
       refetch(); // Refresh profile user data
       refetchCurrentUser(); // Refresh current user's following list

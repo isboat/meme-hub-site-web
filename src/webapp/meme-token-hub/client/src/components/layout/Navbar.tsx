@@ -38,12 +38,6 @@ const NavLink = styled(Link)`
   }
 `;
 
-const UserMenu = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.medium};
-`;
-
 const Navbar: React.FC = () => {
   const { authenticated, logout, user } = usePrivy();
   const navigate = useNavigate();

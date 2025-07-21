@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
 import { User } from '../types';
 import { useApi } from '../hooks/useApi';
 import Button from '../components/common/Button';
-import api from '../api/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ProfileOverview from '../components/profile/ProfileOverview';
-import axios, { AxiosError } from 'axios'; // Import axios and AxiosError
 import ProfileActivity from '../components/profile/ProfileActivity';
 import ProfileHubSpot from '../components/profile/ProfileHubSpot';
 import ProfileHubSocials from '../components/profile/ProfileHubSocials';
@@ -55,24 +53,6 @@ const Verification = styled.p`
   margin-bottom: ${({ theme }) => theme.spacing.medium};
 `;
 
-const Stats = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.large};
-  margin-top: ${({ theme }) => theme.spacing.medium};
-`;
-
-const StatItem = styled.div`
-  text-align: center;
-  span {
-    display: block;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-  small {
-    color: ${({ theme }) => theme.colors.placeholder};
-  }
-`;
-
 const TabsContainer = styled.div`
   display: flex;
   margin-bottom: ${({ theme }) => theme.spacing.large};
@@ -93,41 +73,19 @@ const TabButton = styled(Button)<{ active: boolean }>`
   }
 `;
 
-const FollowButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  background-color: ${({ theme }) => theme.colors.secondary};
-  /* Note: darken(5%) is SASS syntax. For pure CSS, you'd calculate this manually or use CSS variables */
-  /* Example for hover with hex color manipulation (concept, not actual CSS fn) */
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.secondary + 'E0'}; /* Slightly darker if secondary is a hex */
-  }
-`;
-
-const UnfollowButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.text};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.error};
-    color: white;
-  }
-`;
-
-
 const Profile: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'hubSpot' | 'hubSocials' | 'polls'>('overview');
 
-  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${privyUser?.id}`);
+  const { data: profileUser, loading, error } = useApi<User>(`/profile/${privyUser?.id}`);
 
   if (loading) {
     return (
       <ProfileContainer theme={theme}>
         <LoadingSpinner />
-        <p>Loading profile...</p>
+        <p>Loading profile... {authenticated}</p>
       </ProfileContainer>
     );
   }

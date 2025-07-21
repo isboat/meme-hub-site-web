@@ -5,7 +5,6 @@ import AuthPage from './pages/AuthOld';
 import { Layout } from './components/layout/Layout';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
-import AnonymousHome from './pages/AnonymousHome';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 import Home from './pages/Home';
@@ -14,6 +13,8 @@ import CreateProfile from './pages/CreateProfile';
 import UserProfile from './pages/userprofile';
 import KolProfiles from './pages/Kols';
 import TokensFeed from './pages/Tokens';
+import FAQ from './pages/FAQ';
+import AboutUs from './pages/AboutUs';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -38,6 +39,8 @@ const App: React.FC = () => {
   return (
     <Routes>
       {/* Public Routes (accessible to all) */}
+      <Route path="/faq" element={<FAQ />} /> {/* ADD THIS LINE */}
+      <Route path="/about-us" element={<AboutUs />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/user-profile/:profileId" element={<Layout><UserProfile /></Layout>} /> {/* Anonymous can view profiles */}

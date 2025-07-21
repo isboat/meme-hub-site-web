@@ -17,7 +17,7 @@ const Discount = styled.p`
 `;
 
 
-const ProfileActivity: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
+const ProfileActivity: React.FC<ProfileProps> = ({ user }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   

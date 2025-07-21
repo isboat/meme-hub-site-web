@@ -17,7 +17,7 @@ const ProfilePolls: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   
-      <h2>🗳️ MemeTokenHub Community Polls {user.username }</h2>
+      <h2>🗳️ {isCurrentUser} MemeTokenHub Community Polls {user.username }</h2>
     </OverviewCard>
   );
 };

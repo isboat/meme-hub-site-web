@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useApi } from '../hooks/useApi';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { UserProfile } from '../types'; // Assuming your User interface is defined here
-import axios, { AxiosError } from 'axios'; // For robust error handling
+import axios from 'axios'; // For robust error handling
 
 // Styled Components
 const PageContainer = styled.div`

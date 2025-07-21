@@ -1,7 +1,7 @@
 // client/src/components/profile/ProfileOverview.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { ProfileProps, User } from '../../types';
+import { ProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 
@@ -31,7 +31,7 @@ const ProfileHubSpot: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
           </Button>
       </OverviewCard>
       <OverviewCard theme={theme}>
-        <p>🎯 No Featured Project yet.</p>
+        <p>🎯 No Featured Project yet. { user._id }</p>
       </OverviewCard>
     </>
   );

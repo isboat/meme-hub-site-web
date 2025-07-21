@@ -1,7 +1,7 @@
 // client/src/components/profile/ProfileOverview.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { ProfileProps, User } from '../../types';
+import { ProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 import { useNavigate } from 'react-router-dom';
@@ -19,13 +19,13 @@ const SocialBtn = styled.div`
 `;
 
 
-const ProfileHubSocials: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
+const ProfileHubSocials: React.FC<ProfileProps> = ({ isCurrentUser }) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
   const handleGetStarted = () => {
     console.log(isCurrentUser)
-    //navigate('/auth');
+    navigate('/');
   };
 
   return (

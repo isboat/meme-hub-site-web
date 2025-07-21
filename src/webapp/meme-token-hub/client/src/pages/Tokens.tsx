@@ -1,10 +1,10 @@
 // client/src/pages/UnclaimedTokensFeed.tsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { TrendingData } from '../types';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import axios, { AxiosError } from 'axios'; // For robust error handling
+import axios from 'axios'; // For robust error handling
 import { useApi } from '../hooks/useApi';
 
 const PageContainer = styled.div`
@@ -75,7 +75,7 @@ const TokensFeed: React.FC = () => {
     <PageContainer theme={theme}>
       <Header theme={theme}>Trending</Header>
       <div style={{ display: 'flex' }}>
-      {Object.entries(trendingData.data).filter(([chainName, tokens]) => (chainName != 'undefined')).map(([chainName, tokens]) => (
+      {Object.entries(trendingData.data).filter(([chainName, tokens]) => (chainName != 'undefined' && tokens != null)).map(([chainName, tokens]) => (
         <div key={chainName} style={{ marginRight: '2rem', display:'block' }}>
         <h2><img src={tokens[0].chain_logo} width={24} /> {chainName.toLocaleUpperCase()}</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', border: '1px solid #ddd', borderRadius: '8px', }}>

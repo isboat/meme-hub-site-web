@@ -1,5 +1,5 @@
 // client/src/components/profile/ProfileFollows.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { User } from '../../types';
@@ -72,7 +72,7 @@ interface ProfileFollowsProps {
   isCurrentUser: boolean;
 }
 
-const ProfileFollows: React.FC<ProfileFollowsProps> = ({ userId, isCurrentUser }) => {
+const ProfileFollows: React.FC<ProfileFollowsProps> = ({ userId }) => {
   const theme = useTheme();
   const [activeSubTab, setActiveSubTab] = useState<'followers' | 'following'>('followers');
 
