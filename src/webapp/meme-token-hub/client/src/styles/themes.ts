@@ -12,6 +12,7 @@ export const darkTheme = {
       border: '#4a5568',
       placeholder: '#a0aec0',
       success: '#10b981',
+      warning: '#ff9900',
       error: '#ef4444',
     },
     button: {

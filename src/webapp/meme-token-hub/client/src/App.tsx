@@ -15,6 +15,7 @@ import KolProfiles from './pages/Kols';
 import TokensFeed from './pages/Tokens';
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
+import UpdateProfile from './pages/UpdateProfile';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -39,9 +40,9 @@ const App: React.FC = () => {
   return (
     <Routes>
       {/* Public Routes (accessible to all) */}
-      <Route path="/faq" element={<FAQ />} /> {/* ADD THIS LINE */}
-      <Route path="/about-us" element={<AboutUs />} />
-      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/faq" element={<Layout><FAQ /></Layout>} /> {/* ADD THIS LINE */}
+      <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
+      <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
       <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/user-profile/:profileId" element={<Layout><UserProfile /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/kol-profiles" element={<Layout><KolProfiles /></Layout>} /> {/* Anonymous can view profiles */}
@@ -58,6 +59,7 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
           <Route path="/create-profile" element={<Layout><CreateProfile /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
+          <Route path="/update-profile" element={<Layout><UpdateProfile /></Layout>} />
           {/* Add more authenticated routes here */}
         </>
       ) : (

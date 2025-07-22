@@ -86,7 +86,7 @@ const AuthPage: React.FC = () => {
           setTimeout(() => navigate('/create-profile'), 1500);
         } else {
           setAuthStatusMessage('Authenticated successfully! Redirecting...');
-          setTimeout(() => navigate('/dashboard'), 1500);
+          setTimeout(() => navigate('/'), 1500);
         }
       } catch (error: any) {
         console.error('Authentication error:', error);

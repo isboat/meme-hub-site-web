@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/auth');
+      navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -55,9 +55,15 @@ const Navbar: React.FC = () => {
   return (
     <Nav theme={theme}>
       <Logo to="/" theme={theme}>
-      MEMETOKENHUB
+        MEMETOKENHUB
       </Logo>
       <NavLinks theme={theme}>
+        <NavLink to={`/faq`} theme={theme}>
+          FAQs
+        </NavLink>
+        <NavLink to={`/about-us`} theme={theme}>
+          About US
+        </NavLink>
         {authenticated ? (
           <>
             {/* <NavLink to="/dashboard" theme={theme}>

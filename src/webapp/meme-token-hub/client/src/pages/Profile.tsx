@@ -53,6 +53,24 @@ const Verification = styled.p`
   margin-bottom: ${({ theme }) => theme.spacing.medium};
 `;
 
+const Stats = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.large};
+  margin-top: ${({ theme }) => theme.spacing.medium};
+`;
+
+const StatItem = styled.div`
+  text-align: center;
+  span {
+    display: block;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  small {
+    color: ${({ theme }) => theme.colors.placeholder};
+  }
+`;
+
 const TabsContainer = styled.div`
   display: flex;
   margin-bottom: ${({ theme }) => theme.spacing.large};
@@ -70,6 +88,14 @@ const TabButton = styled(Button)<{ active: boolean }>`
   transition: all 0.2s ease-in-out;
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+const EditProfileButton = styled(Button)`
+  margin-top: ${({ theme }) => theme.spacing.medium};
+  background-color: ${({ theme }) => theme.colors.primary};
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary + 'E0'}; /* Slightly darker on hover */
   }
 `;
 
@@ -124,7 +150,7 @@ const Profile: React.FC = () => {
         <Username theme={theme}>{profileUser.username || '#Username'}</Username>
         <Verification theme={theme}>{profileUser.bio || '✔️ Verified by MemeTokenHub.'}</Verification>
  
-        {/*<Stats theme={theme}>
+        <Stats theme={theme}>
           <StatItem theme={theme}>
             <span>{profileUser.followers.length}</span>
             <small>Followers</small>
@@ -133,7 +159,13 @@ const Profile: React.FC = () => {
             <span>{profileUser.following.length}</span>
             <small>Following</small>
           </StatItem>
-        </Stats> */}
+        </Stats>
+
+        {profileUser && authenticated && (
+          <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
+            Edit Profile
+          </EditProfileButton>
+        )}
       </ProfileHeader>
 
       <TabsContainer theme={theme}>

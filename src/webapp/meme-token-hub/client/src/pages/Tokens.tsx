@@ -76,7 +76,7 @@ const TokensFeed: React.FC = () => {
       <Header theme={theme}>Trending</Header>
       <div style={{ display: 'flex' }}>
       {Object.entries(trendingData.data).filter(([chainName, tokens]) => (chainName != 'undefined' && tokens != null)).map(([chainName, tokens]) => (
-        <div key={chainName} style={{ marginRight: '2rem', display:'block' }}>
+        <div key={chainName} style={{ marginRight: '1rem', display:'block' }}>
         <h2><img src={tokens[0].chain_logo} width={24} /> {chainName.toLocaleUpperCase()}</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', border: '1px solid #ddd', borderRadius: '8px', }}>
           {tokens.map((token, index) => (
@@ -85,13 +85,17 @@ const TokensFeed: React.FC = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                padding: '0.5rem',
+                paddingLeft: '0.5rem',
+                paddingTop: '0.5rem',
                 gap: '1rem',
+                fontSize: '12px',
+                marginBottom: '-15px'
               }}
             >
-                <img src={token.logo} alt={token.name} width={50} />
+                <img src={token.logo} alt={token.name} width={30} />
                 <div>
-                  <strong>{token.name}</strong> ({token.symbol})
+                  <div><strong>{token.name}</strong></div> 
+                  <div>({token.symbol})</div>
                 </div>
                 <div>{token.h24}%</div>
             </div>

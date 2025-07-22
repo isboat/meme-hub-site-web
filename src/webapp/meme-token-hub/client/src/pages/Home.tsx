@@ -77,6 +77,9 @@ const Home: React.FC = () => {
     navigate('/auth');
   };
 
+  const handleTrending = () => {
+    navigate('/tokens')
+  }
   const handleUnclaimed = () => {
     navigate('/unclaimed-tokens')
   }
@@ -103,11 +106,11 @@ const Home: React.FC = () => {
           <CardDescription theme={theme}>
             See unclaimed tokens appearing in real time.
           </CardDescription>
-          <Button onClick={handleUnclaimed} style={{ backgroundColor: theme.colors.primary }}>
+          <Button onClick={handleUnclaimed} style={{ backgroundColor: theme.colors.primary, marginRight: '10px' }}>
             Watch Now
           </Button>
-          <Button onClick={handleProfile} style={{ backgroundColor: theme.colors.primary }}>
-            View KOL Profiles
+          <Button onClick={handleTrending} style={{ backgroundColor: theme.colors.success }}>
+            Trending
           </Button>
         </ContentCard>
         <ContentCard theme={theme}>
@@ -124,11 +127,11 @@ const Home: React.FC = () => {
         <ContentCard theme={theme}>
           <CardTitle theme={theme}>Explore & Discover</CardTitle>
           <CardDescription theme={theme}>
-            Browse public profiles, discover trending topics, and explore content even before you sign up.
+            Browse public profiles, and explore content even before you sign up.
             See what the community is talking about!
           </CardDescription>
-          <Button onClick={handleGetStarted} style={{ backgroundColor: theme.colors.primary }}>
-            Discover
+          <Button onClick={handleProfile} style={{ backgroundColor: theme.colors.warning, color: theme.colors.white }}>
+            View KOL Profiles
           </Button>
         </ContentCard>
 
