@@ -4,9 +4,16 @@ export interface UserProfile {
   privyId: string;
   createdAt: string;
   username: string;
+  discountCode:string;
+  verified: boolean;
+  metadata: ProfileMetadata;
   email: string;
-  bio?: string;
+  description?: string;
   profileImage?: string;
+  profileName: string;
+  language: string;
+  totalMentions: number;
+  location: string;
   socialLinks?: {
     facebook?: string;
     twitter?: string;
@@ -20,13 +27,17 @@ export interface UserProfile {
   };
 }
 
+
+export interface ProfileMetadata {
+  [key: string]: string
+}
+
 export interface User {
     _id: string;
     privyId: string;
     createdAt: string;
     username: string;
     email: string;
-    bio?: string;
     profileImage?: string;
     socialLinks?: {
       facebook?: string;
@@ -42,7 +53,7 @@ export interface User {
   }
   
   export interface ProfileProps {
-    user: User;
+    user: UserProfile;
     isCurrentUser: boolean;
   }
   

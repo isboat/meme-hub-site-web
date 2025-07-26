@@ -77,7 +77,7 @@ const Settings: React.FC = () => {
   useEffect(() => {
     if (currentUser) {
       setUsername(currentUser.username || '');
-      setBio(currentUser.bio || '');
+      setBio(currentUser.username || '');
       setProfileImage(currentUser.profileImage || '');
       setFacebookLink(currentUser.socialLinks?.facebook || '');
       setTwitterLink(currentUser.socialLinks?.twitter || '');

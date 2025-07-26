@@ -70,7 +70,7 @@ interface FAQData {
 const faqs: FAQData[] = [
   {
     question: 'What is MemeTokenHub?',
-    answer: 'MemeTokenHub is a social platform dedicated to meme tokens, connecting enthusiasts, developers, and influencers in a dedicated community space.',
+    answer: 'MemeTokenHub is your home base for discovering meme tokens, tracking sentiment, and watching the market’s vibes shift in real-time. It’s like a live meme war room—but for tokens. ⚔️',
   },
   {
     question: 'How do I create an account?',
@@ -83,6 +83,26 @@ const faqs: FAQData[] = [
   {
     question: 'Can I launch my meme token project on MemeTokenHub?',
     answer: 'Yes! We encourage meme token developers to join. Our platform provides tools and community exposure to help launch and grow your project.',
+  },
+  {
+    question: 'What can tokens do here?',
+    answer: 'Tokens can: 🚀 Upload their banner, 🔗 Add all social links in one go, 🧩 Update info instantly, ✅ Get verified by community activity. All for just $29.99. Yep, fast, fair, and no gatekeeping.',
+  },
+  {
+    question: 'Is this a market data platform?',
+    answer: 'Nope. We’re more about market sentiment than dry stats. We capture social signals—the gut feels, meme momentum, and community pulse.',
+  },
+  {
+    question: 'Is it just for Ethereum?',
+    answer: 'Not at all! We support Solana, Ethereum, BNB Chain, and wherever memes live.',
+  },
+  {
+    question: 'What does it cost?',
+    answer: 'Token listing: $29.99. Browsing, following, voting: Free',
+  },
+  {
+    question: 'TL;DR?',
+    answer: 'MemeTokenHub is where memes meet metrics. It’s receipts, vibes, and visibility—rolled into one degen-friendly package.',
   },
   {
     question: 'What benefits are there for KOLs/Influencers?',

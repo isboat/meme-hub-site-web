@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
-import { User } from '../types';
+import { UserProfile } from '../types';
 import { useApi } from '../hooks/useApi';
 import Button from '../components/common/Button';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -105,7 +105,7 @@ const Profile: React.FC = () => {
   const { user: privyUser, authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'hubSpot' | 'hubSocials' | 'polls'>('overview');
 
-  const { data: profileUser, loading, error } = useApi<User>(`/profile/${privyUser?.id}`);
+  const { data: profileUser, loading, error } = useApi<UserProfile>(`/profile/${privyUser?.id}`);
 
   if (loading) {
     return (
@@ -144,11 +144,11 @@ const Profile: React.FC = () => {
       <ProfileHeader theme={theme}>
         <ProfileImage
           src={profileUser.profileImage  || '/default-avatar.JPG'}
-          alt={`${profileUser.username}'s profile`}
+          alt={`${profileUser.profileName}'s profile`}
           theme={theme}
         />
-        <Username theme={theme}>{profileUser.username || '#Username'}</Username>
-        <Verification theme={theme}>{profileUser.bio || '✔️ Verified by MemeTokenHub.'}</Verification>
+        <Username theme={theme}>{profileUser.profileName || '#Profilename'}</Username>
+        <Verification theme={theme}>{profileUser.description || '✔️ Verified by MemeTokenHub.'}</Verification>
  
         <Stats theme={theme}>
           <StatItem theme={theme}>
@@ -173,13 +173,13 @@ const Profile: React.FC = () => {
           Overview
         </TabButton>
         <TabButton onClick={() => setActiveTab('activity')} active={activeTab === 'activity'} theme={theme}>
-        activity
+        Activity
         </TabButton>
         <TabButton onClick={() => setActiveTab('hubSpot')} active={activeTab === 'hubSpot'} theme={theme}>
-        hubSpot
+        HubSpot
         </TabButton>
         <TabButton onClick={() => setActiveTab('hubSocials')} active={activeTab === 'hubSocials'} theme={theme}>
-        hubSocials
+        HubSocials
         </TabButton>
         <TabButton onClick={() => setActiveTab('polls')} active={activeTab === 'polls'} theme={theme}>
         polls

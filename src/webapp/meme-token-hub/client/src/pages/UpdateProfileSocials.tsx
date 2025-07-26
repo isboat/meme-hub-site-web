@@ -1,5 +1,5 @@
 // client/src/pages/UpdateProfile.tsx
-import React, { useState, useEffect, useRef } from 'react'; // Import useRef
+import React, { useState, useEffect } from 'react'; // Import useRef
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
@@ -53,29 +53,6 @@ const FormGroup = styled.div`
   }
 `;
 
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 1em;
-  line-height: 1.5;
-  min-height: 100px;
-  resize: vertical;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.placeholder};
-  }
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}40;
-  }
-`;
-
 // Corrected MessageProps interface
 interface MessageProps {
   type: 'success' | 'error' | '';
@@ -89,36 +66,7 @@ const Message = styled.p<MessageProps>`
     type === 'error' ? theme.colors.error : theme.colors.primary};
 `;
 
-const ProfileImagePreview = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: ${({ theme }) => theme.spacing.medium} auto;
-  border: 3px solid ${({ theme }) => theme.colors.primary};
-`;
-
-const FileInputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.small};
-`;
-
-const StyledFileInput = styled.input`
-  display: none; /* Hide the default file input */
-`;
-
-const CustomFileUploadButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.small};
-  background-color: ${({ theme }) => theme.colors.secondary};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.secondary + 'E0'};
-  }
-`;
-
-
-const UpdateProfile: React.FC = () => {
+const UpdateProfileSocials: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
@@ -128,15 +76,9 @@ const UpdateProfile: React.FC = () => {
   const [location, setLocation] = useState('');
   const [language, setLanguage] = useState('');
 
-  // New state for selected file and its preview URL
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrlPreview, setImageUrlPreview] = useState<string | null>(null); // For local preview
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
-
-  const fileInputRef = useRef<HTMLInputElement>(null); // Ref for triggering file input
 
   const { data: currentUserProfile, loading, error, refetch } = useApi<UserProfile>(
     `/profile/${privyUser?.id}`,
@@ -153,23 +95,8 @@ const UpdateProfile: React.FC = () => {
       setBio(currentUserProfile.description || '');
       setLocation(currentUserProfile.location || '');
       setLanguage(currentUserProfile.language || '');
-      // Set the initial image preview to the user's current profile image
-      if (currentUserProfile.profileImage) {
-        setImageUrlPreview(currentUserProfile.profileImage);
-      } else {
-        setImageUrlPreview('/default-avatar.png'); // Default if no image
-      }
     }
   }, [currentUserProfile]);
-
-  // Clean up the object URL when component unmounts or new file is selected
-  useEffect(() => {
-    return () => {
-      if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrlPreview);
-      }
-    };
-  }, [imageUrlPreview]);
 
   // Handle errors during initial fetch
   useEffect(() => {
@@ -193,28 +120,6 @@ const UpdateProfile: React.FC = () => {
   }, [error, navigate]);
 
 
-  // Handle file selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-
-      // Create a URL for image preview
-      if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrlPreview); // Clean up previous blob URL
-      }
-      setImageUrlPreview(URL.createObjectURL(file));
-    } else {
-      setSelectedFile(null);
-      // If no file selected, revert to current profile image or default
-      setImageUrlPreview(currentUserProfile?.profileImage || '/default-avatar.png'); // Revert to existing or default
-      if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-          URL.revokeObjectURL(imageUrlPreview); // Clean up old blob if it exists
-      }
-    }
-  };
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!authenticated || !privyUser) {
@@ -234,12 +139,6 @@ const UpdateProfile: React.FC = () => {
       formData.append('language', language);
       formData.append('location', location);
 
-      if (selectedFile) {
-        formData.append('profileImageFile', selectedFile); // Append the file
-      }
-      // If no new file is selected, the 'profileImageFile' will simply not be in FormData.
-      // Your backend should handle this by either keeping the existing image or a default.
-
       // We assume a new backend endpoint for multipart/form-data, e.g., PUT /users/update-with-image
       const response = await api.put<User>('/profile/update-with-image', formData, {
         headers: {
@@ -254,13 +153,6 @@ const UpdateProfile: React.FC = () => {
     } catch (err: unknown) {
       console.error('Profile update error:', err);
       let errorMessage = 'Failed to update profile.';
-      if (axios.isAxiosError(err)) {
-        errorMessage = err.response?.data?.message || err.message;
-      } else if (typeof err === 'object' && err !== null && err instanceof Error) {
-        errorMessage = err.message;
-      } else {
-        errorMessage = String(err);
-      }
       setStatusMessage(`Error: ${errorMessage}`);
       setMessageType('error');
     } finally {
@@ -309,34 +201,6 @@ const UpdateProfile: React.FC = () => {
       <Header theme={theme}>Update Your Profile</Header>
 
       <Form onSubmit={handleSubmit} theme={theme}>
-        <FileInputContainer theme={theme}>
-          <ProfileImagePreview
-            src={imageUrlPreview || '/default-avatar.png'} // Use imageUrlPreview for display
-            alt="Profile Preview"
-            theme={theme}
-          />
-          <StyledFileInput
-            type="file"
-            id="profileImageUpload"
-            accept="image/*" // Accept only image files
-            onChange={handleFileChange}
-            ref={fileInputRef} // Connect ref to the hidden input
-            disabled={isSubmitting}
-          />
-          <CustomFileUploadButton
-            type="button" // Important: Prevent this button from submitting the form
-            onClick={() => fileInputRef.current?.click()} // Trigger the hidden file input
-            disabled={isSubmitting}
-            theme={theme}
-          >
-            {selectedFile ? 'Change Image' : 'Upload Image'}
-          </CustomFileUploadButton>
-          {selectedFile && (
-            <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
-              Selected: {selectedFile.name}
-            </p>
-          )}
-        </FileInputContainer>
 
         <FormGroup theme={theme}>
           <label htmlFor="username">Username</label>
@@ -349,20 +213,7 @@ const UpdateProfile: React.FC = () => {
             required
             disabled={isSubmitting}
           />
-        </FormGroup>
-
-        <FormGroup theme={theme}>
-          <label htmlFor="bio">Bio</label>
-          <TextArea theme={theme}
-            id="bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Tell us about yourself..."
-            rows={4}
-            disabled={isSubmitting}
-          />
-        </FormGroup>
-        
+        </FormGroup>      
 
         <FormGroup theme={theme}>
           <label htmlFor="location">Location</label>
@@ -403,4 +254,4 @@ const UpdateProfile: React.FC = () => {
   );
 };
 
-export default UpdateProfile;
+export default UpdateProfileSocials;

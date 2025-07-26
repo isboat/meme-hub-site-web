@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
-import { User } from '../types';
+import { User, UserProfile } from '../types';
 import { useApi } from '../hooks/useApi';
 import Button from '../components/common/Button';
 import api from '../api/api';
@@ -110,20 +110,14 @@ const UnfollowButton = styled(Button)`
 `;
 
 
-const UserProfile: React.FC = () => {
+const UserProfilePage: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
   const theme = useTheme();
   const { user: privyUser, authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'overview' | 'follows' | 'links'>('overview');
 
-  const { data: profileUser, loading, error, refetch } = useApi<User>(`/profile/${profileId}`);
-  const { data: currentUser, refetch: refetchCurrentUser } = useApi<User>(
-    `/users/${privyUser?.id}`,
-    'get',
-    null,
-    null,
-    !authenticated
-  ); // Fetch current user details if logged in
+  const { data: profileUser, loading, error, refetch } = useApi<UserProfile>(`/profile/${profileId}`);
+  const { data: currentUser, refetch: refetchCurrentUser } = useApi<User>(`/users/${privyUser?.id}`,'get',null,null,!authenticated); // Fetch current user details if logged in
 
   const isCurrentUserProfile = authenticated && privyUser?.id === profileId;
   const isFollowing = authenticated && profileUser?.followers?.includes(currentUser?.privyId || '');
@@ -160,7 +154,7 @@ const UserProfile: React.FC = () => {
           theme={theme}
         />
         <Username theme={theme}>{profileUser.username}</Username>
-        <Bio theme={theme}>{profileUser.bio || 'No bio available.'}</Bio>
+        <Bio theme={theme}>{profileUser.description || 'No bio available.'}</Bio>
 
         <Stats theme={theme}>
           <StatItem theme={theme}>
@@ -203,7 +197,7 @@ const UserProfile: React.FC = () => {
           <ProfileOverview user={profileUser} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'follows' && (
-          <ProfileFollows userId={profileUser._id} isCurrentUser={isCurrentUserProfile} />
+          <ProfileFollows userId={profileUser.id} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'links' && (
           <ProfileLinks user={profileUser} isCurrentUser={isCurrentUserProfile} />
@@ -213,4 +207,4 @@ const UserProfile: React.FC = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfilePage;

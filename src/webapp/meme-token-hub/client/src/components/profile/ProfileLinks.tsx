@@ -1,7 +1,7 @@
 // client/src/components/profile/ProfileLinks.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { User } from '../../types';
+import { UserProfile } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 import { FaFacebook, FaTwitter } from 'react-icons/fa'; // Example icons
 
@@ -36,7 +36,7 @@ const LinkItem = styled.div`
 `;
 
 interface ProfileLinksProps {
-  user: User;
+  user: UserProfile;
   isCurrentUser: boolean; // Not strictly used here, but useful for edit mode
 }
 

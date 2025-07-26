@@ -46,30 +46,30 @@ const Bio = styled.p`
 `;
 
 
-const ProfileOverview: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
+const ProfileOverview: React.FC<ProfileProps> = ({ user }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   
-      <h2>About {user.username || '#Username' }</h2> 
+      <h2>About {user.profileName || '#Username' }</h2> 
       <ProfileImageDiv>
         <ProfileImage src={user.profileImage  || '/default-avatar.JPG'} alt={`${user.username}'s profile`} theme={theme} />
       </ProfileImageDiv>
-      <Bio theme={theme}>{user.bio || 'No bio available.'}</Bio>
-      <Username theme={theme}>{user.username}</Username>
+      <Bio theme={theme}>{user.description || 'No bio available.'}</Bio>
+      <Username theme={theme}>{user.profileName}</Username>
       <DetailItem theme={theme}>
         <span>Category:</span> {user.username}
       </DetailItem>
       <DetailItem theme={theme}>
-        <span>Location:</span> {isCurrentUser ? user.email : 'Private'}
+        <span>Location:</span> {user.location || 'Private'}
       </DetailItem>
       <DetailItem theme={theme}>
-        <span>Total Mentions:</span> {user.bio || 'Not provided'}
+        <span>Total Mentions:</span> {user.totalMentions || 'Not provided'}
       </DetailItem>
       <DetailItem theme={theme}>
         <span>Active since:</span> {user.createdAt}
       </DetailItem>
       <DetailItem theme={theme}>
-        <span>Language:</span> {user.bio || 'Not provided'}
+        <span>Language:</span> {user.language || 'Not provided'}
       </DetailItem>
       {/* Add more profile details as needed */}
     </OverviewCard>

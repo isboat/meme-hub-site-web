@@ -10,7 +10,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: Theme }>`
   }
 
   body {
-    font-family: 'Inter', sans-serif; /* Or your preferred font */
+    font-family: 'Poppins', sans-serif; /* Or your preferred font */
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
     line-height: 1.6;

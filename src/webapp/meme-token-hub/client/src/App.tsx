@@ -16,6 +16,7 @@ import TokensFeed from './pages/Tokens';
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
 import UpdateProfile from './pages/UpdateProfile';
+import UpdateProfileSocials from './pages/UpdateProfileSocials';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -60,6 +61,7 @@ const App: React.FC = () => {
           <Route path="/create-profile" element={<Layout><CreateProfile /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
           <Route path="/update-profile" element={<Layout><UpdateProfile /></Layout>} />
+          <Route path="/update-socials" element={<Layout><UpdateProfileSocials /></Layout>} />
           {/* Add more authenticated routes here */}
         </>
       ) : (

@@ -58,6 +58,19 @@ const AboutUs: React.FC = () => {
         <p>
           We believe in the power of community and the unique culture that meme tokens foster. MemeTokenHub is built on the principle of bringing transparency, excitement, and legitimate social interaction to an often chaotic space.
         </p>
+        <br />
+        <p>
+        MemeTokenHub was built to give meme tokens a faster, easier way to gain visibility and build communities.
+Instead of relying on scattered Telegrams, vague Twitter handles, or trying to dig through exchanges, this hub gives tokens a clear place to call home.
+It's a low-cost platform where tokens can quickly upload their logo, drop their banner, share their links — and instantly become discoverable.
+        </p>
+        <br />
+        <p>It’s also built for:</p>
+          <div>🔥 KOLs who want to visibly follow projects and timestamp their support</div>
+          <div>🧠 Fans who want to track their favorite influencers, projects, and networks</div>
+          <div>📊 Communities who want one place to measure hype and direction</div>
+        <br />
+        <p>From Solana sentiment to tracking your favorite degen plays — this platform was created by the community, for the community to enjoy their shared love of meme tokens.</p>
       </Section>
 
       <Section theme={theme}>
