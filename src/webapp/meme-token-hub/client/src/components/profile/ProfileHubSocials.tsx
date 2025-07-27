@@ -5,6 +5,7 @@ import { ProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 import { useNavigate } from 'react-router-dom';
+import AnchorButton from '../common/AnchorButton';
 
 const OverviewCard = styled.div`
   text-align: left;
@@ -24,14 +25,19 @@ const ProfileHubSocials: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const handleClickedSocials = (social: string) => {
-    console.log(isCurrentUser)
-    const url = user.metadata[social];
-    if(url) window.open(url, '_blank', 'noopener,noreferrer');
-  };
   const updateSocials = () => {
     console.log(isCurrentUser)
     navigate('/update-socials');
+  };
+
+  const generateSocialLink = (url: string) => {
+    const httpPrefix = "https://";
+    if(!url.startsWith(httpPrefix)) {
+      return httpPrefix + url;
+    }
+    // If the URL already has the prefix, return it as is
+    // This ensures that the URL is always valid when used in the AnchorButton
+    return url;
   };
 
   return (
@@ -39,34 +45,28 @@ const ProfileHubSocials: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
       <OverviewCard theme={theme}>
         <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Hub Socials</h2>
         <SocialBtn theme={theme}>
-          <Button onClick={() => {
-            handleClickedSocials('x');
-          }} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
+          <AnchorButton size='medium' variant='x' href={generateSocialLink(user.metadata['x'])} target="_blank" rel="noopener noreferrer">
             X
-          </Button>
-        </SocialBtn>
-        <SocialBtn theme={theme}> <Button onClick={() => {
-            handleClickedSocials('telegram');
-          }} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
-          Telegram
-        </Button>
+          </AnchorButton>
         </SocialBtn>
         <SocialBtn theme={theme}>
-          <Button onClick={() => {
-            handleClickedSocials('instagram');
-          }} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
-            Instagram
-          </Button>
+          <AnchorButton size='medium' variant='telegram' href={generateSocialLink(user.metadata['telegram'])} target="_blank" rel="noopener noreferrer">
+            Telegram
+          </AnchorButton>
         </SocialBtn>
         <SocialBtn theme={theme}>
-          <Button onClick={() => {
-            handleClickedSocials('youtube');
-          }} style={{ backgroundColor: theme.colors.primary, width: theme.button.size.medium }}>
+            <AnchorButton size='medium' variant='instagram' href={generateSocialLink(user.metadata['instagram'])} target="_blank" rel="noopener noreferrer">
+              Instagram
+            </AnchorButton>
+        </SocialBtn>
+        <SocialBtn theme={theme}>
+          <AnchorButton size='medium' variant='youtube' href={generateSocialLink(user.metadata['youtube'])} target="_blank" rel="noopener noreferrer">
             Youtube
-          </Button>
+          </AnchorButton>
         </SocialBtn>
 
       </OverviewCard>
+
       <OverviewCard theme={theme}>
         <p>Click button below to update these social links for FREE.</p><br />
         <Button onClick={updateSocials} style={{ backgroundColor: theme.colors.success }}>

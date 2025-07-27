@@ -71,10 +71,10 @@ const UpdateProfileSocials: React.FC = () => {
   const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
 
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
-  const [location, setLocation] = useState('');
-  const [language, setLanguage] = useState('');
+  const [x, setX] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [youtube, setYoutube] = useState('');
+  const [instagram, setInstagram] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
@@ -91,10 +91,11 @@ const UpdateProfileSocials: React.FC = () => {
   // Effect to populate form fields and initial image preview
   useEffect(() => {
     if (currentUserProfile) {
-      setUsername(currentUserProfile.profileName || '');
-      setBio(currentUserProfile.description || '');
-      setLocation(currentUserProfile.location || '');
-      setLanguage(currentUserProfile.language || '');
+      setX(currentUserProfile?.metadata["x"] || '');
+      setTelegram(currentUserProfile?.metadata["telegram"] || '');
+      setInstagram(currentUserProfile?.metadata["instagram"] || '');
+      setYoutube(currentUserProfile?.metadata["youtube"] || '');
+      setStatusMessage(''); // Clear any previous status message
     }
   }, [currentUserProfile]);
 
@@ -123,7 +124,7 @@ const UpdateProfileSocials: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!authenticated || !privyUser) {
-      setStatusMessage('You must be logged in to update your profile.');
+      setStatusMessage('You must be logged in to update your socials.');
       setMessageType('error');
       return;
     }
@@ -134,13 +135,13 @@ const UpdateProfileSocials: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('username', username);
-      formData.append('bio', bio);
-      formData.append('language', language);
-      formData.append('location', location);
+      formData.append('x', x);
+      formData.append('telegram', telegram);
+      formData.append('youtube', youtube);
+      formData.append('instagram', instagram);
 
-      // We assume a new backend endpoint for multipart/form-data, e.g., PUT /users/update-with-image
-      const response = await api.put<User>('/profile/update-with-image', formData, {
+      // We assume a new backend endpoint for multipart/form-data, e.g., PUT /users/update-socials
+      const response = await api.put<User>('/profile/update-socials', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Crucial for FormData
         },
@@ -163,7 +164,7 @@ const UpdateProfileSocials: React.FC = () => {
   if (!authenticated || !privyUser) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Update Profile</Header>
+        <Header theme={theme}>Update Socials</Header>
         <Message theme={theme} type="error">
           You must be logged in to access this page.
         </Message>
@@ -177,7 +178,7 @@ const UpdateProfileSocials: React.FC = () => {
   if (loading) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Update Profile</Header>
+        <Header theme={theme}>Update Socials</Header>
         <LoadingSpinner />
         <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading your profile data...</p>
       </PageContainer>
@@ -187,7 +188,7 @@ const UpdateProfileSocials: React.FC = () => {
   if (!currentUserProfile && messageType === 'error' && statusMessage.includes("don't have a profile yet")) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Update Profile</Header>
+        <Header theme={theme}>Update Socials</Header>
         <Message theme={theme} type="error">{statusMessage}</Message>
         <Button onClick={() => navigate('/create-profile')} style={{ marginTop: theme.spacing.medium }}>
           Create Your Profile Now
@@ -198,50 +199,62 @@ const UpdateProfileSocials: React.FC = () => {
 
   return (
     <PageContainer theme={theme}>
-      <Header theme={theme}>Update Your Profile</Header>
+      <Header theme={theme}>Update Your Socials</Header>
 
       <Form onSubmit={handleSubmit} theme={theme}>
 
         <FormGroup theme={theme}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="x">X</label>
           <Input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Your display name"
+            id="x"
+            value={x}
+            onChange={(e) => setX(e.target.value)}
+            placeholder="Your X handle"
             required
             disabled={isSubmitting}
           />
         </FormGroup>      
 
         <FormGroup theme={theme}>
-          <label htmlFor="location">Location</label>
+          <label htmlFor="telegram">Telegram</label>
           <Input
             type="text"
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="e.g. US New York, London UK"
+            id="telegram"
+            value={telegram}
+            onChange={(e) => setTelegram(e.target.value)}
+            placeholder="Your Telegram handle"
             required
             disabled={isSubmitting}
           />
         </FormGroup>
         <FormGroup theme={theme}>
-          <label htmlFor="language">Language</label>
+          <label htmlFor="youtube">YouTube</label>
           <Input
             type="text"
-            id="language"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            placeholder="e.g. English, French"
+            id="youtube"
+            value={youtube}
+            onChange={(e) => setYoutube(e.target.value)}
+            placeholder="Your YouTube channel link"
+            required
+            disabled={isSubmitting}
+          />
+        </FormGroup>
+        <FormGroup theme={theme}>
+          <label htmlFor="instagram">Instagram</label>
+          <Input
+            type="text"
+            id="instagram"
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            placeholder="Your Instagram handle"
             required
             disabled={isSubmitting}
           />
         </FormGroup>
 
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? <LoadingSpinner size="small" /> : 'Update Profile'}
+          {isSubmitting ? <LoadingSpinner size="small" /> : 'Update Socials'}
         </Button>
 
         {statusMessage && (

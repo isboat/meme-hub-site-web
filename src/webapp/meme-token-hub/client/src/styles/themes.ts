@@ -17,7 +17,9 @@ export const darkTheme = {
     },
     button: {
       size : {
-        medium: '200px'
+        medium: '200px',
+        small: '100px',
+        large: '300px'
       }
     },
     spacing: {

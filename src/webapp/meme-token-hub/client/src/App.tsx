@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { usePrivy } from '@privy-io/react-auth';
-import AuthPage from './pages/AuthOld';
 import { Layout } from './components/layout/Layout';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
@@ -10,13 +9,14 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import UnclaimedTokensFeed from './pages/UnclaimedTokensFeed';
 import CreateProfile from './pages/CreateProfile';
-import UserProfile from './pages/userprofile';
 import KolProfiles from './pages/Kols';
 import TokensFeed from './pages/Tokens';
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
 import UpdateProfile from './pages/UpdateProfile';
 import UpdateProfileSocials from './pages/UpdateProfileSocials';
+import AuthPage from './pages/Auth';
+import UserProfile from './pages/UserProfile';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();

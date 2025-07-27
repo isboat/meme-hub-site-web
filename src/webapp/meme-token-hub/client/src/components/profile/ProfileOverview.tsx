@@ -20,44 +20,12 @@ const DetailItem = styled.p`
   }
 `;
 
-const ProfileImage = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
-  border: 3px solid ${({ theme }) => theme.colors.primary};
-`;
-const ProfileImageDiv = styled.div`
-  display: flex;
-`;
-
-const Username = styled.h1`
-  font-size: 2.5em;
-  margin-bottom: ${({ theme }) => theme.spacing.small};
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Bio = styled.p`
-  font-size: 1em;
-  color: ${({ theme }) => theme.colors.placeholder};
-  max-width: 600px;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
-`;
-
-
 const ProfileOverview: React.FC<ProfileProps> = ({ user }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>   
-      <h2>About {user.profileName || '#Username' }</h2> 
-      <ProfileImageDiv>
-        <ProfileImage src={user.profileImage  || '/default-avatar.JPG'} alt={`${user.username}'s profile`} theme={theme} />
-      </ProfileImageDiv>
-      <Bio theme={theme}>{user.description || 'No bio available.'}</Bio>
-      <Username theme={theme}>{user.profileName}</Username>
       <DetailItem theme={theme}>
-        <span>Category:</span> {user.username}
+        <span>Category:</span> {user.username || 'Unknown'}
       </DetailItem>
       <DetailItem theme={theme}>
         <span>Location:</span> {user.location || 'Private'}
@@ -66,7 +34,7 @@ const ProfileOverview: React.FC<ProfileProps> = ({ user }) => {
         <span>Total Mentions:</span> {user.totalMentions || 'Not provided'}
       </DetailItem>
       <DetailItem theme={theme}>
-        <span>Active since:</span> {user.createdAt}
+        <span>Active since:</span> {user.createdAt ? new Date(user.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
       </DetailItem>
       <DetailItem theme={theme}>
         <span>Language:</span> {user.language || 'Not provided'}

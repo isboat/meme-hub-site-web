@@ -73,7 +73,6 @@ const StatItem = styled.div`
 
 const TabsContainer = styled.div`
   display: flex;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   margin-bottom: ${({ theme }) => theme.spacing.large};
 `;
 
@@ -84,6 +83,8 @@ const TabButton = styled(Button)<{ active: boolean }>`
     ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
   color: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.text)};
   font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
+  border-radius: 0px;
+  background-color: ${({ theme }) => theme.colors.background} !important;
   transition: all 0.2s ease-in-out;
   &:hover {
     color: ${({ theme }) => theme.colors.primary};

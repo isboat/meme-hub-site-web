@@ -66,9 +66,6 @@ const Navbar: React.FC = () => {
         </NavLink>
         {authenticated ? (
           <>
-            {/* <NavLink to="/dashboard" theme={theme}>
-              Dashboard
-            </NavLink> */}
             <NavLink to={`/profile/${user?.id}`} theme={theme}>
               My Profile
             </NavLink>

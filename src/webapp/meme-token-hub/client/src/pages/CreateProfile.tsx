@@ -193,7 +193,7 @@ const CreateProfile: React.FC = () => {
         setMessage('🎉 Profile submitted successfully! Redirecting...');
         // Optionally store profile data in local storage or context if needed
         // localStorage.setItem('userProfile', JSON.stringify(response.data.profile));
-        setTimeout(() => navigate('/dashboard'), 1500); // Redirect to dashboard
+        setTimeout(() => navigate('/'), 1500); // Redirect to home
       } else {
         setMessage(`Error: ${response.data.message || 'Something went wrong.'}`);
       }
