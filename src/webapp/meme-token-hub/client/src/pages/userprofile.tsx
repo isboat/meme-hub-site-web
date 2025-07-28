@@ -10,7 +10,7 @@ import api from '../api/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ProfileOverview from '../components/profile/ProfileOverview';
 import ProfileFollows from '../components/profile/ProfileFollows';
-import ProfileLinks from '../components/profile/ProfileLinks';
+import ProfileHubSocials from '../components/profile/ProfileHubSocials';
 
 
 const ProfileContainer = styled.div`
@@ -201,7 +201,7 @@ const UserProfilePage: React.FC = () => {
           <ProfileFollows userId={profileUser.id} isCurrentUser={isCurrentUserProfile} />
         )}
         {activeTab === 'links' && (
-          <ProfileLinks user={profileUser} isCurrentUser={isCurrentUserProfile} />
+          <ProfileHubSocials user={profileUser} isCurrentUser={isCurrentUserProfile} header="Social Links" />
         )}
       </div>
     </ProfileContainer>

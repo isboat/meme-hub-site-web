@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
 
-    "azlogin": "az login",
+    "azlogin": " az login --tenant {REMOVETHIS}dd70279e-8291-4dd5-8168-7859a162f979{REMOVETHIS}",
     "swalogin": "swa login",
-    "deploy": "swa --verbose=silly deploy --env production --deployment-token <DEPLOYMENT-TOKEN> ./dist"
+    "deploy": "swa --verbose=silly deploy --env production --deployment-token <DEPLOYMENT-TOKEN>7b23dae1d0fc739c573ddd<DEPLOYMENT-TOKEN>efd7849530fc2e5c66ebcbd3e56a5f43e428944ccb02-37eeb4a4-6d09-41e3-b82a-20e04b53be01003180204563c903<DEPLOYMENT-TOKEN> ./dist"
   },
   "dependencies": {
     "@privy-io/react-auth": "^2.17.3",

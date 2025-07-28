@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import { User, UserProfile } from '../../types';
+import { UserProfile } from '../../types';
 import { useApi } from '../../hooks/useApi';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../common/LoadingSpinner';
