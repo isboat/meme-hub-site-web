@@ -4,7 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface AnchorButtonProps extends React.ButtonHTMLAttributes<HTMLAnchorElement> {
   // 'primary' is the default, 'secondary' could be for less prominent actions
-  variant?: 'primary' | 'secondary' | 'youtube' | 'x' | 'telegram' | 'instagram';
+  variant?: 'primary' | 'secondary' | 'youtube' | 'x' | 'telegram' | 'instagram' | 'twitch';
 
   // Size of the button, can be used for styling
   size?: 'small' | 'medium' | 'large';
@@ -49,7 +49,7 @@ const StyledAnchorButton = styled.a<AnchorButtonProps>`
 
   /* Variant-specific styles */
   background-color: ${({ theme, variant }) =>
-    variant === 'telegram'
+    variant === 'telegram' || variant === 'twitch'
       ? '#086492ff'
       : variant === 'x'
       ? '#000'
@@ -59,7 +59,7 @@ const StyledAnchorButton = styled.a<AnchorButtonProps>`
       ? theme.colors.cardBackground
       : theme.colors.primary};
   color: ${({ theme, variant }) =>
-    variant === 'x' || variant === 'youtube' || variant === 'telegram'
+    variant === 'x' || variant === 'youtube' || variant === 'telegram' || variant === 'twitch'
       ? '#fff'
       : variant === 'secondary'
       ? theme.colors.primary

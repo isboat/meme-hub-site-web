@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import { User } from '../../types';
+import { User, UserProfile } from '../../types';
 import { useApi } from '../../hooks/useApi';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -62,6 +62,9 @@ const UserAvatar = styled.img`
 const UsernameLink = styled(Link)`
   color: ${({ theme }) => theme.colors.text};
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.medium};
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
   }
@@ -72,12 +75,12 @@ interface ProfileFollowsProps {
   isCurrentUser: boolean;
 }
 
-const ProfileFollows: React.FC<ProfileFollowsProps> = ({ userId }) => {
+const ProfileFollows: React.FC<ProfileFollowsProps> = ({ userId, isCurrentUser }) => {
   const theme = useTheme();
   const [activeSubTab, setActiveSubTab] = useState<'followers' | 'following'>('followers');
 
-  const { data: followers, loading: followersLoading, error: followersError } = useApi<User[]>(`/users/${userId}/followers`);
-  const { data: following, loading: followingLoading, error: followingError } = useApi<User[]>(`/users/${userId}/following`);
+  const { data: followers, loading: followersLoading, error: followersError } = useApi<UserProfile[]>(`/profile/${userId}/followers`);
+  const { data: following, loading: followingLoading, error: followingError } = useApi<UserProfile[]>(`/profile/${userId}/following`);
 
   const displayUsers = activeSubTab === 'followers' ? followers : following;
   const loading = activeSubTab === 'followers' ? followersLoading : followingLoading;
@@ -108,10 +111,10 @@ const ProfileFollows: React.FC<ProfileFollowsProps> = ({ userId }) => {
       {displayUsers && displayUsers.length > 0 ? (
         <UserList theme={theme}>
           {displayUsers.map((user) => (
-            <UserListItem key={user._id} theme={theme}>
-              <UserAvatar src={user.profileImage || '/default-avatar.png'} alt={user.username} theme={theme} />
-              <UsernameLink to={`/profile/${user._id}`} theme={theme}>
-                {user.username}
+            <UserListItem key={user.id} theme={theme}>
+              <UsernameLink to={isCurrentUser ? `/profile/${user.id}` : `/user-profile/${user.id}`} theme={theme}>
+              <UserAvatar src={user.profileImage || '/default-avatar.JPG'} alt={user.username} theme={theme} />
+                {user.profileName}
               </UsernameLink>
             </UserListItem>
           ))}

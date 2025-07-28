@@ -55,6 +55,7 @@ export interface User {
   export interface ProfileProps {
     user: UserProfile;
     isCurrentUser: boolean;
+    header?: string; // Optional header for the component
   }
   
   export interface Post {

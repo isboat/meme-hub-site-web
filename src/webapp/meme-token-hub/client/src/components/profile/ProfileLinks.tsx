@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { UserProfile } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 import { FaFacebook, FaTwitter } from 'react-icons/fa'; // Example icons
+import ProfileHubSocials from './ProfileHubSocials';
 
 const LinksCard = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBackground};
@@ -40,38 +41,10 @@ interface ProfileLinksProps {
   isCurrentUser: boolean; // Not strictly used here, but useful for edit mode
 }
 
-const ProfileLinks: React.FC<ProfileLinksProps> = ({ user }) => {
+const ProfileLinks: React.FC<ProfileLinksProps> = ({ user, isCurrentUser }) => {
   const theme = useTheme();
-
-  const hasLinks = user.socialLinks && (user.socialLinks.facebook || user.socialLinks.twitter);
-
   return (
-    <LinksCard theme={theme}>
-      <h3 style={{ marginBottom: theme.spacing.medium, color: theme.colors.secondary }}>External Links</h3>
-      {hasLinks ? (
-        <>
-          {user.socialLinks?.facebook && (
-            <LinkItem theme={theme}>
-              <FaFacebook />
-              <a href={user.socialLinks.facebook} target="_blank" rel="noopener noreferrer">
-                Facebook
-              </a>
-            </LinkItem>
-          )}
-          {user.socialLinks?.twitter && (
-            <LinkItem theme={theme}>
-              <FaTwitter />
-              <a href={user.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                Twitter
-              </a>
-            </LinkItem>
-          )}
-          {/* Add more links as needed */}
-        </>
-      ) : (
-        <p>No social media links provided.</p>
-      )}
-    </LinksCard>
+    <ProfileHubSocials user={user} isCurrentUser={isCurrentUser} header="Social Links" />
   );
 };
 
