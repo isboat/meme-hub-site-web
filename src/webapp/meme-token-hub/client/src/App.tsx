@@ -17,6 +17,7 @@ import UpdateProfile from './pages/UpdateProfile';
 import UpdateProfileSocials from './pages/UpdateProfileSocials';
 import AuthPage from './pages/Auth';
 import UserProfile from './pages/UserProfile';
+import TokenProfile from './pages/TokenProfile';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -50,7 +51,7 @@ const App: React.FC = () => {
       <Route path="/tokens" element={<Layout><TokensFeed /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/unclaimed-tokens" element={<Layout><UnclaimedTokensFeed /></Layout>} /> {/* <--- ADD NEW ROUTE */}
-      <Route path="/token/:tokenAddr" element={<Layout><div>Token Details Page (Coming Soon) for {":tokenAddr"}</div></Layout>} />
+      <Route path="/token/:tokenAddr" element={<Layout><TokenProfile /></Layout>} />
       {/* Route for submitting socials - adjust as per your backend route */}
       <Route path="/submit-socials" element={<Layout><div>Submit Socials Page (Coming Soon)</div></Layout>} />
       

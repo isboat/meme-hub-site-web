@@ -52,6 +52,11 @@ export interface User {
     };
   }
   
+  export interface TokenProfileProps {
+    user: UserProfile;
+    isCurrentUser: boolean;
+  }
+
   export interface ProfileProps {
     user: UserProfile;
     isCurrentUser: boolean;
