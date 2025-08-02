@@ -37,12 +37,12 @@ const SocialCircleLinksAnchor = styled.a`
   }
 `;
 
-const TokenProfileLinks: React.FC<TokenProfileProps> = ({ user }) => {
+const TokenProfileLinks: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}> 
     <h3 style={{ color: theme.colors.primary }}>Connect With America Party</h3>
-    <p>Official Social Channels {user.profileName}</p>
+    <p>Official Social Channels {tokenProfile?.profileName}</p>
     <SocialCircleLinks>
       <SocialCircleLinksAnchor href="https://twitter.com/americapartytoken" target="_blank" title="Twitter">𝕏</SocialCircleLinksAnchor>
       <SocialCircleLinksAnchor href="https://t.me/americapartyportal" target="_blank" title="Telegram">💬</SocialCircleLinksAnchor>

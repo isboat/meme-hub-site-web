@@ -1,11 +1,13 @@
 // client/src/pages/UnclaimedTokensFeed.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
-import { TrendingData } from '../types';
+import { NetworkData, NetworkTokenData } from '../types';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import axios from 'axios'; // For robust error handling
 import { useApi } from '../hooks/useApi';
+import api from '../api/api';
+import { useNavigate } from 'react-router';
 
 const PageContainer = styled.div`
   display: flex;
@@ -34,15 +36,44 @@ const ErrorMessage = styled.p`
 
 const TokensFeed: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
-  const { data: trendingData, loading, error } = useApi<TrendingData>('/memetoken/trending');
+  const { data: networkData, loading, error } = useApi<NetworkData[]>('/memetoken/networks');
+  
+  const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
+  let isLoadingNetworkTokens = false;
+
+  const loadNetworkTokens = async (event: React.MouseEvent<HTMLAnchorElement>): Promise<void> => {
+    event.preventDefault();
+    const networkName = event.currentTarget.textContent?.trim().toLowerCase();
+    if (!networkName) return;
+
+    const network = networkData?.find(chain => chain.name.toLowerCase() === networkName);
+    if (network) {
+      isLoadingNetworkTokens = true;
+      // load the tokens from api
+      const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.slug}/tokens`);
+      const tokensData = response.data;
+      if (tokensData) {
+        setNetworkTokenData(tokensData);
+      }
+      isLoadingNetworkTokens = false;
+    }
+  }
+
+  const navigateToTokenPage = (token: NetworkTokenData): void => {
+    if (!token || !token.id) return;
+    // Navigate to the token profile page
+    // pass the token object to the token profile page
+    navigate(`/token/${token.addresses[0].tokenAddress}`, { state: { token } });
+  };
 
   if (loading) {
     return (
       <PageContainer theme={theme}>
         <Header theme={theme}>Trending</Header>
         <LoadingSpinner />
-        <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading profiles...</p>
+        <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
       </PageContainer>
     );
   }
@@ -56,53 +87,40 @@ const TokensFeed: React.FC = () => {
     }
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Profiles</Header>
-        <ErrorMessage theme={theme}>Error loading profiles: {errorMessage}</ErrorMessage>
+        <Header theme={theme}>Tokens</Header>
+        <ErrorMessage theme={theme}>Error loading tokens: {errorMessage}</ErrorMessage>
       </PageContainer>
     );
   }
 
-  if (!trendingData) {
+  if (!networkData) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Profiles</Header>
-        <p>No profiles found. Start creating some!</p>
+        <Header theme={theme}>Tokens</Header>
+        <p>No tokens found!</p>
       </PageContainer>
     );
   }
 
   return (
     <PageContainer theme={theme}>
-      <Header theme={theme}>Trending</Header>
-      <div style={{ display: 'flex' }}>
-      {Object.entries(trendingData.data).filter(([chainName, tokens]) => (chainName != 'undefined' && tokens != null)).map(([chainName, tokens]) => (
-        <div key={chainName} style={{ marginRight: '1rem', display:'block' }}>
-        <h2><img src={tokens[0].chain_logo} width={24} /> {chainName.toLocaleUpperCase()}</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', border: '1px solid #ddd', borderRadius: '8px', }}>
-          {tokens.map((token, index) => (
-            <div
-              key={index}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                paddingLeft: '0.5rem',
-                paddingTop: '0.5rem',
-                gap: '1rem',
-                fontSize: '12px',
-                marginBottom: '-15px'
-              }}
-            >
-                <img src={token.logo} alt={token.name} width={30} />
-                <div>
-                  <div><strong>{token.name}</strong></div> 
-                  <div>({token.symbol})</div>
-                </div>
-                <div>{token.h24}%</div>
-            </div>
-          ))}
-        </div>
+      <Header theme={theme}>Trending Network Tokens</Header>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+        {networkData.filter(chain => chain.name != 'undefined').map((chain) => (
+          <div key={chain.slug} style={{ display:'block' }}>
+          <a onClick={loadNetworkTokens}><img src={chain.logoUrl} width={24} /> {chain.name.toLocaleUpperCase()}</a>
       </div>
       ))}
+      </div>
+      <div>
+        {isLoadingNetworkTokens && <LoadingSpinner />}
+        {!isLoadingNetworkTokens && networkTokenData.length === 0 && <p>No tokens found for the selected network.</p>}
+        {networkTokenData.map(token => (
+          <div key={token.id} onClick={() =>navigateToTokenPage(token)} style={{ cursor: 'pointer', margin: '10px', padding: '10px', border: '1px solid #ddd', borderRadius: '8px' }}>
+            <h3>{token.name}</h3>
+            <p>Price: ${token.price}</p>
+          </div>
+        ))}
       </div>
     </PageContainer>
   );

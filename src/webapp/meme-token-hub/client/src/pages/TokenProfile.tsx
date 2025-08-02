@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
-import { UserProfile } from '../types';
+import { NetworkTokenData, TokenProfile } from '../types';
 import { useApi } from '../hooks/useApi';
 import Button from '../components/common/Button';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -74,14 +74,27 @@ const EditProfileButton = styled(Button)`
   }
 `;
 
-const TokenProfile: React.FC = () => {
+const TokenProfilePage: React.FC = () => {
   const { tokenAddr } = useParams<{ tokenAddr: string }>();
   const theme = useTheme();
   const navigate = useNavigate();
+  
+  const location = useLocation();
+  const tokenData = (location.state as { token?: NetworkTokenData })?.token;
+
+  if (!tokenData) {
+    console.error('Token data is not available in location state');
+    return (
+      <ProfileContainer theme={theme}>
+        <p style={{ color: theme.colors.text }}>Token data is unavailable.</p>
+      </ProfileContainer>
+    );
+  }
+
   const { authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState<'token' | 'community' | 'hubFollow' | 'kolFollows' | 'links' | 'token-chart'>('token');
 
-  const { data: profileUser, loading, error } = useApi<UserProfile>(`/token/${tokenAddr}`);
+  const { data: profileUser, loading, error } = useApi<TokenProfile>(`/token/${tokenAddr}`);
 
   if (loading) {
     return (
@@ -106,24 +119,15 @@ const TokenProfile: React.FC = () => {
     );
   }
 
-  // If profileUser is null/undefined after loading and no specific error, it means profile not found
-  if (!profileUser) {
-    return (
-      <ProfileContainer theme={theme}>
-        <p style={{ color: theme.colors.text }}>Token data is unavailable.</p>
-      </ProfileContainer>
-    );
-  }
-
   return (
     <ProfileContainer theme={theme}>
       <ProfileHeader theme={theme}>
-        <Username theme={theme}>{profileUser.profileName || '#Profilename'}</Username>
-        <Verification theme={theme}>{profileUser.description || '✔️ Verified by MemeTokenHub.'}</Verification>
+        <Username theme={theme}>{profileUser?.profileName || tokenData?.name || '#Profilename'}</Username>
+        <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
-        {profileUser && authenticated && (
+        {!profileUser && authenticated && (
           <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
-            Edit Profile
+            Claim Profile
           </EditProfileButton>
         )}
       </ProfileHeader>
@@ -151,26 +155,26 @@ const TokenProfile: React.FC = () => {
 
       <div>
         {activeTab === 'token' && (
-          <TokenProfileOverview user={profileUser} isCurrentUser={true} />
+          <TokenProfileOverview tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'community' && (
-          <TokenProfileCommunity user={profileUser} isCurrentUser={true} />
+          <TokenProfileCommunity tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'hubFollow' && (
-          <TokenProfileHubFollow user={profileUser} isCurrentUser={true} />
+          <TokenProfileHubFollow tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'kolFollows' && (
-          <TokenProfileKolFollows user={profileUser} isCurrentUser={true} />
+          <TokenProfileKolFollows tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'links' && (
-          <TokenProfileLinks user={profileUser} isCurrentUser={true} />
+          <TokenProfileLinks tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'token-chart' && (
-          <TokenProfileCommunity user={profileUser} isCurrentUser={true} />
+          <TokenProfileCommunity tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
       </div>
     </ProfileContainer>
   );
 };
 
-export default TokenProfile;
+export default TokenProfilePage;

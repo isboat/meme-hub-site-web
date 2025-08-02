@@ -10,7 +10,6 @@ const ProfileImage = styled.img`
   height: 200px;
   object-fit: cover;
   margin-bottom: ${({ theme }) => theme.spacing.medium};
-  border: 3px solid ${({ theme }) => theme.colors.primary};
 `;
 
 const Row = styled.div`
@@ -41,22 +40,22 @@ const DetailItem = styled.p`
   }
 `;
 
-const TokenProfileOverview: React.FC<TokenProfileProps> = ({ user }) => {
+const TokenProfileOverview: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
   const theme = useTheme();
   return (
     <>
       <Row>
         <Column theme={theme}>
             <ProfileImage
-              src={user.profileImage || '/default-avatar.JPG'}
-              alt={`${user.profileName}'s profile`}
+              src={tokenProfile?.profileImage || '/token-avatar.jpg'}
+              alt={`${tokenProfile?.profileName}'s profile`}
               theme={theme}
             />
         </Column>
         <Column theme={theme}>
           <OverviewCard theme={theme}>
             <DetailItem theme={theme}>
-              <p>{user.description || 'Description Not provided'}</p>
+              {tokenProfile?.description || 'Description Not provided'}
             </DetailItem>
             {/* Add more profile details as needed */}
           </OverviewCard>
@@ -65,24 +64,24 @@ const TokenProfileOverview: React.FC<TokenProfileProps> = ({ user }) => {
       <Row>
         <Column theme={theme}>
             <DetailItem theme={theme}>
-              <span>Price (USD): </span> {user.username || '$0.01116'}
+              <span>Price (USD): </span> {tokenData?.price || '$0.01116'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Location:</span> {user.location || 'Private'}
+              <span>Location:</span> {tokenProfile?.location || 'Private'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Total Mentions:</span> {user.totalMentions || 'Not provided'}
+              <span>Total Mentions:</span> {tokenProfile?.totalMentions || 'Not provided'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Active since:</span> {user.createdAt ? new Date(user.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
+              <span>Active since:</span> {tokenProfile?.createdAt ? new Date(tokenProfile.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Language:</span> {user.language || 'Not provided'}
+              <span>Language:</span> {tokenProfile?.language || 'Not provided'}
             </DetailItem>
         </Column>
         <Column theme={theme}>
             <h3>📢 Team Message</h3>
-            <p>{user.description || '"We’re here to bring wholesome chaos to the meme world. Expect NFTs, games, and weekly community burns."'}</p>
+            <p>{tokenProfile?.description || '"We’re here to bring wholesome chaos to the meme world. Expect NFTs, games, and weekly community burns."'}</p>
         </Column>
       </Row>
     </>
