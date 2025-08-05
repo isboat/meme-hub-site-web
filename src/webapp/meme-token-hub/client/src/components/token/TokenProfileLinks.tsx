@@ -40,19 +40,27 @@ const SocialCircleLinksAnchor = styled.a`
 const TokenProfileLinks: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
   const theme = useTheme();
   return (
-    <OverviewCard theme={theme}> 
-    <h3 style={{ color: theme.colors.primary }}>Connect With America Party</h3>
-    <p>Official Social Channels {tokenProfile?.profileName}</p>
-    <SocialCircleLinks>
-      <SocialCircleLinksAnchor href="https://twitter.com/americapartytoken" target="_blank" title="Twitter">𝕏</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://t.me/americapartyportal" target="_blank" title="Telegram">💬</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://americaparty.io" target="_blank" title="Website">🌐</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://dexscreener.com/solana/AMERICAPT" target="_blank" title="Dexscreener">📊</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://www.dextools.io/app/en/solana/pair-explorer/AMERICAPT" target="_blank" title="DEXTools">📈</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://gmgn.ai/token/AMERICAPT" target="_blank" title="GMGN">🧬</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://pumpswap.xyz/swap/AMERICAPT" target="_blank" title="PumpSwap">🚀</SocialCircleLinksAnchor>
-      <SocialCircleLinksAnchor href="https://bullx.xyz/token/AMERICAPT" target="_blank" title="BullX">🐂</SocialCircleLinksAnchor>
-    </SocialCircleLinks>
+    <OverviewCard theme={theme}>
+      <h3 style={{ color: theme.colors.primary }}>Connect With {tokenProfile?.profileName || tokenData?.name || '#Profilename'}</h3>
+      <p>Official Social Channels</p>
+      <SocialCircleLinks>
+        {tokenData?.links?.map((link) => (
+            <React.Fragment key={link.url}>
+              {(() => {
+                switch (link.type.title.toLowerCase()) {
+                  case 'twitter':
+                    return <SocialCircleLinksAnchor key={link.url} href={link.url} target="_blank">𝕏</SocialCircleLinksAnchor>;
+                  case 'english_telegram':
+                    return <SocialCircleLinksAnchor key={link.url} href={link.url} target="_blank">💬</SocialCircleLinksAnchor>;
+                case 'website':
+                  return <SocialCircleLinksAnchor key={link.url} href={link.url} target="_blank">🌐</SocialCircleLinksAnchor>;
+                default:
+                  return <SocialCircleLinksAnchor key={link.url} href={link.url} target="_blank">{link.type.title.charAt(0).toUpperCase()}</SocialCircleLinksAnchor>;
+              }
+            })()}
+        </React.Fragment>
+        ))}
+      </SocialCircleLinks>
     </OverviewCard>
   );
 };

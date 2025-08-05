@@ -13,7 +13,7 @@ import ProfileHubSpot from '../components/profile/ProfileHubSpot';
 import ProfileHubSocials from '../components/profile/ProfileHubSocials';
 
 const ProfileContainer = styled.div`
-  max-width: 800px;
+  max-width: 70%;
   margin: ${({ theme }) => theme.spacing.large} auto;
   padding: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.background};

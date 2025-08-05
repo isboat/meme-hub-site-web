@@ -13,9 +13,10 @@ import TokenProfileCommunity from '../components/token/TokenProfileCommunity';
 import TokenProfileHubFollow from '../components/token/TokenProfileHubFollow';
 import TokenProfileKolFollows from '../components/token/TokenProfileKolFollows';
 import TokenProfileLinks from '../components/token/TokenProfileLinks';
+import TokenProfileChart from '../components/token/TokenProfileChart';
 
 const ProfileContainer = styled.div`
-  max-width: 800px;
+  max-width: 70%;
   margin: ${({ theme }) => theme.spacing.large} auto;
   padding: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.background};
@@ -170,7 +171,7 @@ const TokenProfilePage: React.FC = () => {
           <TokenProfileLinks tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'token-chart' && (
-          <TokenProfileCommunity tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileChart tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
         )}
       </div>
     </ProfileContainer>

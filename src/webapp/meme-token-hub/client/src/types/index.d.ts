@@ -163,6 +163,7 @@ export interface NetworkTokenData {
   id: string;
   name: string;
   addresses: TokenAddressDto[];
+  links: TokenLinkDto[];
   slug: string;
   symbol: string;
   createdAt: Date;
@@ -182,6 +183,22 @@ export interface NetworkTokenData {
   createdBy: string;
 }
 
+export interface TokenLinkDto {
+  id: string;
+  type: TokenLinkType; // e.g., 'website', 'twitter', etc.
+  url: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TokenLinkType {
+  id: string;
+  title: string; // e.g., 'website', 'twitter', etc.
+  position: number; // Position in the list
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface TokenAddressDto {
   id: string;
   token: string;
@@ -199,6 +216,20 @@ export interface TokenAddressDto {
   launchpad?: string; // Optional, as it can be null
   createdAt: Date;
   updatedAt: Date;
+  chain: {
+    id: string;
+    chainId: string;
+    name: string;
+    abbr: string;
+    slug: string;
+    currencySymbol: string;
+    explorerUrl: string;
+    dextoolsIdentifier: string;
+    geckoterminalIdentifier: string;
+    payCurrency: string;
+    emoji: string;
+    logoUrl: string;
+  };
 }
 
 // Main data shape where keys like "eth", "bsc", "sol", etc. map to arrays of TokenInfo

@@ -47,8 +47,8 @@ const TokenProfileOverview: React.FC<TokenProfileProps> = ({ tokenProfile, token
       <Row>
         <Column theme={theme}>
             <ProfileImage
-              src={tokenProfile?.profileImage || '/token-avatar.jpg'}
-              alt={`${tokenProfile?.profileName}'s profile`}
+              src={tokenProfile?.profileImage || tokenData?.logoUrl || '/token-avatar.jpg'}
+              alt={`${tokenProfile?.profileName || tokenData?.name}'s profile`}
               theme={theme}
             />
         </Column>
