@@ -1,10 +1,11 @@
 // client/src/styles/themes.ts
 export const darkTheme = {
     colors: {
-      background: '#1a202c',
+      background: '#041438ff',
       cardBackground: '#2d3748',
       navBarBackground: '#1a202e',
       text: '#e2e8f0',
+      dimmedWhite: '#a2a4a5ff',
       primary: '#3b82f6',
       white: '#ffffff',
       ticker: '#fbbf24',
@@ -30,6 +31,7 @@ export const darkTheme = {
       extraLarge: '48px',
     },
     borderRadius: '8px',
+
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
     breakpoints: {
       small: '576px', // Example: for phones

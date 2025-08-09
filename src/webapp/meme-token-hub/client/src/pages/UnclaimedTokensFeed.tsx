@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import api from '../api/api'; // Import your Axios instance
-import { UnclaimedToken } from '../types';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Input from '../components/common/Input'; // Re-use common Input component
 import { Link } from 'react-router-dom'; // For navigation to details/socials pages
+import { UnclaimedToken } from '../types/token-components';
 
 const PageContainer = styled.div`
   display: flex;

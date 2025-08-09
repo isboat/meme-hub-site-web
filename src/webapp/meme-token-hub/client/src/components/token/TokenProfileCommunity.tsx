@@ -28,7 +28,7 @@ const TokenProfileCommunity: React.FC<TokenProfileProps> = ({ tokenProfile, toke
         <span>Category:</span> {'Unknown'}
       </DetailItem>
       <DetailItem theme={theme}>
-        <span>Location:</span> {tokenProfile?.location || 'Private'}
+        <span>Location:</span> {tokenProfile?.location || tokenData?.id || 'Private'}
       </DetailItem>
       <DetailItem theme={theme}>
         <span>Total Mentions:</span> {tokenProfile?.totalMentions || 'Not provided'}

@@ -88,6 +88,10 @@ const Home: React.FC = () => {
     navigate('/kol-profiles')
   }
 
+  const handleCreatedTokens = () => {
+    navigate('/created-tokens')
+  }
+
   return (
     <HomeContainer theme={theme}>
       <TopContent theme={theme}>
@@ -111,6 +115,15 @@ const Home: React.FC = () => {
           </Button>
           <Button onClick={handleTrending} style={{ backgroundColor: theme.colors.success }}>
             Trending
+          </Button>
+        </ContentCard>
+        <ContentCard theme={theme}>
+          <CardTitle theme={theme}>⚡ Created Tokens</CardTitle>
+          <CardDescription theme={theme}>
+            See newly created tokens appearing in real time.
+          </CardDescription>
+          <Button onClick={handleCreatedTokens} style={{ backgroundColor: theme.colors.primary, marginRight: '10px' }}>
+            Created Tokens
           </Button>
         </ContentCard>
         <ContentCard theme={theme}>

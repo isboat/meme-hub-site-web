@@ -7,7 +7,6 @@ export interface TokenProfileProps {
   tokenData?: NetworkTokenData | null; // Optional token data for specific token profiles
 }
 
-
 export interface TokenProfile {
   id: string;
   privyId: string;
@@ -117,22 +116,6 @@ export interface TickerItem {
   text: string;
   link?: string; // Optional link for the ticker item
 }
-
-export interface RawTokenData {
-  mint: string;
-  initialBuy: number; // Assuming number, adjust if string
-  marketCapSol: number; // Assuming number, adjust if string
-  // Add other rawData properties if they exist and are used
-}
-
-export interface UnclaimedToken {
-  name: string;
-  image: string; // URL to the image
-  rawData: RawTokenData;
-  // Add other properties if your backend sends them
-}
-
-
 
 // Root object
 export interface TrendingData {

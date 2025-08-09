@@ -17,7 +17,7 @@ const TokenProfileKolFollows: React.FC<TokenProfileProps> = ({ tokenProfile, tok
   return (
     <OverviewCard theme={theme}> 
     <h3>🤝 KOL Mentions</h3>
-    <p>@memealpha – "Watching this one closely" {tokenProfile?.profileName}</p>
+    <p>@memealpha – "Watching this one closely" {tokenData?.name} {tokenProfile?.profileName}</p>
     <p>@solshiller – Featured $AMERICAPT in latest Space</p>
     </OverviewCard>
   );

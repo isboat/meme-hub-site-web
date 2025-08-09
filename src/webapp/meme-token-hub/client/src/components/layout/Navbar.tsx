@@ -7,7 +7,7 @@ import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 
 const Nav = styled.nav`
-  background-color: ${({ theme }) => theme.colors.navBarBackground};
+  background-color: ${({ theme }) => theme.colors.background};
   padding: ${({ theme }) => theme.spacing.medium};
   display: flex;
   justify-content: space-between;
