@@ -17,6 +17,12 @@ const MainContent = styled.main`
   padding: ${({ theme }) => theme.spacing.medium};
 `;
 
+const SiteLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+`;
+
 interface LayoutProps {
   children: ReactNode;
 }
@@ -25,11 +31,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const theme = useTheme();
   return (
     <AppWrapper theme={theme}>
-      <Navbar />
-      <WebsiteTicker /> {/* <--- ADD THE TICKER HERE */}
-      <MainContent theme={theme}>
-        {children}
-      </MainContent>
+      <WebsiteTicker />
+      <SiteLayout>
+        <Navbar />
+        <MainContent theme={theme}>
+          {children}
+        </MainContent>
+      </SiteLayout>
     </AppWrapper>
   );
 };

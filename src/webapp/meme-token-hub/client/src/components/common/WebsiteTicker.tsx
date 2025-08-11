@@ -19,7 +19,6 @@ const TickerWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBackground};
   color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.spacing.small} 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   white-space: nowrap; /* Prevent text from wrapping */
   box-shadow: ${({ theme }) => theme.boxShadow};
 `;

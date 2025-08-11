@@ -31,7 +31,7 @@ const StyledButton = styled.button<ButtonProps>`
 
   /* Variant-specific styles */
   background-color: ${({ theme, variant }) =>
-    variant === 'secondary' ? theme.colors.cardBackground : theme.colors.primary};
+    variant === 'secondary' ? theme.colors.cardBackground : theme.colors.capsuleButton};
   color: ${({ theme }) => theme.colors.white};
 
   /* Hover effect */

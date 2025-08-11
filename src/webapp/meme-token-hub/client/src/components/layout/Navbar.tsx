@@ -7,10 +7,8 @@ import { useTheme } from '../../context/ThemeContext';
 import Button from '../common/Button';
 
 const Nav = styled.nav`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.navBarBackground};
   padding: ${({ theme }) => theme.spacing.medium};
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   box-shadow: ${({ theme }) => theme.boxShadow};
 `;
@@ -23,15 +21,14 @@ const Logo = styled(Link)`
 `;
 
 const NavLinks = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.large};
-  align-items: center;
 `;
 
 const NavLink = styled(Link)`
   color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
+  display: block;
   font-weight: 500;
+  margin: ${({ theme }) => theme.spacing.medium} 0;
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
     text-decoration: none;
@@ -54,33 +51,38 @@ const Navbar: React.FC = () => {
 
   return (
     <Nav theme={theme}>
+      <div>
       <Logo to="/" theme={theme}>
-        MEMETOKENHUB
+        <img src="/logo.jpg" alt="Logo" style={{ maxHeight: '40px' }} />
       </Logo>
+      </div>
       <NavLinks theme={theme}>
+        <div>
+          <h2>Menu</h2>
+        </div>
         <NavLink to={`/faq`} theme={theme}>
-          FAQs
+          ❓ FAQs
         </NavLink>
         <NavLink to={`/about-us`} theme={theme}>
-          About US
+          ℹ️ About US
         </NavLink>
         {authenticated ? (
           <>
             <NavLink to={`/profile/${user?.id}`} theme={theme}>
-              My Profile
+              👤 My Profile
             </NavLink>
             <NavLink to="/settings" theme={theme}>
-              Settings
+              ⚙️ Settings
             </NavLink>
             <Button onClick={handleLogout}>Logout</Button>
           </>
         ) : (
           <>
             <NavLink to="/" theme={theme}>
-              Home
+              🏠 Home
             </NavLink>
             <NavLink to="/auth" theme={theme}>
-              Login / Sign Up
+              🔐 Login / Sign Up
             </NavLink>
           </>
         )}

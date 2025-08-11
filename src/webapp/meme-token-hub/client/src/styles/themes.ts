@@ -7,6 +7,7 @@ export const darkTheme = {
       text: '#e2e8f0',
       dimmedWhite: '#a2a4a5ff',
       primary: '#3b82f6',
+      capsuleButton: '#1e293b',
       white: '#ffffff',
       ticker: '#fbbf24',
       secondary: '#6366f1',

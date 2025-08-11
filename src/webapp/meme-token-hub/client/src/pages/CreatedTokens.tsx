@@ -65,18 +65,20 @@ const TokenDetails = styled.div`
 `;
 
 const SearchField = styled.div`
-width: 100%;
+  width: 100%;
   max-width: 640px;
   input {
     padding: 1rem 2.25rem;
     border-radius: 9999px;
     color: ${({ theme }) => theme.colors.text};
+    background: ${({ theme }) => theme.colors.capsuleButton};
 
     width: 100%;
     max-width: 640px;
     margin: 2rem auto;
     display: block;
     padding: 0.75rem 1rem;
+    height: 50px;
   }
 `;
 
@@ -146,7 +148,7 @@ const CreatedTokensFeed: React.FC = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginBottom: theme.spacing.large }}>
         {launchPlatforms.map((platform) => (
           <div key={platform.slug} style={{ display: 'block' }}>
-            <CapsuleButton className={platform.slug === selected ? 'selected' : ''} variant='secondary' onClick={(event) => { loadNetworkTokens(event) }}>
+            <CapsuleButton className={platform.slug === selected ? 'selected' : ''} onClick={(event) => { loadNetworkTokens(event) }}>
               {platform.name}
             </CapsuleButton>
           </div>
