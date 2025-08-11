@@ -27,9 +27,9 @@ const Header = styled.h1`
 `;
 
 const TokenCardsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.large};
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
   justify-content: center;
 `;
 
@@ -45,6 +45,8 @@ const TokenCard = styled.div`
         transform: scale(1.03);
       cursor: pointer;
       }
+      width: 200px;
+      max-width: 300px;
 `;
 const TokenImage = styled.div`
   img {
@@ -163,7 +165,7 @@ const CreatedTokensFeed: React.FC = () => {
               <img src={token.image} alt={token.name} />
             </TokenImage>
             <TokenName>💠 {token.name}</TokenName>
-            <TokenDetails>Market Cap: ${token.rawData.marketCapSol}</TokenDetails>
+            <TokenDetails>Market Cap: ${token.rawData.marketCapSol.toFixed(4)}</TokenDetails>
           </TokenCard>
         ))}
       </TokenCardsWrapper>

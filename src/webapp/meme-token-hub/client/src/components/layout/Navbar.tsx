@@ -11,6 +11,7 @@ const Nav = styled.nav`
   padding: ${({ theme }) => theme.spacing.medium};
   align-items: center;
   box-shadow: ${({ theme }) => theme.boxShadow};
+  min-width: 15%;
 `;
 
 const Logo = styled(Link)`
