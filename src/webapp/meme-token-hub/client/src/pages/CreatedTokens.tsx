@@ -25,7 +25,8 @@ const TokenCardsWrapper = styled.div`
 `;
 
 const TokenCard = styled.div`
-      background: #1e293b;
+      background: ${({ theme }) => theme.colors.navBarBackground};
+      border: 1px solid ${({ theme }) => theme.colors.border};
       padding: 1rem;
       border-radius: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -48,9 +49,7 @@ const TokenImage = styled.div`
   }
 `;
 const TokenName = styled.div`
-font-size: 1.25rem;
-        font-weight: bold;
-        margin-bottom: 0.25rem;
+  text-transform: capitalize;
 `;
 const TokenDetails = styled.div`
       font-size: 0.8rem;
@@ -64,7 +63,7 @@ const SearchField = styled.div`
     padding: 1rem 2.25rem;
     border-radius: 9999px;
     color: ${({ theme }) => theme.colors.text};
-    background: ${({ theme }) => theme.colors.capsuleButton};
+    background: ${({ theme }) => theme.colors.navBarBackground};
 
     width: 100%;
     max-width: 640px;
@@ -164,11 +163,13 @@ const CreatedTokensFeed: React.FC = () => {
       <TokenCardsWrapper theme={theme}>
         {isLoadingTokens && <LoadingSpinner />}
         {networkTokenData.map(token => (
-          <TokenCard key={token.id} onClick={() => navigateToTokenPage(token)}>
-            <TokenImage>
-              <img src={token.image} alt={token.name} />
-            </TokenImage>
-            <TokenName>💠 {token.name}</TokenName>
+          <TokenCard theme={theme} key={token.id} onClick={() => navigateToTokenPage(token)}>
+            <div style={{display: 'flex'}}>
+              {token.image && <TokenImage>
+                <img src={token.image} alt={token.name} />
+              </TokenImage>}
+              <TokenName>💠 {token.name}</TokenName>
+            </div>
             <TokenDetails>Market Cap: ${token.rawData.marketCapSol.toFixed(4)}</TokenDetails>
           </TokenCard>
         ))}

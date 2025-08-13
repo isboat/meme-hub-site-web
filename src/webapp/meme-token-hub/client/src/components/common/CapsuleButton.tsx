@@ -17,7 +17,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const StyledButton = styled.button<ButtonProps>`
   /* Base styles for all buttons */
   padding: 1rem 2.25rem;
-  border: none;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 9999px;
       font-family: inherit;
     font-size: 100%;
@@ -30,8 +30,7 @@ const StyledButton = styled.button<ButtonProps>`
   text-decoration: none;
 
   /* Variant-specific styles */
-  background-color: ${({ theme, variant }) =>
-    variant === 'secondary' ? theme.colors.cardBackground : theme.colors.capsuleButton};
+  background-color: ${({ theme }) => theme.colors.navBarBackground}
   color: ${({ theme }) => theme.colors.white};
 
   /* Hover effect */
