@@ -16,7 +16,7 @@ import TokenProfileLinks from '../components/token/TokenProfileLinks';
 import TokenProfileChart from '../components/token/TokenProfileChart';
 
 const ProfileContainer = styled.div`
-  max-width: 70%;
+  max-width: 80%;
   margin: ${({ theme }) => theme.spacing.large} auto;
   padding: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.background};
@@ -135,22 +135,22 @@ const TokenProfilePage: React.FC = () => {
 
       <TabsContainer theme={theme}>
         <TabButton onClick={() => setActiveTab('token')} active={activeTab === 'token'} theme={theme}>
-          Token
+          TOKEN
         </TabButton>
         <TabButton onClick={() => setActiveTab('community')} active={activeTab === 'community'} theme={theme}>
-        Community
+        COMMUNITY
         </TabButton>
         <TabButton onClick={() => setActiveTab('hubFollow')} active={activeTab === 'hubFollow'} theme={theme}>
-        HubFollow
+        HUB FOLLOW
         </TabButton>
         <TabButton onClick={() => setActiveTab('kolFollows')} active={activeTab === 'kolFollows'} theme={theme}>
-        KolFollows
+        KOL FOLLOWS
         </TabButton>
         <TabButton onClick={() => setActiveTab('links')} active={activeTab === 'links'} theme={theme}>
-        Links
+        LINKS
         </TabButton>
         <TabButton onClick={() => setActiveTab('token-chart')} active={activeTab === 'token-chart'} theme={theme}>
-        Token Chart
+        TOKEN CHART
         </TabButton>
       </TabsContainer>
 

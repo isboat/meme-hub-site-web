@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Navbar from './Navbar';
 import { useTheme } from '../../context/ThemeContext';
 import WebsiteTicker from '../common/WebsiteTicker';
+import SiteFooter from './Footer';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -38,6 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </MainContent>
       </SiteLayout>
+      <SiteFooter />
     </AppWrapper>
   );
 };
