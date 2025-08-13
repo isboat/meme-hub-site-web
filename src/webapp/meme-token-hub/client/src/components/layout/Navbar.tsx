@@ -61,6 +61,9 @@ const Navbar: React.FC = () => {
         <div>
           <h2>Menu</h2>
         </div>
+        <NavLink to="/" theme={theme}>
+          🏠 Home
+        </NavLink>
         <NavLink to={`/faq`} theme={theme}>
           ❓ FAQs
         </NavLink>
@@ -72,16 +75,13 @@ const Navbar: React.FC = () => {
             <NavLink to={`/profile/${user?.id}`} theme={theme}>
               👤 My Profile
             </NavLink>
-            <NavLink to="/settings" theme={theme}>
+            {/* <NavLink to="/settings" theme={theme}>
               ⚙️ Settings
-            </NavLink>
+            </NavLink> */}
             <Button onClick={handleLogout}>Logout</Button>
           </>
         ) : (
           <>
-            <NavLink to="/" theme={theme}>
-              🏠 Home
-            </NavLink>
             <NavLink to="/auth" theme={theme}>
               🔐 Login / Sign Up
             </NavLink>

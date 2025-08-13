@@ -26,15 +26,12 @@ const TopContent = styled.div`
 
 const MainTitle = styled.h1`
   font-size: 3em; /* Larger font size for main title */
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: ${({ theme }) => theme.spacing.medium};
 `;
 
 const MainParagraph = styled.p`
-  font-size: 1.2em;
-  line-height: 1.8;
   color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.large};
 `;
 
 const ContentCardsWrapper = styled.div`
@@ -59,7 +56,7 @@ const ContentCard = styled.div`
 `;
 
 const CardTitle = styled.h2` /* Changed to h2 for semantic hierarchy */
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: ${({ theme }) => theme.spacing.medium};
 `;
 

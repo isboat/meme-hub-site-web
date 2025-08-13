@@ -33,7 +33,7 @@ const StyledButton = styled.button<ButtonProps>`
   background-color: ${({ theme, variant }) =>
     variant === 'secondary' ? theme.colors.cardBackground : theme.colors.primary};
   color: ${({ theme, variant }) =>
-    variant === 'secondary' ? theme.colors.primary : theme.colors.cardBackground};
+    variant === 'secondary' ? theme.colors.primary : theme.colors.text};
   border: ${({ theme, variant }) =>
     variant === 'secondary' ? `1px solid ${theme.colors.primary}` : 'none'};
 

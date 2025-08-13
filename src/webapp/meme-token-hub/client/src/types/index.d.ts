@@ -124,22 +124,15 @@ export interface TrendingData {
 
 export interface NetworkData {
   id: string;
-  chainId: string;
+  chainIdentifier: string;
   name: string;
-  abbr: string;
-  slug: string;
-  currencySymbol: string;
-  explorerUrl: string;
-  dextoolsIdentifier: string;
-  geckoterminalIdentifier: string;
-  payCurrency: string;
-  emoji: string;
-  logoUrl: string;
-  priceUsd: number;
-  priceUpdatedAt: Date;
-  ranking: number;
-  createdAt: Date;
-  updatedAt: Date;
+  shortName: string;
+  nativeCoinId: string;
+  image: {
+      thumb: string;
+      small: string;
+      large: string;
+  };
 }
 
 export interface NetworkTokenData {

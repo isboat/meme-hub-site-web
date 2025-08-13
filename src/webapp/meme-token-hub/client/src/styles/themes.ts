@@ -1,12 +1,12 @@
 // client/src/styles/themes.ts
 export const darkTheme = {
     colors: {
-      background: '#041438ff',
-      cardBackground: '#2d3748',
-      navBarBackground: '#1a202e',
-      text: '#e2e8f0',
+      background: '#000000',
+      cardBackground: '#141414ff',
+      navBarBackground: '#141414ff',
+      text: '#ffffff',
       dimmedWhite: '#a2a4a5ff',
-      primary: '#3b82f6',
+      primary: '#00b8d8',
       capsuleButton: '#1e293b',
       white: '#ffffff',
       ticker: '#fbbf24',

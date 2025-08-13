@@ -7,16 +7,7 @@ import api from '../api/api';
 import { useNavigate } from 'react-router';
 import { TokenDataModel } from '../types/token-components';
 import CapsuleButton from '../components/common/CapsuleButton';
-
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: ${({ theme }) => theme.spacing.large};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  min-height: calc(100vh - 120px); /* Adjust based on navbar/ticker height */
-`;
+import PageContainer from '../components/common/PageContainer';
 
 const Header = styled.h1`
   color: ${({ theme }) => theme.colors.white};

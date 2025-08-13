@@ -123,7 +123,7 @@ const TokenProfilePage: React.FC = () => {
   return (
     <ProfileContainer theme={theme}>
       <ProfileHeader theme={theme}>
-        <Username theme={theme}>{profileUser?.profileName || tokenData?.name || '#Profilename'}</Username>
+        <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename').toLocaleUpperCase()}</Username>
         <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
         {!profileUser && authenticated && (

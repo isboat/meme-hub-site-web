@@ -16,7 +16,7 @@ const scrollLeft = keyframes`
 const TickerWrapper = styled.div`
   width: 100%;
   overflow: hidden; /* Hide content outside the wrapper */
-  background-color: ${({ theme }) => theme.colors.cardBackground};
+  background-color: ${({ theme }) => theme.colors.navBarBackground};
   color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.spacing.small} 0;
   white-space: nowrap; /* Prevent text from wrapping */

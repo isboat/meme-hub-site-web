@@ -38,7 +38,7 @@ const TokensFeed: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { data: networkData, loading, error } = useApi<NetworkData[]>('/memetoken/networks');
+  let { data: networkData, loading, error } = useApi<NetworkData[]>('/memetoken/networks');
   
   const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
   let isLoadingNetworkTokens = false;
@@ -52,7 +52,7 @@ const TokensFeed: React.FC = () => {
     if (network) {
       isLoadingNetworkTokens = true;
       // load the tokens from api
-      const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.slug}/tokens`);
+      const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.id}/tokens`);
       const tokensData = response.data;
       if (tokensData) {
         setNetworkTokenData(tokensData);
@@ -66,7 +66,7 @@ const TokensFeed: React.FC = () => {
     // Navigate to the token profile page
     // pass the token object to the token profile page
     navigate(`/token/${token.addresses[0].tokenAddress}`, { state: { token } });
-  };
+  };  
 
   if (loading) {
     return (
@@ -93,6 +93,8 @@ const TokensFeed: React.FC = () => {
     );
   }
 
+  const allowNetworks = ['solana', 'ethereum', 'bnb', 'polygon', 'base', 'tron', 'unichain'];
+
   if (!networkData) {
     return (
       <PageContainer theme={theme}>
@@ -101,14 +103,17 @@ const TokensFeed: React.FC = () => {
       </PageContainer>
     );
   }
+  else {
+    networkData = networkData.filter(chain => allowNetworks.includes(chain.id.toLowerCase()));
+  }
 
   return (
     <PageContainer theme={theme}>
       <Header theme={theme}>Trending Network Tokens</Header>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
         {networkData.filter(chain => chain.name != 'undefined').map((chain) => (
-          <div key={chain.slug} style={{ display:'block' }}>
-          <a onClick={loadNetworkTokens}><img src={chain.logoUrl} width={24} /> {chain.name.toLocaleUpperCase()}</a>
+          <div key={chain.id} style={{ display:'block' }}>
+          <a onClick={loadNetworkTokens}><img src={chain.image.thumb} width={24} /> {chain.name.toLocaleUpperCase()}</a>
       </div>
       ))}
       </div>
