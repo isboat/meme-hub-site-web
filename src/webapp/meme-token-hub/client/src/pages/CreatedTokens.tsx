@@ -95,7 +95,8 @@ const CreatedTokensFeed: React.FC = () => {
     { name: 'FourMeme', slug: 'fourmeme' },
     { name: 'Bags', slug: 'bags' },
     { name: 'LetsBonk.fun', slug: 'letsbonk' },
-    { name: 'Jupiter Launchpad', slug: 'jupiterlaunchpad' }
+    { name: 'Jupiter Launchpad', slug: 'jupiterlaunchpad' },
+    { name: 'Socials Updated', slug: 'socialsupdated' }
   ];
 
   const [networkTokenData, setNetworkTokenData] = useState([] as TokenDataModel[]);
@@ -140,6 +141,16 @@ const CreatedTokensFeed: React.FC = () => {
     navigate(`/token/${token.id}`, { state: { token } });
   };
 
+  const addClassName = (platform: { name: string; slug: string }) => {
+    var className = platform.slug === selected ? 'selected' : '';
+    // if it's socialsupdated
+    if (platform.slug === 'socialsupdated') {
+      className += ' socials-updated';
+    }
+
+    return className;
+  };
+
   return (
     <PageContainer theme={theme}>
       <Header theme={theme}>New Created Tokens</Header>
@@ -150,15 +161,17 @@ const CreatedTokensFeed: React.FC = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginBottom: theme.spacing.large }}>
         {launchPlatforms.map((platform) => (
           <div key={platform.slug} style={{ display: 'block' }}>
-            <CapsuleButton className={platform.slug === selected ? 'selected' : ''} onClick={(event) => { loadNetworkTokens(event) }}>
+            <CapsuleButton className={addClassName(platform)} onClick={(event) => { loadNetworkTokens(event) }}>
               {platform.name}
             </CapsuleButton>
           </div>
         ))}
       </div>
+      <div>        
+        {!isLoadingTokens && networkTokenData.length === 0 && <p>No tokens found for the selected launch platform.</p>}
+      </div>
       <TokenCardsWrapper theme={theme}>
         {isLoadingTokens && <LoadingSpinner />}
-        {!isLoadingTokens && networkTokenData.length === 0 && <p>No tokens found for the selected launch platform.</p>}
         {networkTokenData.map(token => (
           <TokenCard key={token.id} onClick={() => navigateToTokenPage(token)}>
             <TokenImage>

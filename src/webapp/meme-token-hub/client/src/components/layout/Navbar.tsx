@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
           ❓ FAQs
         </NavLink>
         <NavLink to={`/about-us`} theme={theme}>
-          ℹ️ About US
+          ℹ️ About us
         </NavLink>
         {authenticated ? (
           <>

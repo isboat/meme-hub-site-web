@@ -56,6 +56,10 @@ const StyledButton = styled.button<ButtonProps>`
     color: #0f172a;
     font-weight: bold;
   }
+  &.socials-updated {
+    box-shadow: 0 0 12px #4ade80;
+    border: 2px solid #4ade80;
+  }
 `;
 
 const CapsuleButton: React.FC<ButtonProps> = (props) => {
