@@ -9,6 +9,7 @@ import { useApi } from '../hooks/useApi';
 import api from '../api/api';
 import { useNavigate } from 'react-router';
 import CapsuleButton from '../components/common/CapsuleButton';
+import CapsuleSelect from '../components/common/CapsuleSelect';
 
 const PageContainer = styled.div`
   display: flex;
@@ -35,6 +36,11 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.large};
 `;
 
+const TopSection = styled.div`
+  text-align: center;
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+`;
+
 type SortType = "featured" | "az" | "since";
 
 const CHAIN_FILTERS = [
@@ -56,11 +62,12 @@ const TokensFeed: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const [sort, setSort] = useState<SortType>("featured");
   const [showCap, setShowCap] = useState<boolean>(false);
+  const [selected, setSelected] = useState('');
+  const [isLoadingNetworkTokens, setIsLoadingNetworkTokens] = useState<boolean>(false);
 
   let { data: networkData, loading, error } = useApi<NetworkData[]>('/memetoken/networks');
 
   const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
-  let isLoadingNetworkTokens = false;
 
   const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
@@ -69,14 +76,18 @@ const TokensFeed: React.FC = () => {
 
     const network = networkData?.find(chain => chain.name.toLowerCase() === networkName);
     if (network) {
-      isLoadingNetworkTokens = true;
+      setSelected(network.chainIdentifier);
+      setIsLoadingNetworkTokens(true);
+      // Reset the token data
+      setNetworkTokenData([]);
+      
       // load the tokens from api
       const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.chainIdentifier}/tokens`);
       const tokensData = response.data;
       if (tokensData) {
         setNetworkTokenData(tokensData);
       }
-      isLoadingNetworkTokens = false;
+      setIsLoadingNetworkTokens(false);
     }
   }
 
@@ -133,19 +144,22 @@ const TokensFeed: React.FC = () => {
     }
   }
 
+  const addClassName = (platform: { label: string; value: string; }) => {
+    var className = platform.value === selected ? 'selected' : '';
+    return className;
+  };
+
   return (
     <PageContainer theme={theme}>
-      <Header theme={theme}>Trending Network Tokens</Header>
-
       <div>
         <div>
-          <div>
+          <TopSection theme={theme}>
             <div>
-              <h1>Trending Coins</h1>
-              <p>
+              <h1 style={{ marginBottom: theme.spacing.small }}>Trending Coins</h1>
+              <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.text }}>
                 The original OG, authentic meme coins — artwork first. Click a card to view the full profile.
               </p>
-              <div>
+              <div style={{ marginBottom: theme.spacing.medium }}>
                 <label>
                   <input
                     type="checkbox"
@@ -154,34 +168,36 @@ const TokensFeed: React.FC = () => {
                   />
                   <span>Show Market Caps</span>
                 </label>
-                <span className="text-slate-600">•</span>
-                <input
+                <input style={{ margin: '0 20px' }}
                   type="search"
                   placeholder="Search (doge, shib, pepe…)"
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                 />
-                <span className="text-slate-600 hidden sm:inline">•</span>
-                <select
+                <CapsuleSelect
                   value={sort}
                   onChange={e => setSort(e.target.value as SortType)}
                 >
                   <option value="featured">Featured</option>
                   <option value="az">A → Z</option>
                   <option value="since">Newest</option>
-                </select>
+                </CapsuleSelect>
               </div>
             </div>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }} aria-label="Filter by chain">
-            {CHAIN_FILTERS.map(f => (
-              <CapsuleButton key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
-                {f.label}
-              </CapsuleButton>
-            ))}
-          </div>
-
+            <div style={{ marginBottom: '16px' }} aria-label="Filter by chain">
+              {CHAIN_FILTERS.map(f => (
+                <CapsuleButton className={addClassName(f)} key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
+                  {f.label}
+                </CapsuleButton>
+              ))}
+            </div>
+          </TopSection>
+          {isLoadingNetworkTokens && <LoadingSpinner />}
+          {!isLoadingNetworkTokens && networkTokenData.length === 0 && (
+            <p>No tokens found for this network.</p>
+          )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+
             {networkTokenData.map(c => {
               return (
                 <div key={c.name} style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>

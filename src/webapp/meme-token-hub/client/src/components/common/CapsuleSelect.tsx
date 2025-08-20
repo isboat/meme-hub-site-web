@@ -2,21 +2,15 @@
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  // 'primary' is the default, 'secondary' could be for less prominent actions
-  variant?: 'primary' | 'secondary';
-  // Add a type for the button's HTML type attribute
-  type?: 'button' | 'submit' | 'reset';
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   // Allow passing className for external styling if needed (though styled-components handles most)
   className?: string;
   // Allow onClick and other standard button props
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   disabled?: boolean;
 }
 
-const StyledButton = styled.button<ButtonProps>`
-  /* Base styles for all buttons */
-  padding: 0.5rem 1.25rem;
+const StyledSelect = styled.select<SelectProps>`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 9999px;
       font-family: inherit;
@@ -61,9 +55,9 @@ const StyledButton = styled.button<ButtonProps>`
   }
 `;
 
-const CapsuleButton: React.FC<ButtonProps> = (props) => {
+const CapsuleSelect: React.FC<SelectProps> = (props) => {
   const theme = useTheme(); // Access the theme
-  return <StyledButton theme={theme} {...props} />;
+  return <StyledSelect theme={theme} {...props} />;
 };
 
-export default CapsuleButton;
+export default CapsuleSelect;
