@@ -11,7 +11,7 @@ export const darkTheme = {
       white: '#ffffff',
       ticker: '#fbbf24',
       secondary: '#6366f1',
-      border: '#4a5568',
+      border: '#282829ff',
       footer: '#848585ff',
       placeholder: '#a0aec0',
       success: '#10b981',

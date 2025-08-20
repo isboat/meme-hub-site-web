@@ -16,11 +16,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const StyledButton = styled.button<ButtonProps>`
   /* Base styles for all buttons */
-  padding: 0.5rem 1.25rem;
+  padding: 0.5rem 1rem;
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 9999px;
       font-family: inherit;
-    font-size: 100%;
+    font-size: 80%;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, opacity 0.2s ease-in-out;
   width: auto;

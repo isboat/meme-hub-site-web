@@ -1,5 +1,5 @@
 // client/src/pages/UnclaimedTokensFeed.tsx
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { NetworkData, NetworkTokenData } from '../types';
@@ -91,10 +91,10 @@ const TokensFeed: React.FC = () => {
   }
 
   const navigateToTokenPage = (token: NetworkTokenData): void => {
-    if (!token || !token.id) return;
+    if (!token || !token.address) return;
     // Navigate to the token profile page
     // pass the token object to the token profile page
-    navigate(`/token/${token.addresses[0].tokenAddress}`, { state: { token } });
+    navigate(`/token/${token.address}`, { state: { token } });
   };
 
   if (loading) {
@@ -150,11 +150,11 @@ const TokensFeed: React.FC = () => {
 
   return (
     <PageContainer theme={theme}>
-      <div style={{ width: '100%', maxWidth: '1200px'}}>
+      <div style={{ width: '100%', maxWidth: '1200px' }}>
         <TopSection theme={theme}>
           <div>
             <h1 style={{ marginBottom: theme.spacing.small }}>Trending Coins</h1>
-            <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.text }}>
+            <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.dimmedWhite }}>
               The original OG, authentic meme coins — artwork first. Click a card to view the full profile.
             </p>
             <div style={{ marginBottom: theme.spacing.medium }}>
@@ -174,7 +174,7 @@ const TokensFeed: React.FC = () => {
               </CapsuleSelect>
             </div>
           </div>
-          <div style={{ marginBottom: '16px' }} aria-label="Filter by chain">
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
             {CHAIN_FILTERS.map(f => (
               <CapsuleButton className={addClassName(f)} key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
                 {f.label}
@@ -190,12 +190,10 @@ const TokensFeed: React.FC = () => {
 
           {networkTokenData.map(c => {
             return (
-              <div key={c.name} style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-                <a href={`#/token/${c.symbol.toLowerCase()}`} className="block" aria-label={`View ${c.name} profile`}>
-                  <div>
-                    <img width="100%" src={c.logoURI} alt={`${c.name} Banner`} />
-                  </div>
-                </a>
+              <a onClick={() => navigateToTokenPage(c)} key={c.name} style={{ textDecoration: 'none', cursor: 'pointer', border: `1px solid ${theme.colors.border}`, borderRadius: '8px', overflow: 'hidden' }}>
+                <div>
+                  <img width="100%" src={c.logoURI} alt={`${c.name} Banner`} />
+                </div>
                 <div style={{ padding: '10px' }}>
                   <div>
                     <div style={{ fontWeight: 'bold', fontSize: 'small', textTransform: 'capitalize' }}>{c.name} <span>({c.symbol})</span></div>
@@ -203,7 +201,7 @@ const TokensFeed: React.FC = () => {
                     <div style={{ fontSize: 'smaller', color: '#666', textTransform: 'capitalize' }}>{selected} • since 2023</div>
                   </div>
                 </div>
-              </div>
+              </a>
             );
           })}
         </div>

@@ -52,7 +52,7 @@ const TokenProfileChart: React.FC<TokenProfileProps> = ({ tokenProfile, tokenDat
     <OverviewCard theme={theme}>
       <DetailItem theme={theme}>
         <ProfileImage
-              src={tokenProfile?.profileImage || tokenData?.logoUrl || '/token-avatar.jpg'}
+              src={tokenProfile?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
               alt={`${tokenProfile?.profileName || tokenData?.name}'s profile`}
               theme={theme}
             />
