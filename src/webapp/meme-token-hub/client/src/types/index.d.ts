@@ -145,7 +145,7 @@ export interface NetworkTokenData {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
-  logoUrl: string;
+  logoURI: string;
   price: number;
   marketcap: number;
   liquidity: number;
