@@ -61,7 +61,6 @@ const TokensFeed: React.FC = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState<string>("");
   const [sort, setSort] = useState<SortType>("featured");
-  const [showCap, setShowCap] = useState<boolean>(false);
   const [selected, setSelected] = useState('');
   const [isLoadingNetworkTokens, setIsLoadingNetworkTokens] = useState<boolean>(false);
 
@@ -80,7 +79,7 @@ const TokensFeed: React.FC = () => {
       setIsLoadingNetworkTokens(true);
       // Reset the token data
       setNetworkTokenData([]);
-      
+
       // load the tokens from api
       const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.chainIdentifier}/tokens`);
       const tokensData = response.data;
@@ -151,83 +150,62 @@ const TokensFeed: React.FC = () => {
 
   return (
     <PageContainer theme={theme}>
-      <div>
-        <div>
-          <TopSection theme={theme}>
-            <div>
-              <h1 style={{ marginBottom: theme.spacing.small }}>Trending Coins</h1>
-              <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.text }}>
-                The original OG, authentic meme coins — artwork first. Click a card to view the full profile.
-              </p>
-              <div style={{ marginBottom: theme.spacing.medium }}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={showCap}
-                    onChange={e => setShowCap(e.target.checked)}
-                  />
-                  <span>Show Market Caps</span>
-                </label>
-                <input style={{ margin: '0 20px' }}
-                  type="search"
-                  placeholder="Search (doge, shib, pepe…)"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                />
-                <CapsuleSelect
-                  value={sort}
-                  onChange={e => setSort(e.target.value as SortType)}
-                >
-                  <option value="featured">Featured</option>
-                  <option value="az">A → Z</option>
-                  <option value="since">Newest</option>
-                </CapsuleSelect>
-              </div>
+      <div style={{ width: '100%', maxWidth: '1200px'}}>
+        <TopSection theme={theme}>
+          <div>
+            <h1 style={{ marginBottom: theme.spacing.small }}>Trending Coins</h1>
+            <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.text }}>
+              The original OG, authentic meme coins — artwork first. Click a card to view the full profile.
+            </p>
+            <div style={{ marginBottom: theme.spacing.medium }}>
+              <input style={{ width: '75%', margin: '0 20px' }}
+                type="search"
+                placeholder="Search (doge, shib, pepe…)"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+              />
+              <CapsuleSelect
+                value={sort}
+                onChange={e => setSort(e.target.value as SortType)}
+              >
+                <option value="featured">Featured</option>
+                <option value="az">A → Z</option>
+                <option value="since">Newest</option>
+              </CapsuleSelect>
             </div>
-            <div style={{ marginBottom: '16px' }} aria-label="Filter by chain">
-              {CHAIN_FILTERS.map(f => (
-                <CapsuleButton className={addClassName(f)} key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
-                  {f.label}
-                </CapsuleButton>
-              ))}
-            </div>
-          </TopSection>
-          {isLoadingNetworkTokens && <LoadingSpinner />}
-          {!isLoadingNetworkTokens && networkTokenData.length === 0 && (
-            <p>No tokens found for this network.</p>
-          )}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+          </div>
+          <div style={{ marginBottom: '16px' }} aria-label="Filter by chain">
+            {CHAIN_FILTERS.map(f => (
+              <CapsuleButton className={addClassName(f)} key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
+                {f.label}
+              </CapsuleButton>
+            ))}
+          </div>
+        </TopSection>
+        {isLoadingNetworkTokens && <LoadingSpinner />}
+        {!isLoadingNetworkTokens && networkTokenData.length === 0 && (
+          <p style={{ textAlign: 'center' }}>No tokens found.</p>
+        )}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px' }}>
 
-            {networkTokenData.map(c => {
-              return (
-                <div key={c.name} style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-                  <a href={`#/token/${c.symbol.toLowerCase()}`} className="block" aria-label={`View ${c.name} profile`}>
-                    <div className="relative">
-                      <img width="100%" src={c.logoURI} alt={`${c.name} Banner`} />
-                    </div>
-                  </a>
-                  <div className="p-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <h3 className="title font-semibold truncate">{c.name} <span className="text-xs text-slate-400">({c.symbol})</span></h3>
-                        <div>{c.name} • since 2023</div>
-                      </div>
-                      {showCap && (
-                        <span className="ml-2 inline-flex items-center rounded-full bg-slate-900/70 border border-slate-700 px-2 py-0.5 text-[10px]">
-                          MC {fmtCap(c.marketcap)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-2">
-                      <a href={`#/token/${c.symbol.toLowerCase()}`} className="inline-flex items-center gap-2 rounded-md bg-amber-400 text-slate-900 px-3 py-1.5 text-xs font-semibold hover:bg-amber-300">
-                        View Profile
-                      </a>
-                    </div>
+          {networkTokenData.map(c => {
+            return (
+              <div key={c.name} style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+                <a href={`#/token/${c.symbol.toLowerCase()}`} className="block" aria-label={`View ${c.name} profile`}>
+                  <div>
+                    <img width="100%" src={c.logoURI} alt={`${c.name} Banner`} />
+                  </div>
+                </a>
+                <div style={{ padding: '10px' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: 'small', textTransform: 'capitalize' }}>{c.name} <span>({c.symbol})</span></div>
+                    <div style={{ fontSize: 'smaller', color: '#666', textTransform: 'capitalize' }}>Mkt Cap: {fmtCap(c.marketcap)}</div>
+                    <div style={{ fontSize: 'smaller', color: '#666', textTransform: 'capitalize' }}>{selected} • since 2023</div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </PageContainer>
