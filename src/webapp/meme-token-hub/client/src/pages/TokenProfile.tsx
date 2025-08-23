@@ -14,6 +14,7 @@ import TokenProfileHubFollow from '../components/token/TokenProfileHubFollow';
 import TokenProfileKolFollows from '../components/token/TokenProfileKolFollows';
 import TokenProfileLinks from '../components/token/TokenProfileLinks';
 import TokenProfileChart from '../components/token/TokenProfileChart';
+import CapsuleButton from '../components/common/CapsuleButton';
 
 const ProfileContainer = styled.div`
   max-width: 80%;
@@ -34,7 +35,6 @@ const ProfileHeader = styled.div`
 `;
 
 const Username = styled.h1`
-  font-size: 2.5em;
   margin-bottom: ${({ theme }) => theme.spacing.small};
   color: ${({ theme }) => theme.colors.text};
 `;
@@ -47,26 +47,6 @@ const Verification = styled.p`
   margin-bottom: ${({ theme }) => theme.spacing.medium};
 `;
 
-const TabsContainer = styled.div`
-  display: flex;
-  margin-bottom: ${({ theme }) => theme.spacing.large};
-`;
-
-const TabButton = styled(Button)<{ active: boolean }>`
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing.small} ${({ theme }) => theme.spacing.medium};
-  border-bottom: 3px solid
-    ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
-  color: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.text)};
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  border-radius: 0px;
-  background-color: ${({ theme }) => theme.colors.background} !important;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const EditProfileButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.primary};
@@ -75,11 +55,20 @@ const EditProfileButton = styled(Button)`
   }
 `;
 
+const tabs = [
+  { label: "Token", value: "token" },
+  { label: "Community", value: "community" },
+  { label: "Hub Follow", value: "hubFollow" },
+  { label: "KOL Follows", value: "kolFollows" },
+  { label: "Links", value: "links" },
+  { label: "Token Chart", value: "token-chart" }
+];
+
 const TokenProfilePage: React.FC = () => {
   const { tokenAddr } = useParams<{ tokenAddr: string }>();
   const theme = useTheme();
   const navigate = useNavigate();
-  
+
   const location = useLocation();
   const tokenData = (location.state as { token?: NetworkTokenData })?.token;
 
@@ -93,7 +82,7 @@ const TokenProfilePage: React.FC = () => {
   }
 
   const { authenticated } = usePrivy();
-  const [activeTab, setActiveTab] = useState<'token' | 'community' | 'hubFollow' | 'kolFollows' | 'links' | 'token-chart'>('token');
+  const [activeTab, setActiveTab] = useState('token');
 
   const { data: profileUser, loading, error } = useApi<TokenProfile>(`/token/${tokenAddr}`);
 
@@ -107,7 +96,7 @@ const TokenProfilePage: React.FC = () => {
   }
 
   // Handle error (including 404 specifically)
-  if (error != null && error.indexOf("status code 404") > -1) {    
+  if (error != null && error.indexOf("status code 404") > -1) {
     return (
       <ProfileContainer theme={theme}>
         <p style={{ color: theme.colors.text }}>
@@ -120,10 +109,17 @@ const TokenProfilePage: React.FC = () => {
     );
   }
 
+  const addClass = (f: typeof tabs[number]) => {
+    var cls = activeTab === f.value ? 'selected' : '';
+    if (f.value === 'community') {
+      cls += ' socials-updated';
+    }
+    return cls;
+  };
   return (
     <ProfileContainer theme={theme}>
       <ProfileHeader theme={theme}>
-        <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename').toLocaleUpperCase()}</Username>
+        <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename')}</Username>
         <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
         {!profileUser && authenticated && (
@@ -133,27 +129,13 @@ const TokenProfilePage: React.FC = () => {
         )}
       </ProfileHeader>
 
-      <TabsContainer theme={theme}>
-        <TabButton onClick={() => setActiveTab('token')} active={activeTab === 'token'} theme={theme}>
-          TOKEN
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('community')} active={activeTab === 'community'} theme={theme}>
-        COMMUNITY
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('hubFollow')} active={activeTab === 'hubFollow'} theme={theme}>
-        HUB FOLLOW
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('kolFollows')} active={activeTab === 'kolFollows'} theme={theme}>
-        KOL FOLLOWS
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('links')} active={activeTab === 'links'} theme={theme}>
-        LINKS
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('token-chart')} active={activeTab === 'token-chart'} theme={theme}>
-        TOKEN CHART
-        </TabButton>
-      </TabsContainer>
-
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
+        {tabs.map(f => (
+          <CapsuleButton key={f.value} onClick={() => setActiveTab(f.value)} className={addClass(f)}>
+            {f.label}
+          </CapsuleButton>
+        ))}
+      </div>
       <div>
         {activeTab === 'token' && (
           <TokenProfileOverview tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
