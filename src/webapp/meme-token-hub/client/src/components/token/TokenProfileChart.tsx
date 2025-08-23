@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { TokenProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
+import TradingViewChart from '../common/TradingViewChart';
 
 const OverviewCard = styled.div`
   text-align: left;
@@ -58,9 +59,9 @@ const TokenProfileChart: React.FC<TokenProfileProps> = ({ tokenProfile, tokenDat
             />
       </DetailItem>
       <DexScreenerEmbed>
-        <iframe src={`https://dexscreener.com/${tokenData?.addresses[0].chain?.name.toLocaleLowerCase()}/${tokenData?.addresses[0].pairAddress}?embed=1&loadChartSettings=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15`}></iframe>
+        <TradingViewChart symbol={tokenData?.symbol} />
+        {/* <iframe src={`https://dexscreener.com/${tokenData?.addresses[0].chain?.name.toLocaleLowerCase()}/${tokenData?.addresses[0].pairAddress}?embed=1&loadChartSettings=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15`}></iframe> */}
       </DexScreenerEmbed>
-      {/* Add more profile details as needed */}
     </OverviewCard>
   );
 };
