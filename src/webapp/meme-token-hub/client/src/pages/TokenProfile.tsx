@@ -37,6 +37,7 @@ const ProfileHeader = styled.div`
 const Username = styled.h1`
   margin-bottom: ${({ theme }) => theme.spacing.small};
   color: ${({ theme }) => theme.colors.text};
+  text-transform: capitalize;
 `;
 
 const Verification = styled.p`
