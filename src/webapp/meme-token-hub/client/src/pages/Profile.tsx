@@ -11,6 +11,7 @@ import ProfileOverview from '../components/profile/ProfileOverview';
 import ProfileActivity from '../components/profile/ProfileActivity';
 import ProfileHubSpot from '../components/profile/ProfileHubSpot';
 import ProfileHubSocials from '../components/profile/ProfileHubSocials';
+import CapsuleButton from '../components/common/CapsuleButton';
 
 const ProfileContainer = styled.div`
   max-width: 70%;
@@ -71,26 +72,6 @@ const StatItem = styled.div`
   }
 `;
 
-const TabsContainer = styled.div`
-  display: flex;
-  margin-bottom: ${({ theme }) => theme.spacing.large};
-`;
-
-const TabButton = styled(Button)<{ active: boolean }>`
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing.small} ${({ theme }) => theme.spacing.medium};
-  border-bottom: 3px solid
-    ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
-  color: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.text)};
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  border-radius: 0px;
-  background-color: ${({ theme }) => theme.colors.background} !important;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const EditProfileButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.primary};
@@ -98,12 +79,19 @@ const EditProfileButton = styled(Button)`
     background-color: ${({ theme }) => theme.colors.primary + 'E0'}; /* Slightly darker on hover */
   }
 `;
+const tabs = [
+  { label: "Overview", value: "overview" },
+  { label: "Activity", value: "activity" },
+  { label: "HubSpot", value: "hubSpot" },
+  { label: "HubSocials", value: "hubSocials" },
+  { label: "Polls", value: "polls" }
+];
 
 const Profile: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user: privyUser, authenticated } = usePrivy();
-  const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'hubSpot' | 'hubSocials' | 'polls'>('overview');
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { data: profileUser, loading, error } = useApi<UserProfile>(`/profile/${privyUser?.id}`);
 
@@ -168,23 +156,13 @@ const Profile: React.FC = () => {
         )}
       </ProfileHeader>
 
-      <TabsContainer theme={theme}>
-        <TabButton onClick={() => setActiveTab('overview')} active={activeTab === 'overview'} theme={theme}>
-          Overview
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('activity')} active={activeTab === 'activity'} theme={theme}>
-        Activity
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('hubSpot')} active={activeTab === 'hubSpot'} theme={theme}>
-        HubSpot
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('hubSocials')} active={activeTab === 'hubSocials'} theme={theme}>
-        HubSocials
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('polls')} active={activeTab === 'polls'} theme={theme}>
-        polls
-        </TabButton>
-      </TabsContainer>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
+        {tabs.map(f => (
+          <CapsuleButton key={f.value} onClick={() => setActiveTab(f.value)} className={activeTab === f.value ? 'selected' : ''}>
+            {f.label}
+          </CapsuleButton>
+        ))}
+      </div>
 
       <div>
         {activeTab === 'overview' && (

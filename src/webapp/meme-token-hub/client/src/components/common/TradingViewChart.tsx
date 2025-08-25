@@ -16,7 +16,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
       script.async = true;
       script.innerHTML = `
         {
-          "allow_symbol_change": true,
+          "allow_symbol_change": false,
           "calendar": false,
           "details": false,
           "hide_side_toolbar": true,
@@ -29,10 +29,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
           "save_image": true,
           "style": "1",
           "symbol": "${symbol}USDT",
-          "theme": "light",
+          "theme": "dark",
           "timezone": "Etc/UTC",
-          "backgroundColor": "#ffffff",
-          "gridColor": "rgba(46, 46, 46, 0.06)",
+          "backgroundColor": "#000000",
+          "gridColor": "rgba(144, 138, 138, 0.94)",
           "watchlist": [],
           "withdateranges": false,
           "compareSymbols": [],
