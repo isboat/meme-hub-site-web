@@ -85,7 +85,7 @@ const TokenProfilePage: React.FC = () => {
   const { authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState('token');
 
-  const { data: profileUser, loading, error } = useApi<TokenProfile>(`/token/${tokenAddr}`);
+  const { data: profileUser, loading, error } = useApi<TokenProfile>(`/token-profile/${tokenAddr}`);
 
   if (loading) {
     return (
