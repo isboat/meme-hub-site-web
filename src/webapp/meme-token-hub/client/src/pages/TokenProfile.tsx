@@ -85,27 +85,13 @@ const TokenProfilePage: React.FC = () => {
   const { authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState('token');
 
-  const { data: profileUser, loading, error } = useApi<TokenProfile>(`/token-profile/${tokenAddr}`);
+  const { data: profileUser, loading } = useApi<TokenProfile>(`/token-profile/${tokenAddr}`);
 
   if (loading) {
     return (
       <ProfileContainer theme={theme}>
         <LoadingSpinner />
         <p>Loading profile... {authenticated}</p>
-      </ProfileContainer>
-    );
-  }
-
-  // Handle error (including 404 specifically)
-  if (error != null && error.indexOf("status code 404") > -1) {
-    return (
-      <ProfileContainer theme={theme}>
-        <p style={{ color: theme.colors.text }}>
-          It looks like the token does not exist yet.
-        </p>
-        <Button onClick={() => navigate('/create-token')} style={{ marginTop: theme.spacing.medium }}>
-          Create Your Token
-        </Button>
       </ProfileContainer>
     );
   }
@@ -124,7 +110,7 @@ const TokenProfilePage: React.FC = () => {
         <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
         {!profileUser && authenticated && (
-          <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
+          <EditProfileButton onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })} theme={theme}>
             Claim Profile
           </EditProfileButton>
         )}

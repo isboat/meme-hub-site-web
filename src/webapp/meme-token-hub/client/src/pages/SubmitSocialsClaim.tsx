@@ -11,6 +11,7 @@ import Button from '../components/common/Button';
 import Input from '../components/common/Input'; // Keep Input for username
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import axios from 'axios';
+import CoinbaseCheckout from '../components/common/CoinbaseCheckout';
 
 const PageContainer = styled.div`
   max-width: 700px;
@@ -118,66 +119,13 @@ const CustomFileUploadButton = styled(Button)`
 `;
 
 
-const SubmitClaim: React.FC = () => {
+const SubmitSocialsClaim: React.FC = () => {
 
   const theme = useTheme();
   const navigate = useNavigate();
-  const { user: privyUser, authenticated } = usePrivy();
-
   const location = useLocation();
-  const tokenData = (location.state as { token?: NetworkTokenData })?.token;
-  if (!tokenData) {
-    console.error('Token data is not available in location state');
-    return (
-        <p style={{ color: theme.colors.text }}>Token data is unavailable.</p>
-    );
-  }
 
-  if (!authenticated || !privyUser) {
-    return (
-      <PageContainer theme={theme}>
-        <Header theme={theme}>Submit Claim</Header>
-        <Message theme={theme} type="error">
-          You must be logged in to access this page.
-        </Message>
-        <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
-          Log In
-        </Button>
-      </PageContainer>
-    );
-  }
   
-  const { data: currentUser, loading } = useApi<User>(
-    `/users/${privyUser?.id}`,
-    'get',
-    null,
-    null,
-    !authenticated
-  );
-
-  if (!currentUser) {
-    return (
-      <PageContainer theme={theme}>
-        <Header theme={theme}>Submit Claim</Header>
-        <Message theme={theme} type="error">
-          You must be logged in to access this page.
-        </Message>
-        <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
-          Log In
-        </Button>
-      </PageContainer>
-    );
-  }  
-
-  if (loading) {
-    return (
-      <PageContainer theme={theme}>
-        <Header theme={theme}>Submit Claim</Header>
-        <LoadingSpinner />
-        <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
-      </PageContainer>
-    );
-  }
 
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -192,6 +140,18 @@ const SubmitClaim: React.FC = () => {
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref for triggering file input
+
+  const { user: privyUser, authenticated } = usePrivy();
+  
+  const { data: currentUser, loading } = useApi<User>(
+    `/users/${privyUser?.id}`,
+    'get',
+    null,
+    null,
+    !authenticated
+  );
+
+  const tokenData = (location.state as { token?: NetworkTokenData })?.token;
 
   // Effect to populate form fields and initial image preview
   useEffect(() => {
@@ -216,6 +176,44 @@ const SubmitClaim: React.FC = () => {
       }
     };
   }, [imageUrlPreview]);
+
+  if (!authenticated || !privyUser) {
+    return (
+      <PageContainer theme={theme}>
+        <Header theme={theme}>Submit Claim</Header>
+        <Message theme={theme} type="error">
+          You must be logged in to access this page.
+        </Message>
+        <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
+          Log In
+        </Button>
+      </PageContainer>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <PageContainer theme={theme}>
+        <Header theme={theme}>Submit Claim</Header>
+        <Message theme={theme} type="error">
+          You must be logged in to access this page.
+        </Message>
+        <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
+          Log In
+        </Button>
+      </PageContainer>
+    );
+  }  
+
+  if (loading) {
+    return (
+      <PageContainer theme={theme}>
+        <Header theme={theme}>Submit Claim</Header>
+        <LoadingSpinner />
+        <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
+      </PageContainer>
+    );
+  }
 
 
   // Handle file selection
@@ -351,6 +349,7 @@ const SubmitClaim: React.FC = () => {
             disabled={isSubmitting}
           />
         </FormGroup>
+        <CoinbaseCheckout chargeCode="your_charge_code_here" />
         
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? <LoadingSpinner size="small" /> : 'Update Profile'}
@@ -366,4 +365,4 @@ const SubmitClaim: React.FC = () => {
   );
 };
 
-export default SubmitClaim;
+export default SubmitSocialsClaim;
