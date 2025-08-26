@@ -1,0 +1,608 @@
+import React, { useState, useRef, ChangeEvent, FormEvent, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+import { useTheme } from '../context/ThemeContext';
+import { NetworkTokenData, User } from "../types";
+import { useApi } from "../hooks/useApi";
+import { usePrivy } from "@privy-io/react-auth";
+import Button from "../components/common/Button";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import axios from "axios";
+import api from "../api/api";
+
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
+
+const CHAINS = [
+    "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
+];
+
+const ClaimTokenProfile: React.FC = () => {
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
+
+    const [step, setStep] = useState<Step>(1);
+    const [descCount, setDescCount] = useState(0);
+    const [showError, setShowError] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [review, setReview] = useState<string>("");
+    const [msg, setMsg] = useState<string>("Message: (click “Generate Message”)");
+    const [dnsVal, setDnsVal] = useState<string>("mth-verify=XXXX");
+    const formRef = useRef<HTMLFormElement>(null);
+
+    // Form state
+    const [form, setForm] = useState<Record<string, any>>({
+        allowMemes: true,
+        allowPolls: true,
+    });
+
+    const { user: privyUser, authenticated } = usePrivy();
+
+    const { data: currentUser, loading } = useApi<User>(
+        `/users/${privyUser?.id}`,
+        'get',
+        null,
+        null,
+        !authenticated
+    );
+
+    const tokenData = (location.state as { token?: NetworkTokenData })?.token;
+
+    // Effect to populate form fields and initial image preview
+    useEffect(() => {
+        if (tokenData) {
+            //setUsername(tokenData.name || '');
+            //setBio('add/update description');
+            //setUserId(currentUser?._id || '');
+        }
+    }, [tokenData]);
+
+    if (!authenticated || !privyUser) {
+        return (
+            <PageContainer theme={theme}>
+                <Header theme={theme}>Submit Claim</Header>
+                <Message theme={theme} type="error">
+                    You must be logged in to access this page.
+                </Message>
+                <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
+                    Log In
+                </Button>
+            </PageContainer>
+        );
+    }
+
+    if (!currentUser) {
+        return (
+            <PageContainer theme={theme}>
+                <Header theme={theme}>Submit Claim</Header>
+                <Message theme={theme} type="error">
+                    You must be logged in to access this page.
+                </Message>
+                <Button onClick={() => navigate('/auth')} style={{ marginTop: theme.spacing.medium }}>
+                    Log In
+                </Button>
+            </PageContainer>
+        );
+    }
+
+    if (loading) {
+        return (
+            <PageContainer theme={theme}>
+                <Header theme={theme}>Submit Claim</Header>
+                <LoadingSpinner />
+                <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
+            </PageContainer>
+        );
+    }
+
+    // Handle input changes
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        setForm(f => ({
+            ...f,
+            [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value
+        }));
+        if (name === "description") setDescCount(value.length);
+    };
+
+    // Step navigation
+    const nextStep = () => {
+        const next = Math.min(step + 1, 6) as Step;
+        if (validateStep(step)) setStep(next);
+    };
+    const prevStep = () => {
+        const previous = Math.max(step - 1, 1) as Step;
+        setStep(previous);
+    };
+
+    // Validators
+    const ethRegex = /^0x[a-fA-F0-9]{40}$/;
+    const solRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+    function validateAddress(chain: string, addr: string) {
+        if (!addr) return false;
+        if (chain === "Solana") return solRegex.test(addr);
+        return ethRegex.test(addr);
+    }
+    function validateStep(n: Step) {
+        let ok = true;
+        if (n === 1) {
+            const req = ["projectName", "symbol", "chain", "contract", "email", "description"];
+            req.forEach(id => {
+                if (!form[id] || !String(form[id]).trim()) {
+                    ok = false;
+                    alert(`Please fill out the ${id} field.`);
+                }
+            });
+            if (!validateAddress(form.chain, form.contract || "")) {
+                ok = false;
+                alert("Please enter a valid contract/mint address for the selected chain.");
+            }
+        }
+        if (n === 2) {
+            const req = ["website", "twitter"];
+            req.forEach(id => {
+                if (!form[id] || !String(form[id]).trim()) 
+                    {
+                        ok = false;
+                        alert(`Please fill out the ${id} field.`);
+                    }
+            });
+        }
+        if (n === 4) {
+            if (!form.teamName || !String(form.teamName).trim()) {
+                ok = false;
+                alert(`Please fill out the team name field.`);
+            }
+        }
+        return ok;
+    }
+
+    // Message generator for wallet-sign
+    const handleGenMsg = () => {
+        const contract = (form.contract || "").trim();
+        const name = (form.projectName || "").trim();
+        const ts = new Date().toISOString();
+        const message = `MemeTokenHub claim for ${name || "(unnamed)"} — ${contract || "(no contract)"} @ ${ts}`;
+        setMsg("Message: " + message);
+        setDnsVal("mth-verify=" + Math.random().toString(36).slice(2, 10));
+    };
+
+    // Review generator
+    const handleGenReview = () => {
+        const lines = [];
+        lines.push(`Project: ${form.projectName || "-"} (${form.symbol || "-"})`);
+        lines.push(`Chain: ${form.chain || "-"}`);
+        lines.push(`Contract: ${form.contract || "-"}`);
+        lines.push(`Email: ${form.email || "-"}`);
+        lines.push(`Description: ${form.description || "-"}`);
+        lines.push(`Website: ${form.website || "-"}`);
+        lines.push(`Twitter: ${form.twitter || "-"}`);
+        if (form.telegram) lines.push(`Telegram: ${form.telegram}`);
+        if (form.discord) lines.push(`Discord: ${form.discord}`);
+        if (form.whitepaper) lines.push(`Docs: ${form.whitepaper}`);
+        if (form.verifyPost) lines.push(`Verification Post: ${form.verifyPost}`);
+        if (form.domain) lines.push(`DNS Domain: ${form.domain}`);
+        lines.push(`Team: ${form.teamName || "-"}${form.contactTel ? " — " + form.contactTel : ""}`);
+        if (form.teamTwitter) lines.push(`Team Twitter: ${form.teamTwitter}`);
+        if (form.github) lines.push(`GitHub: ${form.github}`);
+        if (form.dune) lines.push(`Analytics: ${form.dune}`);
+        if (form.transparency) lines.push(`Transparency Wallets: ${form.transparency}`);
+        lines.push(`Branding: ${form.tagline || "(no tagline)"}`);
+        if (form.ctaBuy) lines.push(`DEX CTA: ${form.ctaBuy}`);
+        if (form.ctaDocs) lines.push(`Docs CTA: ${form.ctaDocs}`);
+        lines.push(`Allow Memes: ${form.allowMemes ? "Yes" : "No"}`);
+        lines.push(`Enable Polls: ${form.allowPolls ? "Yes" : "No"}`);
+        setReview(lines.join("\n"));
+    };
+
+    // Submit
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (!authenticated || !privyUser) {
+            setStatusMessage('You must be logged in to update your profile.');
+            setMessageType('error');
+            return;
+        }
+
+        setIsSubmitting(true);
+        setStatusMessage('');
+        setMessageType('');
+
+        const requiredSteps: Step[] = [1, 2, 4];
+        let ok = requiredSteps.every(s => validateStep(s));
+        if (!form.tos) ok = false;
+        setShowError(!ok);
+        setShowSuccess(ok);
+
+        try {
+            const response = await api.put<User>('/token-profile/submit-socials', form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Crucial for FormData
+                },
+            });
+
+            setStatusMessage('Profile updated successfully!' + response.status);
+            setMessageType('success');
+            // Redirect to profile page after a short delay to show success message
+            setTimeout(() => navigate(`/profile/${privyUser.id}`), 1500);
+
+        } catch (err: unknown) {
+            console.error('Profile update error:', err);
+            let errorMessage = 'Failed to update profile.';
+            if (axios.isAxiosError(err)) {
+                errorMessage = err.response?.data?.message || err.message;
+            } else if (typeof err === 'object' && err !== null && err instanceof Error) {
+                errorMessage = err.message;
+            } else {
+                errorMessage = String(err);
+            }
+            setStatusMessage(`Error: ${errorMessage}`);
+            setMessageType('error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Progress dots
+    const dots = Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className={`dot${i < step ? " active" : ""}`} style={{
+            height: 6, borderRadius: 6, background: i < step ? "linear-gradient(90deg,#6cf,#9ee1ff)" : "#203446",
+            border: "1px solid #1d2733"
+        }} />
+    ));
+
+    // Section wrapper
+    const Section: React.FC<{ stepNum: Step; children: React.ReactNode }> = ({ stepNum, children }) =>
+        <section className={`section${step === stepNum ? " active" : ""}`} style={{ display: step === stepNum ? "block" : "none", margin: "18px 0" }}>
+            {children}
+        </section>;
+
+    return (
+        <PageContainer theme={theme}>
+            <Header theme={theme}>Claim Your Token</Header>
+            <div style={{
+                background: "linear-gradient(180deg,#111925,#0f1722)", padding: 18, borderRadius: 14,
+                border: "1px solid #1d2733", boxShadow: "0 8px 24px rgba(0,0,0,.35)"
+            }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 8, margin: "14px 0" }} aria-hidden="true">
+                    {dots}
+                </div>
+                <form ref={formRef} onSubmit={handleSubmit} noValidate>
+                    {/* 1. Project basics */}
+                    <Section stepNum={1}>
+                        <h2 style={{ marginBottom: theme.spacing.medium }}>Project Basics</h2>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                            <FormField theme={theme}>
+                                <FormLabel theme={theme}>Project / Token Name *</FormLabel>
+                                <FormInput theme={theme} name="projectName" type="text" required placeholder="Infinite Money Glitch" value={form.projectName || ""} onChange={handleChange} />
+                            </FormField>
+                            <FormField theme={theme}>
+                                <FormLabel theme={theme}>Symbol / Ticker *</FormLabel>
+                                <FormInput theme={theme} name="symbol" type="text" required placeholder="GLITCH" value={form.symbol || ""} onChange={handleChange} />
+                            </FormField>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Blockchain *</label>
+                                <select name="chain" required value={form.chain || ""} onChange={handleChange}>
+                                    <option value="">Select chain</option>
+                                    {CHAINS.map(c => <option key={c}>{c}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Contract Address *</label>
+                                <input name="contract" type="text" required placeholder="0x..." value={form.contract || ""} onChange={handleChange} />
+                                <div style={{ fontSize: 12, color: "#8aa0b5" }}>For Solana, paste the mint address.</div>
+                            </div>
+                            <div>
+                                <label>Contact Email *</label>
+                                <input name="email" type="email" required placeholder="team@yourproject.xyz" value={form.email || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div>
+                            <label>Short Description *</label>
+                            <textarea name="description" maxLength={280} required placeholder="One or two sentences about the project." value={form.description || ""} onChange={handleChange} />
+                            <div style={{ fontSize: 12, color: "#8aa0b5" }}>{descCount}/280 characters</div>
+                        </div>
+                        <div style={{ height: 1, background: "#1d2733", margin: "12px 0" }} />
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                            <div style={{ border: "1px dashed #29455f", padding: "12px 14px", borderRadius: 12, background: "#0f1a26" }}>
+                                <label>Logo (PNG/SVG)</label>
+                                <input name="logo" type="file" accept=".png,.svg,.jpg,.jpeg" />
+                                <div style={{ fontSize: 12, color: "#8aa0b5" }}>Square preferred. Max 2MB.</div>
+                            </div>
+                            <div style={{ border: "1px dashed #29455f", padding: "12px 14px", borderRadius: 12, background: "#0f1a26" }}>
+                                <label>Banner (JPG/PNG)</label>
+                                <input name="banner" type="file" accept=".png,.jpg,.jpeg" />
+                                <div style={{ fontSize: 12, color: "#8aa0b5" }}>1600 × 400 recommended. Max 4MB.</div>
+                            </div>
+                        </div>
+                        <p style={{ fontSize: 12, color: "#8aa0b5" }}>Media uploads are illustrative in this demo and are not transmitted.</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <span />
+                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                        </div>
+                    </Section>
+                    {/* 2. Official links */}
+                    <Section stepNum={2}>
+                        <h2>Official Links</h2>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Website *</label>
+                                <input name="website" type="url" required placeholder="https://yourproject.xyz" value={form.website || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Litepaper / Docs</label>
+                                <input name="whitepaper" type="url" placeholder="https://docs.yourproject.xyz" value={form.whitepaper || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Twitter / X *</label>
+                                <input name="twitter" type="url" required placeholder="https://x.com/yourhandle" value={form.twitter || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Telegram</label>
+                                <input name="telegram" type="url" placeholder="https://t.me/yourgroup" value={form.telegram || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Discord</label>
+                                <input name="discord" type="url" placeholder="https://discord.gg/yourserver" value={form.discord || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                        </div>
+                    </Section>
+                    {/* 3. Ownership verification */}
+                    <Section stepNum={3}>
+                        <h2>Ownership Verification</h2>
+                        <p style={{ fontSize: 12, color: "#8aa0b5" }}>Complete <em>one</em> of the options below (more = stronger trust).</p>
+                        <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
+                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                                <span style={pillStyle}>Option A</span><strong> Sign a message</strong>
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 10, alignItems: "center" }}>
+                                <div style={{ fontSize: 12, color: "#8aa0b5" }}>Use the deployer wallet or multisig to sign this message and paste signature.</div>
+                                <button type="button" className="btn" style={btnStyle} onClick={handleGenMsg}>Generate Message</button>
+                            </div>
+                            <label>Signature (hex/base64)</label>
+                            <textarea name="sig" placeholder="0x..." value={form.sig || ""} onChange={handleChange} />
+                            <div style={{ fontSize: 12, color: "#8aa0b5" }}>{msg}</div>
+                        </div>
+                        <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
+                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                                <span style={pillStyle}>Option B</span><strong> DNS TXT record</strong>
+                            </div>
+                            <label>Domain</label>
+                            <input name="domain" type="text" placeholder="yourproject.xyz" value={form.domain || ""} onChange={handleChange} />
+                            <div style={{ background: "#0f1a26", border: "1px solid #234b69", borderRadius: 12, padding: 12, color: "#7fa7c6" }}>
+                                Create a TXT record on <code>_mth-claim.yourproject.xyz</code> with value: <code>{dnsVal}</code>
+                            </div>
+                        </div>
+                        <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
+                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                                <span style={pillStyle}>Option C</span><strong> Social post</strong>
+                            </div>
+                            <label>Verification Post URL</label>
+                            <input name="verifyPost" type="url" placeholder="https://x.com/yourhandle/status/..." value={form.verifyPost || ""} onChange={handleChange} />
+                            <div style={{ fontSize: 12, color: "#8aa0b5" }}>Post must state you’re claiming the MemeTokenHub profile for this contract.</div>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                        </div>
+                    </Section>
+                    {/* 4. Team details */}
+                    <Section stepNum={4}>
+                        <h2>Team & Transparency</h2>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Team / Entity Name *</label>
+                                <input name="teamName" type="text" required placeholder="Glitch Labs LLC" value={form.teamName || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Contact Phone</label>
+                                <input name="contactTel" type="tel" placeholder="+1 555 000 0000" value={form.contactTel || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Team Twitter</label>
+                                <input name="teamTwitter" type="url" placeholder="https://x.com/glitchlabs" value={form.teamTwitter || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>GitHub</label>
+                                <input name="github" type="url" placeholder="https://github.com/yourorg" value={form.github || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Analytics (Dune/Nansen)</label>
+                                <input name="dune" type="url" placeholder="https://dune.com/..." value={form.dune || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div>
+                            <label>Wallets for Transparency (comma-separated)</label>
+                            <textarea name="transparency" placeholder="0xabc..., 0xdef..., 3xSolanaMint..." value={form.transparency || ""} onChange={handleChange} />
+                            <div style={{ fontSize: 12, color: "#8aa0b5" }}>Public team / treasury wallets, if any.</div>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                        </div>
+                    </Section>
+                    {/* 5. Branding & extras */}
+                    <Section stepNum={5}>
+                        <h2>Branding & Extras</h2>
+                        <div>
+                            <label>Tagline</label>
+                            <input name="tagline" type="text" placeholder="Infinite laughs, infinite gains." value={form.tagline || ""} onChange={handleChange} />
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                            <div>
+                                <label>Primary DEX Link</label>
+                                <input name="ctaBuy" type="url" placeholder="https://app.uniswap.org/..." value={form.ctaBuy || ""} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Docs / Whitepaper Link</label>
+                                <input name="ctaDocs" type="url" placeholder="https://docs.yourproject.xyz" value={form.ctaDocs || ""} onChange={handleChange} />
+                            </div>
+                        </div>
+                        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                            <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                                <input name="allowMemes" type="checkbox" checked={form.allowMemes} onChange={handleChange} /> Allow community meme uploads
+                            </label>
+                            <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                                <input name="allowPolls" type="checkbox" checked={form.allowPolls} onChange={handleChange} /> Enable community polls
+                            </label>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                        </div>
+                    </Section>
+                    {/* 6. Review & submit */}
+                    <Section stepNum={6}>
+                        <h2>Review & Submit</h2>
+                        <div style={{ background: "#0f1a26", border: "1px solid #1d2733", borderRadius: 12, padding: 14, fontSize: 14, whiteSpace: "pre-wrap" }}>
+                            {review ? <pre>{review}</pre> : "Click “Generate Review” to preview your submission."}
+                        </div>
+                        <div style={{ height: 1, background: "#1d2733", margin: "12px 0" }} />
+                        <div style={{ display: "grid", gap: 8 }}>
+                            <label>
+                                <input type="checkbox" name="tos" checked={!!form.tos} onChange={handleChange} required /> I confirm the information is accurate and I am authorized to claim this profile.
+                            </label>
+                            <label>
+                                <input type="checkbox" name="ack" checked={!!form.ack} onChange={handleChange} /> I agree to show team badge and transparency details on the profile.
+                            </label>
+                        </div>
+                        <div style={{ display: "grid", placeItems: "center", height: 78, background: "#0d1722", border: "1px solid #1d2733", borderRadius: 12, color: "#7fa7c6", margin: "12px 0" }}>
+                            [ Captcha placeholder ]
+                        </div>
+                        {showError && <div style={{ fontSize: 13, color: "#ff6b8f", marginBottom: 8 }}>Please complete required fields marked with * in previous steps.</div>}
+                        {showSuccess && <div style={{ padding: 14, border: "1px solid #2d6a4f", background: "#0e1b14", borderRadius: 12, marginBottom: 8 }}>✅ Submission accepted (demo). In production, this would send your data to the backend.</div>}
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
+                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <div style={{ display: "inline-flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                                <button type="button" className="btn" style={btnStyle} onClick={handleGenReview}>Generate Review</button>
+                                <button type="submit" className="btn primary" style={btnPrimary}>Submit Claim</button>
+                            </div>
+                        </div>
+                    </Section>
+                </form>
+            </div>
+        </PageContainer>
+    );
+};
+
+const PageContainer = styled.div`
+  max-width: 900px;
+  margin: ${({ theme }) => theme.spacing.large} auto;
+  padding: ${({ theme }) => theme.spacing.medium};
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  min-height: calc(100vh - 120px); /* Adjust for header/footer */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Header = styled.h1`
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+`;
+
+const FormField = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.small};
+    width: 100%;
+`;
+
+const FormLabel = styled.label`
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.text};
+`;
+
+const FormInput = styled.input`
+    padding: ${({ theme }) => theme.spacing.small};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
+    font-size: 1em;
+    line-height: 1.5;
+
+    &::placeholder {
+        color: ${({ theme }) => theme.colors.placeholder};
+    }
+
+    &:focus {
+        outline: none;
+        border-color: ${({ theme }) => theme.colors.primary};
+        box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}40;
+    }
+`;
+interface MessageProps {
+    type: 'success' | 'error' | '';
+}
+const Message = styled.p<MessageProps>`
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing.medium};
+  font-weight: bold;
+  color: ${({ type, theme }) =>
+        type === 'error' ? theme.colors.error : theme.colors.primary};
+`;
+
+// Button styles
+const btnPrimary: React.CSSProperties = {
+    border: "1px solid #3da6ff",
+    background: "linear-gradient(180deg,#3da6ff,#368cff)",
+    color: "#051422",
+    padding: "12px 16px",
+    borderRadius: 12,
+    fontWeight: 700,
+    cursor: "pointer",
+    boxShadow: "0 8px 24px rgba(0,0,0,.35)",
+    transition: ".2s"
+};
+const btnGhost: React.CSSProperties = {
+    border: "1px solid #1d2733",
+    background: "transparent",
+    color: "#e6eef6",
+    padding: "12px 16px",
+    borderRadius: 12,
+    fontWeight: 700,
+    cursor: "pointer",
+    boxShadow: "0 8px 24px rgba(0,0,0,.35)",
+    transition: ".2s"
+};
+const btnStyle: React.CSSProperties = {
+    border: "1px solid #1d2733",
+    background: "linear-gradient(180deg,#1a2532,#111a24)",
+    color: "#e6eef6",
+    padding: "12px 16px",
+    borderRadius: 12,
+    fontWeight: 700,
+    cursor: "pointer",
+    boxShadow: "0 8px 24px rgba(0,0,0,.35)",
+    transition: ".2s"
+};
+const pillStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "6px 10px",
+    borderRadius: 999,
+    background: "#17202b",
+    border: "1px solid #1d2733",
+    fontSize: 12
+};
+
+export default ClaimTokenProfile;

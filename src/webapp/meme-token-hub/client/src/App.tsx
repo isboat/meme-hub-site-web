@@ -20,6 +20,7 @@ import UserProfile from './pages/UserProfile';
 import TokenProfilePage from './pages/TokenProfile';
 import CreatedTokensFeed from './pages/CreatedTokens';
 import SubmitSocialsClaim from './pages/SubmitSocialsClaim';
+import ClaimTokenProfile from './pages/claimsform';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -59,6 +60,7 @@ const App: React.FC = () => {
       {/* Authenticated Routes */}
       {/* Route for submitting socials - adjust as per your backend route */}
       <Route path="/submit-socials-claim" element={<Layout><SubmitSocialsClaim /></Layout>} />
+      <Route path="/claims-form" element={<Layout><ClaimTokenProfile /></Layout>} />
 
 
       {authenticated ? (

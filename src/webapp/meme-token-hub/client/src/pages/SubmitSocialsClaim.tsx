@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { NetworkTokenData, User, UserProfile } from '../types';
+import { NetworkTokenData, User } from '../types';
 import { useApi } from '../hooks/useApi';
 import api from '../api/api';
 import Button from '../components/common/Button';
