@@ -255,12 +255,6 @@ const ClaimTokenProfile: React.FC = () => {
         }} />
     ));
 
-    // Section wrapper
-    const Section: React.FC<{ stepNum: Step; children: React.ReactNode }> = ({ stepNum, children }) =>
-        <section className={`section${step === stepNum ? " active" : ""}`} style={{ display: step === stepNum ? "block" : "none", margin: "18px 0" }}>
-            {children}
-        </section>;
-
     return (
         <PageContainer theme={theme}>
             <Header theme={theme}>Claim Your Token</Header>
@@ -270,7 +264,7 @@ const ClaimTokenProfile: React.FC = () => {
                 </div>
                 <form ref={formRef} onSubmit={handleSubmit} noValidate>
                     {/* 1. Project basics */}
-                    <Section stepNum={1}>
+                    <section className={`section${step === 1 ? " active" : ""}`}  style={{ display: step === 1 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Project Basics</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
@@ -325,9 +319,9 @@ const ClaimTokenProfile: React.FC = () => {
                             <span />
                             <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
-                    </Section>
+                    </section>
                     {/* 2. Official links */}
-                    <Section stepNum={2}>
+                    <section className={`section${step === 2 ? " active" : ""}`}  style={{ display: step === 2 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Official Links</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
@@ -357,9 +351,9 @@ const ClaimTokenProfile: React.FC = () => {
                             <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
                             <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
-                    </Section>
+                    </section>
                     {/* 3. Ownership verification */}
-                    <Section stepNum={3}>
+                    <section className={`section${step === 3 ? " active" : ""}`}  style={{ display: step === 3 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Ownership Verification</FormSectionHeader>
                         <p style={{ fontSize: 12, color: "#8aa0b5" }}>Complete <em>one</em> of the options below (more = stronger trust).</p>
                         <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
@@ -402,9 +396,9 @@ const ClaimTokenProfile: React.FC = () => {
                             <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
                             <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
-                    </Section>
+                    </section>
                     {/* 4. Team details */}
-                    <Section stepNum={4}>
+                    <section className={`section${step === 4 ? " active" : ""}`}  style={{ display: step === 4 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Team & Transparency</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
@@ -439,10 +433,10 @@ const ClaimTokenProfile: React.FC = () => {
                             <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
                             <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
-                    </Section>
+                    </section>
 
                     {/* 5. Branding & extras */}
-                    <Section stepNum={5}>
+                    <section className={`section${step === 5 ? " active" : ""}`}  style={{ display: step === 5 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Branding & Extras</FormSectionHeader>
                         <FormField theme={theme} style={{ marginBottom: 18 }}>
                             <FormLabel theme={theme} htmlFor="tagline">Tagline</FormLabel>
@@ -470,9 +464,9 @@ const ClaimTokenProfile: React.FC = () => {
                             <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
                             <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
-                    </Section>
+                    </section>
                     {/* 6. Review & submit */}
-                    <Section stepNum={6}>
+                    <section className={`section${step === 6 ? " active" : ""}`}  style={{ display: step === 6 ? "block" : "none", margin: "18px 0" }}>
                         <FormSectionHeader theme={theme}>Review & Submit</FormSectionHeader>
                         <div style={{ background: "#0f1a26", border: "1px solid #1d2733", borderRadius: 12, padding: 14, fontSize: 14, whiteSpace: "pre-wrap" }}>
                             {review ? <pre>{review}</pre> : "Click “Generate Review” to preview your submission."}
@@ -498,7 +492,7 @@ const ClaimTokenProfile: React.FC = () => {
                                 <CapsuleButton className="selected">Submit Claim</CapsuleButton>
                             </div>
                         </div>
-                    </Section>
+                    </section>
                 </form>
             </FormDiv>
         </PageContainer>
