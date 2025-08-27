@@ -9,6 +9,7 @@ import Button from "../components/common/Button";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import axios from "axios";
 import api from "../api/api";
+import CapsuleButton from "../components/common/CapsuleButton";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -138,8 +139,8 @@ const ClaimTokenProfile: React.FC = () => {
                 }
             });
             if (!validateAddress(form.chain, form.contract || "")) {
-                ok = false;
-                alert("Please enter a valid contract/mint address for the selected chain.");
+                //ok = false;
+                //alert("Please enter a valid contract/mint address for the selected chain.");
             }
         }
         if (n === 2) {
@@ -263,10 +264,7 @@ const ClaimTokenProfile: React.FC = () => {
     return (
         <PageContainer theme={theme}>
             <Header theme={theme}>Claim Your Token</Header>
-            <div style={{
-                background: "linear-gradient(180deg,#111925,#0f1722)", padding: 18, borderRadius: 14,
-                border: "1px solid #1d2733", boxShadow: "0 8px 24px rgba(0,0,0,.35)"
-            }}>
+            <FormDiv theme={theme}>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 8, margin: "14px 0" }} aria-hidden="true">
                     {dots}
                 </div>
@@ -276,56 +274,56 @@ const ClaimTokenProfile: React.FC = () => {
                         <FormSectionHeader theme={theme}>Project Basics</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Project / Token Name *</FormLabel>
-                                <FormInput theme={theme} name="projectName" type="text" required placeholder="Infinite Money Glitch" value={form.projectName || ""} onChange={handleChange} />
+                                <FormLabel htmlFor="projectName" theme={theme}>Project / Token Name *</FormLabel>
+                                <FormInput theme={theme} id="projectName" name="projectName" type="text" required placeholder="Infinite Money Glitch" value={form.projectName || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Symbol / Ticker *</FormLabel>
-                                <FormInput theme={theme} name="symbol" type="text" required placeholder="GLITCH" value={form.symbol || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="symbol">Symbol / Ticker *</FormLabel>
+                                <FormInput theme={theme} id="symbol" name="symbol" type="text" required placeholder="GLITCH" value={form.symbol || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Blockchain *</FormLabel>
-                                <select name="chain" required value={form.chain || ""} onChange={handleChange}>
+                                <FormLabel htmlFor="chain" theme={theme}>Blockchain *</FormLabel>
+                                <select id="chain" name="chain" required value={form.chain || ""} onChange={handleChange}>
                                     <option value="">Select chain</option>
                                     {CHAINS.map(c => <option key={c}>{c}</option>)}
                                 </select>
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Contract Address *</FormLabel>
-                                <FormInput theme={theme} name="contract" type="text" required placeholder="0x..." value={form.contract || ""} onChange={handleChange} />
+                                <FormLabel htmlFor="contract" theme={theme}>Contract Address *</FormLabel>
+                                <FormInput theme={theme} id="contract" name="contract" type="text" required placeholder="0x..." value={form.contract || ""} onChange={handleChange} />
                                 <div style={{ fontSize: 12, color: "#8aa0b5" }}>For Solana, paste the mint address.</div>
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Contact Email *</FormLabel>
-                                <FormInput theme={theme} name="email" type="email" required placeholder="team@yourproject.xyz" value={form.email || ""} onChange={handleChange} />
+                                <FormLabel htmlFor="email" theme={theme}>Contact Email *</FormLabel>
+                                <FormInput theme={theme} id="email" name="email" type="email" required placeholder="team@yourproject.xyz" value={form.email || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Short Description *</FormLabel>
-                                <textarea name="description" style={{ height: 100 }} maxLength={280} required placeholder="One or two sentences about the project." value={form.description || ""} onChange={handleChange} />
+                                <FormLabel htmlFor="description" theme={theme}>Short Description *</FormLabel>
+                                <textarea name="description" id="description" style={{ height: 100 }} maxLength={280} required placeholder="One or two sentences about the project." value={form.description || ""} onChange={handleChange} />
                                 <div style={{ fontSize: 12, color: "#8aa0b5" }}>{descCount}/280 characters</div>
                             </FormField>
                         </FormGroup>
                         <div style={{ height: 1, background: "#1d2733", margin: "12px 0" }} />
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                             <div style={{ border: "1px dashed #29455f", padding: "12px 14px", borderRadius: 12, background: "#0f1a26" }}>
-                                <label>Logo (PNG/SVG)</label>
-                                <input name="logo" type="file" accept=".png,.svg,.jpg,.jpeg" />
+                                <label htmlFor="logo">Logo (PNG/SVG)</label>
+                                <input name="logo" id="logo" type="file" accept=".png,.svg,.jpg,.jpeg" />
                                 <div style={{ fontSize: 12, color: "#8aa0b5" }}>Square preferred. Max 2MB.</div>
                             </div>
                             <div style={{ border: "1px dashed #29455f", padding: "12px 14px", borderRadius: 12, background: "#0f1a26" }}>
-                                <label>Banner (JPG/PNG)</label>
-                                <input name="banner" type="file" accept=".png,.jpg,.jpeg" />
+                                <label htmlFor="banner">Banner (JPG/PNG)</label>
+                                <input name="banner" id="banner" type="file" accept=".png,.jpg,.jpeg" />
                                 <div style={{ fontSize: 12, color: "#8aa0b5" }}>1600 × 400 recommended. Max 4MB.</div>
                             </div>
                         </div>
                         <p style={{ fontSize: 12, color: "#8aa0b5" }}>Media uploads are illustrative in this demo and are not transmitted.</p>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
                             <span />
-                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                            <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
                     </Section>
                     {/* 2. Official links */}
@@ -333,31 +331,31 @@ const ClaimTokenProfile: React.FC = () => {
                         <FormSectionHeader theme={theme}>Official Links</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Website *</FormLabel>
-                                <FormInput theme={theme} name="website" type="url" required placeholder="https://yourproject.xyz" value={form.website || ""} onChange={handleChange} />
+                                <FormLabel htmlFor="website" theme={theme}>Website *</FormLabel>
+                                <FormInput theme={theme} id="website" name="website" type="url" required placeholder="https://yourproject.xyz" value={form.website || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Litepaper / Docs</FormLabel>
-                                <FormInput theme={theme} name="whitepaper" type="url" placeholder="https://docs.yourproject.xyz" value={form.whitepaper || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="whitepaper">Litepaper / Docs</FormLabel>
+                                <FormInput theme={theme} name="whitepaper" id="whitepaper" type="url" placeholder="https://docs.yourproject.xyz" value={form.whitepaper || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Twitter / X *</FormLabel>
-                                <FormInput theme={theme} name="twitter" type="url" required placeholder="https://x.com/yourhandle" value={form.twitter || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="twitter">Twitter / X *</FormLabel>
+                                <FormInput theme={theme} name="twitter" id="twitter" type="url" required placeholder="https://x.com/yourhandle" value={form.twitter || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Telegram</FormLabel>
-                                <FormInput theme={theme} name="telegram" type="url" placeholder="https://t.me/yourgroup" value={form.telegram || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="telegram">Telegram</FormLabel>
+                                <FormInput theme={theme} name="telegram" id="telegram" type="url" placeholder="https://t.me/yourgroup" value={form.telegram || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Discord</FormLabel>
-                                <FormInput theme={theme} name="discord" type="url" placeholder="https://discord.gg/yourserver" value={form.discord || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="discord">Discord</FormLabel>
+                                <FormInput theme={theme} name="discord" id="discord" type="url" placeholder="https://discord.gg/yourserver" value={form.discord || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
-                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                            <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
+                            <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
                     </Section>
                     {/* 3. Ownership verification */}
@@ -365,38 +363,44 @@ const ClaimTokenProfile: React.FC = () => {
                         <FormSectionHeader theme={theme}>Ownership Verification</FormSectionHeader>
                         <p style={{ fontSize: 12, color: "#8aa0b5" }}>Complete <em>one</em> of the options below (more = stronger trust).</p>
                         <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
-                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                            <div style={optionStyle}>
                                 <span style={pillStyle}>Option A</span><strong> Sign a message</strong>
                             </div>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 10, alignItems: "center" }}>
                                 <div style={{ fontSize: 12, color: "#8aa0b5" }}>Use the deployer wallet or multisig to sign this message and paste signature.</div>
                                 <button type="button" className="btn" style={btnStyle} onClick={handleGenMsg}>Generate Message</button>
                             </div>
-                            <label>Signature (hex/base64)</label>
-                            <textarea name="sig" placeholder="0x..." value={form.sig || ""} onChange={handleChange} />
-                            <div style={{ fontSize: 12, color: "#8aa0b5" }}>{msg}</div>
+                            <FormGroup theme={theme}>
+                                <FormLabel htmlFor="sig" theme={theme}>Signature (hex/base64)</FormLabel>
+                                <textarea name="sig" id="sig" placeholder="0x..." value={form.sig || ""} onChange={handleChange} />
+                                <div style={{ fontSize: 12, color: "#8aa0b5" }}>{msg}</div>
+                            </FormGroup>
                         </div>
                         <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
-                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                            <div style={optionStyle}>
                                 <span style={pillStyle}>Option B</span><strong> DNS TXT record</strong>
                             </div>
-                            <label>Domain</label>
-                            <input name="domain" type="text" placeholder="yourproject.xyz" value={form.domain || ""} onChange={handleChange} />
+                            <FormGroup theme={theme}>
+                                <FormLabel theme={theme} htmlFor="domain">Domain</FormLabel>
+                                <FormInput theme={theme} name="domain" id="domain" type="text" placeholder="yourproject.xyz" value={form.domain || ""} onChange={handleChange} />
+                            </FormGroup>
                             <div style={{ background: "#0f1a26", border: "1px solid #234b69", borderRadius: 12, padding: 12, color: "#7fa7c6" }}>
                                 Create a TXT record on <code>_mth-claim.yourproject.xyz</code> with value: <code>{dnsVal}</code>
                             </div>
                         </div>
                         <div style={{ background: "linear-gradient(180deg,#13293a,#112232)", border: "1px solid #234b69", borderRadius: 12, padding: 12, margin: "10px 0" }}>
-                            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                            <div style={optionStyle}>
                                 <span style={pillStyle}>Option C</span><strong> Social post</strong>
                             </div>
-                            <label>Verification Post URL</label>
-                            <input name="verifyPost" type="url" placeholder="https://x.com/yourhandle/status/..." value={form.verifyPost || ""} onChange={handleChange} />
+                            <FormGroup theme={theme}>
+                                <FormLabel theme={theme} htmlFor="verifyPost">Verification Post URL</FormLabel>
+                                <FormInput theme={theme} name="verifyPost" id="verifyPost" type="url" placeholder="https://x.com/yourhandle/status/..." value={form.verifyPost || ""} onChange={handleChange} />
+                            </FormGroup>
                             <div style={{ fontSize: 12, color: "#8aa0b5" }}>Post must state you’re claiming the MemeTokenHub profile for this contract.</div>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
-                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                            <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
+                            <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
                     </Section>
                     {/* 4. Team details */}
@@ -404,98 +408,99 @@ const ClaimTokenProfile: React.FC = () => {
                         <FormSectionHeader theme={theme}>Team & Transparency</FormSectionHeader>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Team / Entity Name *</FormLabel>
-                                <FormInput theme={theme} name="teamName" type="text" required placeholder="Glitch Labs LLC" value={form.teamName || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="teamName">Team / Entity Name *</FormLabel>
+                                <FormInput theme={theme} name="teamName" id="teamName" type="text" required placeholder="Glitch Labs LLC" value={form.teamName || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Contact Phone</FormLabel>
-                                <FormInput theme={theme} name="contactTel" type="tel" placeholder="+1 555 000 0000" value={form.contactTel || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="contractTel">Contact Phone</FormLabel>
+                                <FormInput theme={theme} name="contactTel" id="contractTel" type="tel" placeholder="+1 555 000 0000" value={form.contactTel || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Team Twitter</FormLabel>
-                                <FormInput theme={theme} name="teamTwitter" type="url" placeholder="https://x.com/glitchlabs" value={form.teamTwitter || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="teamTwitter">Team Twitter</FormLabel>
+                                <FormInput theme={theme} name="teamTwitter" id="teamTwitter" type="url" placeholder="https://x.com/glitchlabs" value={form.teamTwitter || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>GitHub</FormLabel>
-                                <FormInput theme={theme} name="github" type="url" placeholder="https://github.com/yourorg" value={form.github || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="github">GitHub</FormLabel>
+                                <FormInput theme={theme} name="github" id="github" type="url" placeholder="https://github.com/yourorg" value={form.github || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Analytics (Dune/Nansen)</FormLabel>
-                                <FormInput theme={theme} name="dune" type="url" placeholder="https://dune.com/..." value={form.dune || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="dune">Analytics (Dune/Nansen)</FormLabel>
+                                <FormInput theme={theme} name="dune" id="dune" type="url" placeholder="https://dune.com/..." value={form.dune || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme}>
-                            <FormLabel theme={theme}>Wallets for Transparency (comma-separated)</FormLabel>
-                            <textarea name="transparency" placeholder="0xabc..., 0xdef..., 3xSolanaMint..." value={form.transparency || ""} onChange={handleChange} />
+                            <FormLabel theme={theme} htmlFor="transparency">Wallets for Transparency (comma-separated)</FormLabel>
+                            <textarea name="transparency" id="transparency" placeholder="0xabc..., 0xdef..., 3xSolanaMint..." value={form.transparency || ""} onChange={handleChange} />
                             <div style={{ fontSize: 12, color: "#8aa0b5" }}>Public team / treasury wallets, if any.</div>
                         </FormGroup>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
-                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                            <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
+                            <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
                     </Section>
+
                     {/* 5. Branding & extras */}
                     <Section stepNum={5}>
                         <FormSectionHeader theme={theme}>Branding & Extras</FormSectionHeader>
-                        <FormField theme={theme}>
-                            <FormLabel theme={theme}>Tagline</FormLabel>
-                            <FormInput theme={theme} name="tagline" type="text" placeholder="Infinite laughs, infinite gains." value={form.tagline || ""} onChange={handleChange} />
+                        <FormField theme={theme} style={{ marginBottom: 18 }}>
+                            <FormLabel theme={theme} htmlFor="tagline">Tagline</FormLabel>
+                            <FormInput theme={theme} name="tagline" id="tagline" type="text" placeholder="Infinite laughs, infinite gains." value={form.tagline || ""} onChange={handleChange} />
                         </FormField>
                         <FormGroup theme={theme} style={{ gridTemplateColumns: "1fr 1fr" }}>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Primary DEX Link</FormLabel>
-                                <FormInput theme={theme} name="ctaBuy" type="url" placeholder="https://app.uniswap.org/..." value={form.ctaBuy || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="ctaBuy">Primary DEX Link</FormLabel>
+                                <FormInput theme={theme} name="ctaBuy" id="ctaBuy" type="url" placeholder="https://app.uniswap.org/..." value={form.ctaBuy || ""} onChange={handleChange} />
                             </FormField>
                             <FormField theme={theme}>
-                                <FormLabel theme={theme}>Docs / Whitepaper Link</FormLabel>
-                                <FormInput theme={theme} name="ctaDocs" type="url" placeholder="https://docs.yourproject.xyz" value={form.ctaDocs || ""} onChange={handleChange} />
+                                <FormLabel theme={theme} htmlFor="ctaDocs">Docs / Whitepaper Link</FormLabel>
+                                <FormInput theme={theme} name="ctaDocs" id="ctaDocs" type="url" placeholder="https://docs.yourproject.xyz" value={form.ctaDocs || ""} onChange={handleChange} />
                             </FormField>
                         </FormGroup>
                         <FormGroup theme={theme} style={{ gap: 10, flexWrap: "wrap", alignItems: "center" }}>
                             <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                            <input name="allowMemes" type="checkbox" checked={form.allowMemes} onChange={handleChange} /> Allow community meme uploads
+                                <input name="allowMemes" type="checkbox" checked={form.allowMemes} onChange={handleChange} /> Allow community meme uploads
                             </label>
                             <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                            <input name="allowPolls" type="checkbox" checked={form.allowPolls} onChange={handleChange} /> Enable community polls
+                                <input name="allowPolls" type="checkbox" checked={form.allowPolls} onChange={handleChange} /> Enable community polls
                             </label>
                         </FormGroup>
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
-                            <button type="button" className="btn primary" style={btnPrimary} onClick={nextStep}>Next</button>
+                            <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
+                            <CapsuleButton className="glow" onClick={nextStep}>Next</CapsuleButton>
                         </div>
                     </Section>
                     {/* 6. Review & submit */}
                     <Section stepNum={6}>
-                        <h2>Review & Submit</h2>
+                        <FormSectionHeader theme={theme}>Review & Submit</FormSectionHeader>
                         <div style={{ background: "#0f1a26", border: "1px solid #1d2733", borderRadius: 12, padding: 14, fontSize: 14, whiteSpace: "pre-wrap" }}>
                             {review ? <pre>{review}</pre> : "Click “Generate Review” to preview your submission."}
                         </div>
-                        <div style={{ height: 1, background: "#1d2733", margin: "12px 0" }} />
-                        <div style={{ display: "grid", gap: 8 }}>
-                            <label>
-                                <input type="checkbox" name="tos" checked={!!form.tos} onChange={handleChange} required /> I confirm the information is accurate and I am authorized to claim this profile.
-                            </label>
-                            <label>
-                                <input type="checkbox" name="ack" checked={!!form.ack} onChange={handleChange} /> I agree to show team badge and transparency details on the profile.
-                            </label>
-                        </div>
-                        <div style={{ display: "grid", placeItems: "center", height: 78, background: "#0d1722", border: "1px solid #1d2733", borderRadius: 12, color: "#7fa7c6", margin: "12px 0" }}>
-                            [ Captcha placeholder ]
+                        <div style={{ padding: 14, height: 78, background: "#0d1722", border: "1px solid #1d2733", borderRadius: 12, color: "#7fa7c6", margin: "12px 0" }}>
+                            {/* [ Captcha placeholder ] */}
+
+                            <div style={{ display: "grid", gap: 8 }}>
+                                <label>
+                                    <input type="checkbox" name="tos" checked={!!form.tos} onChange={handleChange} required /> I confirm the information is accurate and I am authorized to claim this profile.
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="ack" checked={!!form.ack} onChange={handleChange} /> I agree to show team badge and transparency details on the profile.
+                                </label>
+                            </div>
                         </div>
                         {showError && <div style={{ fontSize: 13, color: "#ff6b8f", marginBottom: 8 }}>Please complete required fields marked with * in previous steps.</div>}
                         {showSuccess && <div style={{ padding: 14, border: "1px solid #2d6a4f", background: "#0e1b14", borderRadius: 12, marginBottom: 8 }}>✅ Submission accepted (demo). In production, this would send your data to the backend.</div>}
                         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-                            <button type="button" className="btn ghost" style={btnGhost} onClick={prevStep}>Back</button>
+                            <CapsuleButton onClick={prevStep}>Back</CapsuleButton>
                             <div style={{ display: "inline-flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-                                <button type="button" className="btn" style={btnStyle} onClick={handleGenReview}>Generate Review</button>
-                                <button type="submit" className="btn primary" style={btnPrimary}>Submit Claim</button>
+                                <CapsuleButton className="glow" onClick={handleGenReview}>Generate Review</CapsuleButton>
+                                <CapsuleButton className="selected">Submit Claim</CapsuleButton>
                             </div>
                         </div>
                     </Section>
                 </form>
-            </div>
+            </FormDiv>
         </PageContainer>
     );
 };
@@ -525,7 +530,7 @@ const FormSectionHeader = styled.h2`
 `;
 
 const FormGroup = styled.div`
-    margin-bottom: ${({ theme }) => theme.spacing.medium};
+    margin-bottom: ${({ theme }) => theme.spacing.extraLarge};
     display: grid;
     gap: 14px;
 `;
@@ -615,5 +620,24 @@ const pillStyle: React.CSSProperties = {
     border: "1px solid #1d2733",
     fontSize: 12
 };
+
+const optionStyle: React.CSSProperties = {
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
+    marginBottom: 16
+};
+
+const FormDiv = styled.div `
+    border: "1px solid #1d2733";
+    width: 100%;
+    padding: ${({ theme }) => theme.spacing.medium};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    background-color: ${({ theme }) => theme.colors.cardBackground};
+    box-shadow: ${({ theme }) => theme.boxShadow};
+    form {
+        width: 100%;
+    }
+`;
 
 export default ClaimTokenProfile;

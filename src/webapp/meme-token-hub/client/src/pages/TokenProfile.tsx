@@ -99,7 +99,7 @@ const TokenProfilePage: React.FC = () => {
   const addClass = (f: typeof tabs[number]) => {
     var cls = activeTab === f.value ? 'selected' : '';
     if (f.value === 'community') {
-      cls += ' socials-updated';
+      cls += ' glow';
     }
     return cls;
   };

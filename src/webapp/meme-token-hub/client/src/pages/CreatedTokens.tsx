@@ -135,7 +135,7 @@ const CreatedTokensFeed: React.FC = () => {
     var className = platform.slug === selected ? 'selected' : '';
     // if it's socialsupdated
     if (platform.slug === 'socialsupdated') {
-      className += ' socials-updated';
+      className += ' glow';
     }
 
     return className;
