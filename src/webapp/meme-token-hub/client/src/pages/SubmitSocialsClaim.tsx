@@ -8,13 +8,12 @@ import { NetworkTokenData, User } from '../types';
 import { useApi } from '../hooks/useApi';
 import api from '../api/api';
 import Button from '../components/common/Button';
-import Input from '../components/common/Input'; // Keep Input for username
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import axios from 'axios';
 import CoinbaseCheckout from '../components/common/CoinbaseCheckout';
 
 const PageContainer = styled.div`
-  max-width: 700px;
+  width: 80%;
   margin: ${({ theme }) => theme.spacing.large} auto;
   padding: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.background};
@@ -42,16 +41,6 @@ const Form = styled.form`
   border-radius: ${({ theme }) => theme.borderRadius};
   background-color: ${({ theme }) => theme.colors.cardBackground};
   box-shadow: ${({ theme }) => theme.boxShadow};
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  label {
-    margin-bottom: ${({ theme }) => theme.spacing.small};
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.text};
-  }
 `;
 
 const TextArea = styled.textarea`
@@ -91,12 +80,10 @@ const Message = styled.p<MessageProps>`
 `;
 
 const ProfileImagePreview = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
   margin: ${({ theme }) => theme.spacing.medium} auto;
-  border: 3px solid ${({ theme }) => theme.colors.primary};
 `;
 
 const FileInputContainer = styled.div`
@@ -118,6 +105,9 @@ const CustomFileUploadButton = styled(Button)`
   }
 `;
 
+const CHAINS = [
+  "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
+];
 
 const SubmitSocialsClaim: React.FC = () => {
 
@@ -125,11 +115,24 @@ const SubmitSocialsClaim: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  
 
-  const [username, setUsername] = useState('');
+
+  const [tokenName, setTokenName] = useState('');
   const [bio, setBio] = useState('');
   const [userId, setUserId] = useState('');
+  const [chain, setChain] = useState('');
+  const [tokenAddress, setTokenAddress] = useState('');
+  const [website, setWebsite] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [discord, setDiscord] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [reddit, setReddit] = useState('');
+  const [other, setOther] = useState('');
+  const [discordUsername, setDiscordUsername] = useState('');
+  const [telegramUsername, setTelegramUsername] = useState('');
+  const [verifiable, setVerifiable] = useState(false);
+  const [noRefund, setNoRefund] = useState(false);
+  const [rightReserve, setRightReserve] = useState(false);
 
   // New state for selected file and its preview URL
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -142,7 +145,7 @@ const SubmitSocialsClaim: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref for triggering file input
 
   const { user: privyUser, authenticated } = usePrivy();
-  
+
   const { data: currentUser, loading } = useApi<User>(
     `/users/${privyUser?.id}`,
     'get',
@@ -156,8 +159,12 @@ const SubmitSocialsClaim: React.FC = () => {
   // Effect to populate form fields and initial image preview
   useEffect(() => {
     if (tokenData) {
-      setUsername(tokenData.name || '');
-      setBio('add/update description');
+      setTokenName(tokenData.name || '');
+      setTokenAddress(tokenData.address || '');
+      if (tokenData.addressDto) {
+        setChain(tokenData.addressDto.chain?.name || '');
+      }
+      //setBio('add/update description');
       setUserId(currentUser?._id || '');
       // Set the initial image preview to the user's current profile image
       if (tokenData.logoURI) {
@@ -166,6 +173,7 @@ const SubmitSocialsClaim: React.FC = () => {
         setImageUrlPreview('/default-avatar.png'); // Default if no image
       }
     }
+    setUserId(privyUser?.id || '');
   }, [tokenData]);
 
   // Clean up the object URL when component unmounts or new file is selected
@@ -203,7 +211,7 @@ const SubmitSocialsClaim: React.FC = () => {
         </Button>
       </PageContainer>
     );
-  }  
+  }
 
   if (loading) {
     return (
@@ -232,7 +240,7 @@ const SubmitSocialsClaim: React.FC = () => {
       // If no file selected, revert to current profile image or default
       setImageUrlPreview('/default-avatar.png'); // Revert to existing or default
       if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-          URL.revokeObjectURL(imageUrlPreview); // Clean up old blob if it exists
+        URL.revokeObjectURL(imageUrlPreview); // Clean up old blob if it exists
       }
     }
   };
@@ -252,9 +260,19 @@ const SubmitSocialsClaim: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('username', username);
-      formData.append('bio', bio);
+      formData.append('tokenName', tokenName);
+      formData.append('description', bio);
       formData.append('userId', userId);
+      formData.append('chain', chain);
+      formData.append('tokenAddress', tokenAddress);
+      formData.append('website', website);
+      formData.append('twitter', twitter);
+      formData.append('discord', discord);
+      formData.append('telegram', telegram);
+      formData.append('reddit', reddit);
+      formData.append('other', other);
+      formData.append('discordUsername', discordUsername);
+      formData.append('telegramUsername', telegramUsername);      
 
       if (selectedFile) {
         formData.append('profileImageFile', selectedFile); // Append the file
@@ -262,17 +280,21 @@ const SubmitSocialsClaim: React.FC = () => {
       // If no new file is selected, the 'profileImageFile' will simply not be in FormData.
       // Your backend should handle this by either keeping the existing image or a default.
 
-      // We assume a new backend endpoint for multipart/form-data, e.g., PUT /users/update-with-image
-      const response = await api.put<User>('/token-profile/submit-socials', formData, {
+      const response = await api.post<User>('/token-profile/submit-socials', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Crucial for FormData
         },
       });
 
-      setStatusMessage('Profile updated successfully!' + response.status);
-      setMessageType('success');
-      // Redirect to profile page after a short delay to show success message
-      setTimeout(() => navigate(`/profile/${privyUser.id}`), 1500);
+      if (response.status !== 200) {
+        setMessageType('error');
+        setStatusMessage('Failed to submit claim. Please try again later.');
+      } else {
+        setMessageType('success');
+        setStatusMessage('Token Claim submitted successfully!');
+        // Redirect to profile page after a short delay to show success message
+        //setTimeout(() => navigate(`/profile/${privyUser.id}`), 1500);
+      }
 
     } catch (err: unknown) {
       console.error('Profile update error:', err);
@@ -296,6 +318,85 @@ const SubmitSocialsClaim: React.FC = () => {
       <Header theme={theme}>Submit Your Claim</Header>
 
       <Form onSubmit={handleSubmit} theme={theme}>
+        <div style={formIntroStyle}>
+          <div>Use this form to request a Community Takeover (updating the socials of a token to new ones).</div>
+          <div>After submission, the request will be reviewed by MTH and you will be contacted via the provided admin/mod contact info.</div>
+          <div>Make sure to fill out all the information truthfully and accurately. Incomplete or false information may lead to rejection of the request.</div>
+        </div>
+        <div style={sectionHeaderStyle}>
+          <h2>Token Info</h2>
+        </div>
+
+        <div style={inputStyle}>
+          <label htmlFor='chain'>Chain</label>
+          <select id="chain" name="chain" required value={chain} onChange={(e) => setChain(e.target.value)}>
+            <option value="">Select chain</option>
+            {CHAINS.map(c => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+        <div style={inputStyle}>
+          <label htmlFor='tokenAddress'>Token Address</label>
+          <input id='tokenAddress' name='tokenAddress' type="text" value={tokenAddress} onChange={(e) => setTokenAddress(e.target.value)} />
+        </div>
+
+        <div style={inputStyle}>
+          <label htmlFor="bio">Token Description/Bio</label>
+          <TextArea theme={theme}
+            id="bio"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Tell us about the token..."
+            rows={4}
+            disabled={isSubmitting}
+          />
+        </div>
+        <div style={sectionHeaderStyle}>
+          <h2>Social Links</h2>
+        </div>
+        <div style={gridInputStyle}>
+          <div style={innerInputStyle}>
+            <label htmlFor='website'>Website</label>
+            <input id='website' name='website' type="text" placeholder='https:// ' value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </div>
+          <div style={innerInputStyle}>
+            <label htmlFor='twitter'>Twitter</label>
+            <input id='twitter' name='twitter' type="text" placeholder='@' value={twitter} onChange={(e) => setTwitter(e.target.value)} />
+          </div>
+        </div>
+        <div style={gridInputStyle}>
+          <div style={innerInputStyle}>
+            <label htmlFor='discord'>Discord</label>
+            <input id='discord' name='discord' type="text" placeholder='https:// ' value={discord} onChange={(e) => setDiscord(e.target.value)} />
+          </div>
+          <div style={innerInputStyle}>
+            <label htmlFor='telegram'>Telegram</label>
+            <input id='telegram' name='telegram' type="text" placeholder='@' value={telegram} onChange={(e) => setTelegram(e.target.value)} />
+          </div>
+        </div>
+        <div style={gridInputStyle}>
+          <div style={innerInputStyle}>
+            <label htmlFor='reddit'>Reddit</label>
+            <input id='reddit' name='reddit' type="text" placeholder='u/' value={reddit} onChange={(e) => setReddit(e.target.value)} />
+          </div>
+          <div style={innerInputStyle}>
+            <label htmlFor='other'>Other</label>
+            <input id='other' name='other' type="text" placeholder='Link or @' value={other} onChange={(e) => setOther(e.target.value)} />
+          </div>
+        </div>
+        <div style={sectionHeaderStyle}>
+          <h2>Admin/Mod Contact Info</h2>
+        </div>
+        <div style={inputStyle}>
+          <label htmlFor='discordUsername'>Discord Username</label>
+          <input id='discordUsername' name='discordUsername' type="text" placeholder=' ' value={discordUsername} onChange={(e) => setDiscordUsername(e.target.value)} />
+        </div>
+        <div style={inputStyle}>
+          <label htmlFor='telegramUsername'>Telegram Username</label>
+          <input id='telegramUsername' name='telegramUsername' type="text" placeholder=' ' value={telegramUsername} onChange={(e) => setTelegramUsername(e.target.value)} />
+        </div>
+        <div style={sectionHeaderStyle}>
+          <h2>Profile Image</h2>
+        </div>
         <FileInputContainer theme={theme}>
           <ProfileImagePreview
             src={imageUrlPreview || '/default-avatar.png'} // Use imageUrlPreview for display
@@ -324,8 +425,41 @@ const SubmitSocialsClaim: React.FC = () => {
             </p>
           )}
         </FileInputContainer>
+        <div style={sectionHeaderStyle}>
+          <h2>Agreements</h2>
+        </div>
+        <div style={inputStyle}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <input name="verifiable" type="checkbox" checked={verifiable} onChange={(e) => setVerifiable((e.target as HTMLInputElement).checked)} />
+            I understand that all supplied data must be verifiable through official channels such as website and socials.
+          </label>
+        </div>
+        <div style={inputStyle}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <input name="norefund" type="checkbox" checked={noRefund} onChange={(e) => setNoRefund((e.target as HTMLInputElement).checked)} />
+            I understand that no refund shall be granted in case my Community Takeover order does not get approved.
+          </label>
+        </div>
+        <div style={inputStyle}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <input name="rightReserve" type="checkbox" checked={rightReserve} onChange={(e) => setRightReserve((e.target as HTMLInputElement).checked)} />
+            I understand and accept that MTH reserves the right to reject or modify the provided information.
+          </label>
+        </div>
+        <div style={{ marginTop: 20, marginBottom: 10, padding: 14, backgroundColor: theme.colors.cardBackground, borderRadius: 12, border: `1px solid ${theme.colors.border}` }}>
+          <h2 style={{ marginBottom: 20 }}>Order Summary</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 14, marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${theme.colors.border}` }}>
+            <div>Product</div>
+            <div style={{ textAlign: "right" }}>Price</div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 14, marginBottom: theme.spacing.extraLarge }}>
+            <div>Profile Claim price</div>
+            <div style={{ textAlign: "right" }}>0.01 ETH</div>
+          </div>
+          <div style={{ fontSize: 12 }}>ETA: Submission will be verified by MTH. Average processing time after receiving payment is less than 24H.</div>
+        </div>
 
-        <FormGroup theme={theme}>
+        {/* <FormGroup theme={theme}>
           <label htmlFor="username">Username</label>
           <Input
             type="text"
@@ -336,24 +470,8 @@ const SubmitSocialsClaim: React.FC = () => {
             required
             disabled={isSubmitting}
           />
-        </FormGroup>
-
-        <FormGroup theme={theme}>
-          <label htmlFor="bio">Token Description/Bio</label>
-          <TextArea theme={theme}
-            id="bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Tell us about the token..."
-            rows={4}
-            disabled={isSubmitting}
-          />
-        </FormGroup>
-        <CoinbaseCheckout chargeCode="your_charge_code_here" />
-        
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? <LoadingSpinner size="small" /> : 'Update Profile'}
-        </Button>
+        </FormGroup> */}
+        <CoinbaseCheckout disabled={true} chargeCode="your_charge_code_here" />
 
         {statusMessage && (
           <Message theme={theme} type={messageType}>
@@ -361,8 +479,42 @@ const SubmitSocialsClaim: React.FC = () => {
           </Message>
         )}
       </Form>
-    </PageContainer>
+    </PageContainer >
   );
 };
 
+const sectionHeaderStyle: React.CSSProperties = {
+  marginTop: 30,
+  marginBottom: 10,
+  borderBottom: '1px solid #ccc',
+  paddingBottom: 6
+};
+const formIntroStyle: React.CSSProperties = {
+  borderRadius: 12,
+  paddingLeft: 14,
+  paddingRight: 14,
+  marginBottom: 20,
+  display: "flex",
+  flexDirection: "column",
+  color: '#a2a4a5ff',
+  gap: 8
+};
+const inputStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  padding: "6px 10px",
+  color: '#a2a4a5ff',
+};
+const gridInputStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: 8,
+}
+const innerInputStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  padding: "6px 10px",
+};
 export default SubmitSocialsClaim;

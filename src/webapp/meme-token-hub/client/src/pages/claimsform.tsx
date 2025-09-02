@@ -1,5 +1,5 @@
 import React, { useState, useRef, ChangeEvent, FormEvent, useEffect } from "react";
-import { Form, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { NetworkTokenData, User } from "../types";
@@ -25,6 +25,8 @@ const ClaimTokenProfile: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
+
+    console.log(isSubmitting, statusMessage, messageType);
 
     const [step, setStep] = useState<Step>(1);
     const [descCount, setDescCount] = useState(0);
@@ -571,28 +573,7 @@ const Message = styled.p<MessageProps>`
 `;
 
 // Button styles
-const btnPrimary: React.CSSProperties = {
-    border: "1px solid #3da6ff",
-    background: "linear-gradient(180deg,#3da6ff,#368cff)",
-    color: "#051422",
-    padding: "12px 16px",
-    borderRadius: 12,
-    fontWeight: 700,
-    cursor: "pointer",
-    boxShadow: "0 8px 24px rgba(0,0,0,.35)",
-    transition: ".2s"
-};
-const btnGhost: React.CSSProperties = {
-    border: "1px solid #1d2733",
-    background: "transparent",
-    color: "#e6eef6",
-    padding: "12px 16px",
-    borderRadius: 12,
-    fontWeight: 700,
-    cursor: "pointer",
-    boxShadow: "0 8px 24px rgba(0,0,0,.35)",
-    transition: ".2s"
-};
+
 const btnStyle: React.CSSProperties = {
     border: "1px solid #1d2733",
     background: "linear-gradient(180deg,#1a2532,#111a24)",

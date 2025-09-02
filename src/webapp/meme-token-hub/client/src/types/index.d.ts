@@ -139,7 +139,7 @@ export interface NetworkTokenData {
   id: string;
   name: string;
   address: string;
-  addresses: TokenAddressDto[];
+  addressDto: TokenAddressDto;
   links: TokenLinkDto[];
   slug: string;
   symbol: string;

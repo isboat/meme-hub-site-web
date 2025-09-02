@@ -16,11 +16,11 @@ import AboutUs from './pages/AboutUs';
 import UpdateProfile from './pages/UpdateProfile';
 import UpdateProfileSocials from './pages/UpdateProfileSocials';
 import AuthPage from './pages/Auth';
-import UserProfile from './pages/UserProfile';
 import TokenProfilePage from './pages/TokenProfile';
 import CreatedTokensFeed from './pages/CreatedTokens';
 import SubmitSocialsClaim from './pages/SubmitSocialsClaim';
 import ClaimTokenProfile from './pages/claimsform';
+import UserProfilePage from './pages/UserProfilePage';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -49,7 +49,7 @@ const App: React.FC = () => {
       <Route path="/about-us" element={<Layout><AboutUs /></Layout>} />
       <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
       <Route path="/profile/:userId" element={<Layout><Profile /></Layout>} /> {/* Anonymous can view profiles */}
-      <Route path="/user-profile/:profileId" element={<Layout><UserProfile /></Layout>} /> {/* Anonymous can view profiles */}
+      <Route path="/user-profile/:profileId" element={<Layout><UserProfilePage /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/kol-profiles" element={<Layout><KolProfiles /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/tokens" element={<Layout><TokensFeed /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/" element={<Layout><Home /></Layout>} />
