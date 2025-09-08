@@ -60,7 +60,6 @@ const TokenProfileChart: React.FC<TokenProfileProps> = ({ tokenProfile, tokenDat
       </DetailItem>
       <DexScreenerEmbed>
         <TradingViewChart symbol={tokenData?.symbol} />
-        {/* <iframe src={`https://dexscreener.com/${tokenData?.addresses[0].chain?.name.toLocaleLowerCase()}/${tokenData?.addresses[0].pairAddress}?embed=1&loadChartSettings=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15`}></iframe> */}
       </DexScreenerEmbed>
     </OverviewCard>
   );

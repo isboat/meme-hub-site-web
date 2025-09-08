@@ -75,6 +75,9 @@ const Navbar: React.FC = () => {
             <NavLink to={`/profile/${user?.id}`} theme={theme}>
               👤 My Profile
             </NavLink>
+            <NavLink to={`/user-pending-socials-claims`} theme={theme}>
+              👤 Submitted Token Claims
+            </NavLink>
             {/* <NavLink to="/settings" theme={theme}>
               ⚙️ Settings
             </NavLink> */}

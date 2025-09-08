@@ -3,7 +3,25 @@
   used in the Meme Token Hub application.
 
 */
-
+export interface UserTokenClaim {
+  id: string;
+  userId: string;
+  tokenAddress: string;
+  description: string;
+  tokenName: string;
+  telegramUsername: string;
+  discordUsername: string;
+  twitter: string;
+  reddit: string;
+  website: string;
+  bannerUrl: string;
+  chain: string;
+  discord: string;
+  others: string;
+  bannerUrl: string;  
+  status: string;
+  submittedAt: string;
+}
 
 export interface UnclaimedToken {
   name: string;

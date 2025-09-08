@@ -1,16 +1,16 @@
 // client/src/pages/UpdateProfile.tsx
 import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import styled from 'styled-components';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { NetworkTokenData, User } from '../types';
-import { useApi } from '../hooks/useApi';
-import api from '../api/api';
-import Button from '../components/common/Button';
-import LoadingSpinner from '../components/common/LoadingSpinner';
+import { NetworkTokenData, User } from '../../types';
+import { useApi } from '../../hooks/useApi';
+import api from '../../api/api';
+import Button from '../../components/common/Button';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import axios from 'axios';
-import CoinbaseCheckout from '../components/common/CoinbaseCheckout';
+import CoinbaseCheckout from '../../components/common/CoinbaseCheckout';
 
 const PageContainer = styled.div`
   width: 80%;
@@ -293,7 +293,7 @@ const SubmitSocialsClaim: React.FC = () => {
         setMessageType('success');
         setStatusMessage('Token Claim submitted successfully!');
         // Redirect to profile page after a short delay to show success message
-        //setTimeout(() => navigate(`/profile/${privyUser.id}`), 1500);
+        setTimeout(() => navigate(`/user-pending-socials-claims`), 1500);
       }
 
     } catch (err: unknown) {
