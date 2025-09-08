@@ -3,7 +3,7 @@
   used in the Meme Token Hub application.
 
 */
-export interface UserTokenClaim {
+export interface UserTokenSocialsClaim {
   id: string;
   userId: string;
   tokenAddress: string;
@@ -21,6 +21,12 @@ export interface UserTokenClaim {
   bannerUrl: string;  
   status: string;
   submittedAt: string;
+  approvers: TokenSocialsClaimApprover[]; // Array of user IDs who approved the claim
+}
+
+export class TokenSocialsClaimApprover {
+  userId: string;
+  approvedAt: string;
 }
 
 export interface UnclaimedToken {
