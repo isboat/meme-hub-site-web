@@ -11,6 +11,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ProfileOverview from '../components/profile/ProfileOverview';
 import ProfileFollows from '../components/profile/ProfileFollows';
 import ProfileHubSocials from '../components/profile/ProfileHubSocials';
+import CapsuleButton from '../components/common/CapsuleButton';
 
 
 const ProfileContainer = styled.div`
@@ -71,26 +72,6 @@ const StatItem = styled.div`
   }
 `;
 
-const TabsContainer = styled.div`
-  display: flex;
-  margin-bottom: ${({ theme }) => theme.spacing.large};
-`;
-
-const TabButton = styled(Button)<{ active: boolean }>`
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing.small} ${({ theme }) => theme.spacing.medium};
-  border-bottom: 3px solid
-    ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
-  color: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.text)};
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  border-radius: 0px;
-  background-color: ${({ theme }) => theme.colors.background} !important;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const FollowButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.medium};
   background-color: ${({ theme }) => theme.colors.secondary};
@@ -110,6 +91,11 @@ const UnfollowButton = styled(Button)`
   }
 `;
 
+const tabs = [
+  { label: "Overview", value: "overview" },
+  { label: "Follows", value: "follows" },
+  { label: "Links", value: "links" }
+];
 
 const UserProfilePage: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
@@ -181,17 +167,13 @@ const UserProfilePage: React.FC = () => {
         )}
       </ProfileHeader>
 
-      <TabsContainer theme={theme}>
-        <TabButton onClick={() => setActiveTab('overview')} active={activeTab === 'overview'} theme={theme}>
-          Overview
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('follows')} active={activeTab === 'follows'} theme={theme}>
-          Follows
-        </TabButton>
-        <TabButton onClick={() => setActiveTab('links')} active={activeTab === 'links'} theme={theme}>
-          Links
-        </TabButton>
-      </TabsContainer>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
+        {tabs.map(f => (
+          <CapsuleButton key={f.value} onClick={() => setActiveTab(f.value as 'overview' | 'follows' | 'links')} className={activeTab === f.value ? 'selected' : ''}>
+            {f.label}
+          </CapsuleButton>
+        ))}
+      </div>
 
       <div>
         {activeTab === 'overview' && (

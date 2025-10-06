@@ -22,6 +22,7 @@ import SubmitSocialsClaim from './pages/token-claims/SubmitSocialsClaim';
 import ClaimTokenProfile from './pages/claimsform';
 import UserProfilePage from './pages/UserProfilePage';
 import UserPendingSocialsClaim from './pages/token-claims/UserPendingClaims';
+import ApprovePendingSocialsClaim from './pages/token-claims/ApprovePendingClaims';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -66,6 +67,7 @@ const App: React.FC = () => {
       {authenticated ? (
         <>
           <Route path="/submit-socials-claim" element={<Layout><SubmitSocialsClaim /></Layout>} />
+          <Route path="/approve-socials-claims/:tokenClaimId" element={<Layout><ApprovePendingSocialsClaim /></Layout>} />
           <Route path="/user-pending-socials-claims" element={<Layout><UserPendingSocialsClaim /></Layout>} />
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
           <Route path="/create-profile" element={<Layout><CreateProfile /></Layout>} />

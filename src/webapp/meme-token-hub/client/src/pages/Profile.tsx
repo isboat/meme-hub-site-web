@@ -79,6 +79,17 @@ const EditProfileButton = styled(Button)`
     background-color: ${({ theme }) => theme.colors.primary + 'E0'}; /* Slightly darker on hover */
   }
 `;
+const VerifyXButton = styled(Button)`
+  margin-top: ${({ theme }) => theme.spacing.medium};
+  background-color: ${({ theme }) => theme.colors.background};
+  margin-left: ${({ theme }) => theme.spacing.large};
+
+    &.glow {
+    box-shadow: 0 0 12px #4ade80;
+    border: 2px solid #4ade80;
+  }
+`;
+
 const tabs = [
   { label: "Overview", value: "overview" },
   { label: "Activity", value: "activity" },
@@ -148,12 +159,19 @@ const Profile: React.FC = () => {
             <small>Following</small>
           </StatItem>
         </Stats>
+        <div>
+          {profileUser && authenticated && (
+            <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
+              Edit Profile
+            </EditProfileButton>
+          )}
 
-        {profileUser && authenticated && (
-          <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
-            Edit Profile
-          </EditProfileButton>
-        )}
+          {profileUser && !profileUser.verified && (
+            <VerifyXButton className='glow' onClick={() => navigate('/update-profile')} theme={theme}>
+              Verify Your X Account
+            </VerifyXButton>
+          )}
+        </div>
       </ProfileHeader>
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">

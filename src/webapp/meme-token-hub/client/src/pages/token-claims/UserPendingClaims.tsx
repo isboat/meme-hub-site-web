@@ -50,7 +50,7 @@ const UserPendingSocialsClaim: React.FC = () => {
 
   const { user: privyUser, authenticated } = usePrivy();
 
-  const { data: userTokenClaims, loading } = useApi<UserTokenSocialsClaim[]>(`/token-profile/user-pending-tokenclaims`,'get',null,null,!authenticated);
+  const { data: userTokenClaims, loading } = useApi<UserTokenSocialsClaim[]>(`/token-profile/user-pending-tokenclaims`, 'get', null, null, !authenticated);
 
   if (!authenticated || !privyUser) {
     return (
@@ -89,7 +89,7 @@ const UserPendingSocialsClaim: React.FC = () => {
 
   const copyPendingLink = (event: React.MouseEvent<HTMLButtonElement>, claim: UserTokenSocialsClaim): void => {
     event.preventDefault();
-    const pendingLink = `${window.location.origin}/claims-form?claimId=${claim.id}`;
+    const pendingLink = `${window.location.origin}/approve-socials-claims/${claim.id}`;
     navigator.clipboard.writeText(pendingLink).then(() => {
       alert('Pending link copied to clipboard!');
     }).catch(err => {
@@ -102,27 +102,36 @@ const UserPendingSocialsClaim: React.FC = () => {
     <PageContainer theme={theme}>
       <Header theme={theme}>Your Pending Token Claims</Header>
 
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: theme.spacing.small, width: '100%', fontWeight: 'bold', borderBottom: `2px solid ${theme.colors.border}`, paddingBottom: theme.spacing.small, marginBottom: theme.spacing.medium }}>
+        <div>Token</div>
+        <div style={{ textAlign: 'center' }}>Total Approvers</div>
+        <div style={{ textAlign: 'end' }}>Actions</div>
+      </div>
       {userTokenClaims.length > 0 ? (
-        <div style={{display: 'flex', flexDirection: 'column', gap: theme.spacing.small}}>
-          {userTokenClaims.map(claim => (
-            <div key={claim.id} style={{ display: 'flex', flexDirection: 'row', padding: theme.spacing.small, borderBottom: `1px solid ${theme.colors.border}` }}>
-              <img src={claim.bannerUrl} alt={claim.tokenName} style={{ width: '100px', borderRadius: theme.borderRadius }} />
-              <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing.small }}>
-                <strong>{claim.tokenName}</strong>
-                <div>Total approvers: {claim.approvers.length}</div>
-                <CapsuleButton className="glow" key={claim.id} onClick={(event) => { copyPendingLink(event, claim) }}>
-                  Copy Pending Link
-              </CapsuleButton>
+        userTokenClaims.map(claim => (
+          <div key={claim.id} style={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr 1fr 1fr', gap: theme.spacing.small, alignItems: 'center', borderBottom: `1px solid ${theme.colors.border}`, padding: theme.spacing.small }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.small }}>
+              <img src={claim.bannerUrl} alt={claim.tokenName} style={{ width: '50px', borderRadius: theme.borderRadius }} />
+              <strong>{claim.tokenName}</strong>
               </div>
+            <div style={{ textAlign: 'center' }}>
+              {claim.approvers.length}/3
             </div>
-          ))}
-        </div>
+            <div style={{ textAlign: 'end' }}>
+              <CapsuleButton className="glow" key={claim.id} onClick={(event) => { copyPendingLink(event, claim) }}>
+                Copy Pending Link
+              </CapsuleButton>
+            </div>
+          </div>
+        ))
       ) : (
-        <Message theme={theme} type="error">
-          You have no pending claims.
-        </Message>
+        <div>
+          <div style={{ textAlign: 'center', padding: theme.spacing.small }}>
+            You have no pending claims.
+          </div>
+        </div>
       )}
-    </PageContainer >
+    </PageContainer>
   );
 };
 
