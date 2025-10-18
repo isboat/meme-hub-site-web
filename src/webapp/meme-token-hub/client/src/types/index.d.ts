@@ -18,6 +18,7 @@ export interface TokenProfile {
   email: string;
   description?: string;
   profileImage?: string;
+  bannerImageUrl?: string;
   profileName: string;
   language: string;
   totalMentions: number;

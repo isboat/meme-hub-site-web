@@ -15,6 +15,7 @@ import TokenProfileKolFollows from '../components/token/TokenProfileKolFollows';
 import TokenProfileLinks from '../components/token/TokenProfileLinks';
 import TokenProfileChart from '../components/token/TokenProfileChart';
 import CapsuleButton from '../components/common/CapsuleButton';
+import ProfileBanner from '../components/common/ProfileBanner';
 
 const ProfileContainer = styled.div`
   max-width: 80%;
@@ -105,6 +106,7 @@ const TokenProfilePage: React.FC = () => {
   };
   return (
     <ProfileContainer theme={theme}>
+      <ProfileBanner imgUrl={profileUser?.bannerImageUrl} />
       <ProfileHeader theme={theme}>
         <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename')}</Username>
         <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
