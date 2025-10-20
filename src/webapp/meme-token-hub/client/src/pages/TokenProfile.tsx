@@ -16,8 +16,6 @@ import TokenProfileKolFollows from '../components/token/TokenProfileKolFollows';
 import TokenProfileLinks from '../components/token/TokenProfileLinks';
 import TokenProfileChart from '../components/token/TokenProfileChart';
 import CapsuleButton from '../components/common/CapsuleButton';
-import ProfileBanner from '../components/common/ProfileBanner';
-// ...existing code...
 
 const ProfileContainer = styled.div`
   width: 100%;

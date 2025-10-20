@@ -82,7 +82,7 @@ const NavLinks = styled.div<{ open: boolean }>`
 /* Inner panel inside overlay that contains the actual nav links */
 const NavPanel = styled.div`
   width: 100%;
-  max-width: 480px;
+  max-width: 300px;
   background: ${({ theme }) => theme.colors.navBarBackground};
   border-radius: 10px;
   box-shadow: ${({ theme }) => theme.boxShadow};

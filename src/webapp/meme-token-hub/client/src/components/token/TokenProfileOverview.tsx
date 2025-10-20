@@ -5,12 +5,12 @@ import { TokenProfileProps } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
 
 
-const ProfileImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
-`;
+// const ProfileImage = styled.img`
+//   width: 100%;
+//   height: 200px;
+//   object-fit: cover;
+//   margin-bottom: ${({ theme }) => theme.spacing.medium};
+// `;
 
 const Row = styled.div`
   display: flex;
