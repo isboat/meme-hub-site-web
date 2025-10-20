@@ -66,6 +66,15 @@ const tabs = [
   { label: "Token Chart", value: "token-chart" }
 ];
 
+const ProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  margin-bottom: ${({ theme }) => theme.spacing.medium};
+`;
+
 const TokenProfilePage: React.FC = () => {
   const { tokenAddr } = useParams<{ tokenAddr: string }>();
   const theme = useTheme();
@@ -106,17 +115,26 @@ const TokenProfilePage: React.FC = () => {
   };
   return (
     <ProfileContainer theme={theme}>
-      <ProfileBanner imgUrl={profileUser?.bannerImageUrl} />
-      <ProfileHeader theme={theme}>
-        <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename')}</Username>
-        <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
+        <ProfileHeader theme={theme}>
+          <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename')}</Username>
+          <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
-        {!profileUser && authenticated && (
-          <EditProfileButton onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })} theme={theme}>
-            Claim Profile
-          </EditProfileButton>
-        )}
-      </ProfileHeader>
+          {!profileUser && authenticated && (
+            <EditProfileButton onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })} theme={theme}>
+              Claim Profile
+            </EditProfileButton>
+          )}
+        </ProfileHeader>
+        <ProfileImage
+              src={profileUser?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
+              alt={`${profileUser?.profileName || tokenData?.name}'s profile`}
+              theme={theme}
+            />
+      </div>
+      <div style={{ marginBottom: theme.spacing.large, backgroundImage: `url(${profileUser?.bannerImageUrl || '/token-default-banner.JPG'})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '200px', width: '100%' }}>
+        
+        </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
         {tabs.map(f => (

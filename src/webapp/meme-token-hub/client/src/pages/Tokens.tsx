@@ -1,4 +1,3 @@
-// client/src/pages/UnclaimedTokensFeed.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
@@ -18,29 +17,154 @@ const PageContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.large};
   background-color: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
-  min-height: calc(100vh - 120px); /* Adjust based on navbar/ticker height */
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: ${({ theme }) => theme.spacing.medium};
+  }
+`;
+
+const Inner = styled.div`
+  width: 100%;
+  max-width: 1200px;
 `;
 
 const Header = styled.h1`
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing.large};
-  font-size: 2.5em;
+  font-size: 2.2rem;
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.small};
-`;
 
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.colors.error};
-  text-align: center;
-  margin-top: ${({ theme }) => theme.spacing.large};
+  @media (max-width: 480px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const TopSection = styled.div`
-  text-align: center;
+  text-align: left;
   margin-bottom: ${({ theme }) => theme.spacing.large};
 `;
 
+const ControlsRow = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: ${({ theme }) => theme.spacing.small};
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const SearchInput = styled.input`
+  flex: 1 1 300px;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.background || 'transparent'};
+  color: ${({ theme }) => theme.colors.text};
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder { color: ${({ theme }) => theme.colors.placeholder}; }
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+const FiltersRow = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: ${({ theme }) => theme.spacing.medium};
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+`;
+
+const ChainWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  gap: 16px;
+  margin-top: ${({ theme }) => theme.spacing.large};
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
+const Card = styled.a`
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 10px;
+  overflow: hidden;
+  background: '#fff'
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.boxShadow};
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  background: #eee;
+
+  @media (max-width: 480px) {
+    height: 160px;
+  }
+`;
+
+const CardBody = styled.div`
+  padding: 10px;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const MetaRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  color: ${({ theme }) => theme.colors.dimmedWhite || '#666'};
+  font-size: 0.85rem;
+`;
+
+const NoResults = styled.p`
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing.large};
+  color: ${({ theme }) => theme.colors.placeholder};
+`;
+
+// ...existing code...
 type SortType = "featured" | "az" | "since";
 
 const CHAIN_FILTERS = [
@@ -68,7 +192,7 @@ const TokensFeed: React.FC = () => {
 
   const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
 
-  const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+  const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>) : Promise<void> => {
     event.preventDefault();
     const networkName = event.currentTarget.textContent?.trim().toLowerCase();
     if (!networkName) return;
@@ -77,10 +201,8 @@ const TokensFeed: React.FC = () => {
     if (network) {
       setSelected(network.chainIdentifier);
       setIsLoadingNetworkTokens(true);
-      // Reset the token data
       setNetworkTokenData([]);
 
-      // load the tokens from api
       const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.chainIdentifier}/tokens`);
       const tokensData = response.data;
       if (tokensData) {
@@ -92,17 +214,17 @@ const TokensFeed: React.FC = () => {
 
   const navigateToTokenPage = (token: NetworkTokenData): void => {
     if (!token || !token.address) return;
-    // Navigate to the token profile page
-    // pass the token object to the token profile page
     navigate(`/token/${token.address}`, { state: { token } });
   };
 
   if (loading) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Trending</Header>
-        <LoadingSpinner />
-        <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
+        <Inner>
+          <Header theme={theme}>Trending</Header>
+          <LoadingSpinner />
+          <p style={{ textAlign: 'center', color: theme.colors.placeholder }}>Loading data...</p>
+        </Inner>
       </PageContainer>
     );
   }
@@ -116,8 +238,10 @@ const TokensFeed: React.FC = () => {
     }
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Tokens</Header>
-        <ErrorMessage theme={theme}>Error loading tokens: {errorMessage}</ErrorMessage>
+        <Inner>
+          <Header theme={theme}>Tokens</Header>
+          <NoResults theme={theme}>Error loading tokens: {errorMessage}</NoResults>
+        </Inner>
       </PageContainer>
     );
   }
@@ -127,12 +251,13 @@ const TokensFeed: React.FC = () => {
   if (!networkData) {
     return (
       <PageContainer theme={theme}>
-        <Header theme={theme}>Tokens</Header>
-        <p>No tokens found!</p>
+        <Inner>
+          <Header theme={theme}>Tokens</Header>
+          <NoResults theme={theme}>No tokens found!</NoResults>
+        </Inner>
       </PageContainer>
     );
-  }
-  else {
+  } else {
     if (networkData) {
       networkData = networkData.filter(chain => allowNetworks.includes(chain.chainIdentifier.toLowerCase()));
       networkData.forEach(chain => {
@@ -150,64 +275,82 @@ const TokensFeed: React.FC = () => {
 
   return (
     <PageContainer theme={theme}>
-      <div style={{ width: '100%', maxWidth: '1200px' }}>
+      <Inner>
         <TopSection theme={theme}>
-          <div>
-            <h1 style={{ marginBottom: theme.spacing.small }}>Trending Coins</h1>
-            <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.dimmedWhite }}>
-              The original OG, authentic meme coins — artwork first. Click a card to view the full profile.
-            </p>
-            <div style={{ marginBottom: theme.spacing.medium }}>
-              <input style={{ width: '75%', margin: '0 20px' }}
-                type="search"
-                placeholder="Search (doge, shib, pepe…)"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-              />
-              <CapsuleSelect
-                value={sort}
-                onChange={e => setSort(e.target.value as SortType)}
-              >
-                <option value="featured">Featured</option>
-                <option value="az">A → Z</option>
-                <option value="since">Newest</option>
-              </CapsuleSelect>
-            </div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
-            {CHAIN_FILTERS.map(f => (
-              <CapsuleButton className={addClassName(f)} key={f.value} onClick={(event) => { loadNetworkTokens(event) }}>
-                {f.label}
-              </CapsuleButton>
-            ))}
-          </div>
+          <Header theme={theme}>Trending Coins</Header>
+          <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.dimmedWhite }}>
+            The original OG, authentic meme coins — artwork first. Tap a card to view the full profile.
+          </p>
+
+          <ControlsRow theme={theme}>
+            <SearchInput
+              type="search"
+              placeholder="Search (doge, shib, pepe…)"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              aria-label="Search tokens"
+              theme={theme}
+            />
+
+            <CapsuleSelect
+              value={sort}
+              onChange={e => setSort(e.target.value as SortType)}
+              aria-label="Sort tokens"
+            >
+              <option value="featured">Featured</option>
+              <option value="az">A → Z</option>
+              <option value="since">Newest</option>
+            </CapsuleSelect>
+          </ControlsRow>
+
+          <FiltersRow aria-label="Filter by chain" theme={theme}>
+            <ChainWrapper>
+              {CHAIN_FILTERS.map(f => (
+                <CapsuleButton
+                  className={addClassName(f)}
+                  key={f.value}
+                  onClick={(event) => { loadNetworkTokens(event) }}
+                  aria-pressed={selected === f.value}
+                >
+                  {f.label}
+                </CapsuleButton>
+              ))}
+            </ChainWrapper>
+          </FiltersRow>
         </TopSection>
+
         {isLoadingNetworkTokens && <LoadingSpinner />}
         {!isLoadingNetworkTokens && networkTokenData.length === 0 && (
-          <p style={{ textAlign: 'center' }}>No tokens found.</p>
+          <NoResults theme={theme}>No tokens found.</NoResults>
         )}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px' }}>
 
-          {networkTokenData.map(c => {
-            return (
-              <a onClick={() => navigateToTokenPage(c)} key={c.name} style={{ textDecoration: 'none', cursor: 'pointer', border: `1px solid ${theme.colors.border}`, borderRadius: '8px', overflow: 'hidden' }}>
-                <div>
-                  <img width="100%" src={c.logoURI} alt={`${c.name} Banner`} />
+        <Grid theme={theme}>
+          {networkTokenData.map(c => (
+            <Card
+              key={c.name}
+              onClick={() => navigateToTokenPage(c)}
+              role="link"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') navigateToTokenPage(c); }}
+              theme={theme}
+            >
+              <CardImage src={c.logoURI} alt={`${c.name} Banner`} />
+              <CardBody theme={theme}>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', textTransform: 'capitalize' }}>
+                  {c.name} <span style={{ fontWeight: 500, fontSize: '0.85rem' }}>({c.symbol})</span>
                 </div>
-                <div style={{ padding: '10px' }}>
-                  <div>
-                    <div style={{ fontWeight: 'bold', fontSize: 'small', textTransform: 'capitalize' }}>{c.name} <span>({c.symbol})</span></div>
-                    <div style={{ fontSize: 'smaller', color: '#666', textTransform: 'capitalize' }}>Mkt Cap: {fmtCap(c.marketcap)}</div>
-                    <div style={{ fontSize: 'smaller', color: '#666', textTransform: 'capitalize' }}>{selected} • since 2023</div>
-                  </div>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      </div>
+                <MetaRow theme={theme}>
+                  <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
+                  <div style={{ textTransform: 'capitalize' }}>{selected} • since 2023</div>
+                </MetaRow>
+              </CardBody>
+            </Card>
+          ))}
+        </Grid>
+      </Inner>
     </PageContainer>
   );
 };
 
 export default TokensFeed;
+// ...existing code...

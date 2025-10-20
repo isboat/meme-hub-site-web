@@ -46,13 +46,6 @@ const TokenProfileOverview: React.FC<TokenProfileProps> = ({ tokenProfile, token
     <>
       <Row>
         <Column theme={theme}>
-            <ProfileImage
-              src={tokenProfile?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
-              alt={`${tokenProfile?.profileName || tokenData?.name}'s profile`}
-              theme={theme}
-            />
-        </Column>
-        <Column theme={theme}>
           <OverviewCard theme={theme}>
             <DetailItem theme={theme}>
               {tokenProfile?.description || 'Description Not provided'}

@@ -8,7 +8,7 @@ const TwitterCallbackHandler: React.FC = () => {
 
   useEffect(() => {
     const code = searchParams.get('code');
-    const state = searchParams.get('state');
+    //const state = searchParams.get('state');
 
     if (code) {
       fetch('https://api.twitter.com/2/oauth2/token', {
