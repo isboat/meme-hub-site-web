@@ -1,4 +1,4 @@
-// client/src/pages/UpdateProfile.tsx
+// ...existing code...
 import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
@@ -26,12 +26,24 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+
+  @media (max-width: 900px) {
+    width: calc(100% - 24px);
+    margin: ${({ theme }) => theme.spacing.medium};
+    padding: ${({ theme }) => theme.spacing.small};
+  }
 `;
 
 const Header = styled.h1`
   text-align: center;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing.large};
+  font-size: 1.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const Form = styled.form`
@@ -43,6 +55,11 @@ const Form = styled.form`
   border-radius: ${({ theme }) => theme.borderRadius};
   background-color: ${({ theme }) => theme.colors.cardBackground};
   box-shadow: ${({ theme }) => theme.boxShadow};
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.small};
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -68,7 +85,6 @@ const TextArea = styled.textarea`
   }
 `;
 
-// Corrected MessageProps interface
 interface MessageProps {
   type: 'success' | 'error' | '';
 }
@@ -98,19 +114,114 @@ const CustomFileUploadButton = styled(Button)`
   &:hover {
     background-color: ${({ theme }) => theme.colors.secondary + 'E0'};
   }
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const CHAINS = [
   "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
 ];
 
+/* Responsive helpers used in place of inline style objects */
+const SectionHeader = styled.div`
+  margin-top: 30px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  padding-bottom: 6px;
+`;
+
+const FormIntro = styled.div`
+  border-radius: 12px;
+  padding-left: 14px;
+  padding-right: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #a2a4a5ff;
+  gap: 8px;
+  font-size: 0.95rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const SingleInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 10px;
+  color: #a2a4a5ff;
+`;
+
+const TwoColGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const InputInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 10px;
+`;
+
+const FileRow = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+`;
+
+const OrderSummary = styled.div`
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 14px;
+  background-color: ${({ theme }) => theme.colors.cardBackground};
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-sizing: border-box;
+`;
+
+const OrderGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: ${({ theme }) => theme.spacing.extraLarge};
+  padding-bottom: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    & > div:nth-child(2) { text-align: left; }
+  }
+`;
+
+const OrderNote = styled.div`
+  font-size: 12px;
+`;
+
+/* End of responsive helpers */
+
+// ...existing code...
 const SubmitSocialsClaim: React.FC = () => {
 
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-
-
 
   const [tokenName, setTokenName] = useState('');
   const [bio, setBio] = useState('');
@@ -162,18 +273,16 @@ const SubmitSocialsClaim: React.FC = () => {
       if (tokenData.addressDto) {
         setChain(tokenData.addressDto.chain?.name || '');
       }
-      //setBio('add/update description');
       setUserId(currentUser?._id || '');
-      // Set the initial image preview to the user's current profile image
       if (tokenData.logoURI) {
         setLogoUrlPreview(tokenData.logoURI);
       } else {
-        setLogoUrlPreview('/default-avatar.png'); // Default if no image
+        setLogoUrlPreview('/default-avatar.png');
       }
-      setImageUrlPreview('/token-default-banner.JPG'); // Default if no image
+      setImageUrlPreview('/token-default-banner.JPG');
     }
     setUserId(privyUser?.id || '');
-  }, [tokenData]);
+  }, [tokenData, currentUser, privyUser]);
 
   // Clean up the object URL when component unmounts or new file is selected
   useEffect(() => {
@@ -181,8 +290,11 @@ const SubmitSocialsClaim: React.FC = () => {
       if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
         URL.revokeObjectURL(logoUrlPreview);
       }
+      if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(imageUrlPreview);
+      }
     };
-  }, [logoUrlPreview]);
+  }, [logoUrlPreview, imageUrlPreview]);
 
   if (!authenticated || !privyUser) {
     return (
@@ -222,24 +334,21 @@ const SubmitSocialsClaim: React.FC = () => {
     );
   }
 
-
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setSelectedFile(file);
 
-      // Create a URL for image preview
       if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrlPreview); // Clean up previous blob URL
+        URL.revokeObjectURL(imageUrlPreview);
       }
       setImageUrlPreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
-      // If no file selected, revert to current profile image or default
-      setImageUrlPreview('/default-avatar.png'); // Revert to existing or default
+      setImageUrlPreview('/default-avatar.png');
       if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrlPreview); // Clean up old blob if it exists
+        URL.revokeObjectURL(imageUrlPreview);
       }
     }
   };
@@ -249,17 +358,15 @@ const SubmitSocialsClaim: React.FC = () => {
       const file = e.target.files[0];
       setSelectedLogoFile(file);
 
-      // Create a URL for image preview
       if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(logoUrlPreview); // Clean up previous blob URL
+        URL.revokeObjectURL(logoUrlPreview);
       }
       setLogoUrlPreview(URL.createObjectURL(file));
     } else {
       setSelectedLogoFile(null);
-      // If no file selected, revert to current profile image or default
-      setLogoUrlPreview('/token-default-banner.JPG'); // Revert to existing or default
+      setLogoUrlPreview('/token-default-banner.JPG');
       if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(logoUrlPreview); // Clean up old blob if it exists
+        URL.revokeObjectURL(logoUrlPreview);
       }
     }
   };
@@ -291,20 +398,18 @@ const SubmitSocialsClaim: React.FC = () => {
       formData.append('reddit', reddit);
       formData.append('other', other);
       formData.append('discordUsername', discordUsername);
-      formData.append('telegramUsername', telegramUsername);      
+      formData.append('telegramUsername', telegramUsername);
 
       if (selectedFile) {
-        formData.append('profileImageFile', selectedFile); // Append the file
+        formData.append('profileImageFile', selectedFile);
       }
       if (selectedLogoFile) {
-        formData.append('profileLogoImageFile', selectedLogoFile); // Append the file
+        formData.append('profileLogoImageFile', selectedLogoFile);
       }
-      // If no new file is selected, the 'profileImageFile' will simply not be in FormData.
-      // Your backend should handle this by either keeping the existing image or a default.
 
       const response = await api.post<User>('/token-profile/submit-socials', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Crucial for FormData
+          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -314,7 +419,6 @@ const SubmitSocialsClaim: React.FC = () => {
       } else {
         setMessageType('success');
         setStatusMessage('Token Claim submitted successfully!');
-        // Redirect to profile page after a short delay to show success message
         setTimeout(() => navigate(`/user-pending-socials-claims`), 1500);
       }
 
@@ -340,16 +444,17 @@ const SubmitSocialsClaim: React.FC = () => {
       <Header theme={theme}>Submit Your Claim</Header>
 
       <Form onSubmit={handleSubmit} theme={theme}>
-        <div style={formIntroStyle}>
+        <FormIntro theme={theme}>
           <div>Use this form to request a Community Takeover (updating the socials of a token to new ones).</div>
           <div>After submission, the request will be reviewed by MTH and you will be contacted via the provided admin/mod contact info.</div>
           <div>Make sure to fill out all the information truthfully and accurately. Incomplete or false information may lead to rejection of the request.</div>
-        </div>
+        </FormIntro>
 
-        <div style={sectionHeaderStyle}>
+        <SectionHeader theme={theme}>
           <h2>Choose Audit Identity</h2>
-        </div>
-        <div style={gridInputStyle}>
+        </SectionHeader>
+
+        <TwoColGrid>
           <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
             <div style={{ justifyContent: 'space-between', display: 'flex', marginBottom: 10 }}>
               <div>MemeTokenHub Profile</div>
@@ -357,186 +462,187 @@ const SubmitSocialsClaim: React.FC = () => {
             </div>
             <div style={{ fontSize: '0.8em' }}>Recommended - shows as MTH holder</div>
           </div>
+
           <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
             <div>X (Twitter) Profile</div>
             <div style={{ fontSize: '0.8em', marginRight: 20, marginBottom: 20 }}>Sign in with your @handle (demo)</div>
             <TwitterLoginButton />
           </div>
-        </div>
-        
-        <div style={sectionHeaderStyle}>
-          <h2>Token Info</h2>
-        </div>
+        </TwoColGrid>
 
-        <div style={inputStyle}>
+        <SectionHeader theme={theme}>
+          <h2>Token Info</h2>
+        </SectionHeader>
+
+        <SingleInput>
           <label htmlFor='chain'>Chain</label>
           <select id="chain" name="chain" required value={chain} onChange={(e) => setChain(e.target.value)}>
             <option value="">Select chain</option>
             {CHAINS.map(c => <option key={c}>{c}</option>)}
           </select>
-        </div>
-        <div style={inputStyle}>
+        </SingleInput>
+
+        <SingleInput>
           <label htmlFor='tokenAddress'>Token Address</label>
           <input id='tokenAddress' name='tokenAddress' type="text" value={tokenAddress} onChange={(e) => setTokenAddress(e.target.value)} />
-        </div>
+        </SingleInput>
 
-        <div style={inputStyle}>
+        <SingleInput>
           <label htmlFor="bio">Token Description/Bio</label>
-          <TextArea theme={theme}
+          <TextArea
             id="bio"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Tell us about the token..."
             rows={4}
             disabled={isSubmitting}
+            theme={theme}
           />
-        </div>
-        <div style={sectionHeaderStyle}>
+        </SingleInput>
+
+        <SectionHeader theme={theme}>
           <h2>Social Links</h2>
-        </div>
-        <div style={gridInputStyle}>
-          <div style={innerInputStyle}>
+        </SectionHeader>
+
+        <TwoColGrid>
+          <InputInner>
             <label htmlFor='website'>Website</label>
             <input id='website' name='website' type="text" placeholder='https:// ' value={website} onChange={(e) => setWebsite(e.target.value)} />
-          </div>
-          <div style={innerInputStyle}>
+          </InputInner>
+          <InputInner>
             <label htmlFor='twitter'>Twitter</label>
             <input id='twitter' name='twitter' type="text" placeholder='@' value={twitter} onChange={(e) => setTwitter(e.target.value)} />
-          </div>
-        </div>
-        <div style={gridInputStyle}>
-          <div style={innerInputStyle}>
+          </InputInner>
+          <InputInner>
             <label htmlFor='discord'>Discord</label>
             <input id='discord' name='discord' type="text" placeholder='https:// ' value={discord} onChange={(e) => setDiscord(e.target.value)} />
-          </div>
-          <div style={innerInputStyle}>
+          </InputInner>
+          <InputInner>
             <label htmlFor='telegram'>Telegram</label>
             <input id='telegram' name='telegram' type="text" placeholder='@' value={telegram} onChange={(e) => setTelegram(e.target.value)} />
-          </div>
-        </div>
-        <div style={gridInputStyle}>
-          <div style={innerInputStyle}>
+          </InputInner>
+          <InputInner>
             <label htmlFor='reddit'>Reddit</label>
             <input id='reddit' name='reddit' type="text" placeholder='u/' value={reddit} onChange={(e) => setReddit(e.target.value)} />
-          </div>
-          <div style={innerInputStyle}>
+          </InputInner>
+          <InputInner>
             <label htmlFor='other'>Other</label>
             <input id='other' name='other' type="text" placeholder='Link or @' value={other} onChange={(e) => setOther(e.target.value)} />
-          </div>
-        </div>
-        <div style={sectionHeaderStyle}>
+          </InputInner>
+        </TwoColGrid>
+
+        <SectionHeader theme={theme}>
           <h2>Admin/Mod Contact Info</h2>
-        </div>
-        <div style={inputStyle}>
+        </SectionHeader>
+
+        <SingleInput>
           <label htmlFor='discordUsername'>Discord Username</label>
           <input id='discordUsername' name='discordUsername' type="text" placeholder=' ' value={discordUsername} onChange={(e) => setDiscordUsername(e.target.value)} />
-        </div>
-        <div style={inputStyle}>
+        </SingleInput>
+
+        <SingleInput>
           <label htmlFor='telegramUsername'>Telegram Username</label>
           <input id='telegramUsername' name='telegramUsername' type="text" placeholder=' ' value={telegramUsername} onChange={(e) => setTelegramUsername(e.target.value)} />
-        </div>
-        <div style={sectionHeaderStyle}>
+        </SingleInput>
+
+        <SectionHeader theme={theme}>
           <h2>Profile Image</h2>
+        </SectionHeader>
+
+        <div>
+          <ProfileBanner imgUrl={imageUrlPreview || '/token-default-banner.JPG'} logoUrl={logoUrlPreview || '/default-avatar.png'} />
         </div>
-          <div>
-            <ProfileBanner imgUrl={imageUrlPreview || '/token-default-banner.JPG'} logoUrl={logoUrlPreview || '/default-avatar.png'} />
-          </div>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-        <FileInputContainer theme={theme}>
-          <StyledFileInput
-            type="file"
-            id="profileImageUpload"
-            accept="image/*" // Accept only image files
-            onChange={handleFileChange}
-            ref={fileInputRef} // Connect ref to the hidden input
-            disabled={isSubmitting}
-          />
-          <CustomFileUploadButton
-            type="button" // Important: Prevent this button from submitting the form
-            onClick={() => fileInputRef.current?.click()} // Trigger the hidden file input
-            disabled={isSubmitting}
-            theme={theme}
-          >
-            {selectedFile ? 'Change Image' : 'Upload Image'}
-          </CustomFileUploadButton>
-          {selectedFile && (
-            <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
-              Selected: {selectedFile.name}
-            </p>
-          )}
-        </FileInputContainer>
-          
-        <FileInputContainer theme={theme}>
-          <StyledFileInput
-            type="file"
-            id="profileLogoUpload"
-            accept="image/*" // Accept only image files
-            onChange={handleLogoFileChange}
-            ref={logoInputRef} // Connect ref to the hidden input
-            disabled={isSubmitting}
-          />
-          <CustomFileUploadButton
-            type="button" // Important: Prevent this button from submitting the form
-            onClick={() => logoInputRef.current?.click()} // Trigger the hidden file input
-            disabled={isSubmitting}
-            theme={theme}
-          >
-            {selectedLogoFile ? 'Change Logo Image' : 'Upload Logo Image'}
-          </CustomFileUploadButton>
-          {selectedLogoFile && (
-            <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
-              Selected: {selectedLogoFile.name}
-            </p>
-          )}
-        </FileInputContainer>
-        </div>
-        <div style={sectionHeaderStyle}>
+
+        <FileRow>
+          <FileInputContainer theme={theme}>
+            <StyledFileInput
+              type="file"
+              id="profileImageUpload"
+              accept="image/*"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              disabled={isSubmitting}
+            />
+            <CustomFileUploadButton
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isSubmitting}
+              theme={theme}
+            >
+              {selectedFile ? 'Change Image' : 'Upload Image'}
+            </CustomFileUploadButton>
+            {selectedFile && (
+              <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
+                Selected: {selectedFile.name}
+              </p>
+            )}
+          </FileInputContainer>
+
+          <FileInputContainer theme={theme}>
+            <StyledFileInput
+              type="file"
+              id="profileLogoUpload"
+              accept="image/*"
+              onChange={handleLogoFileChange}
+              ref={logoInputRef}
+              disabled={isSubmitting}
+            />
+            <CustomFileUploadButton
+              type="button"
+              onClick={() => logoInputRef.current?.click()}
+              disabled={isSubmitting}
+              theme={theme}
+            >
+              {selectedLogoFile ? 'Change Logo Image' : 'Upload Logo Image'}
+            </CustomFileUploadButton>
+            {selectedLogoFile && (
+              <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
+                Selected: {selectedLogoFile.name}
+              </p>
+            )}
+          </FileInputContainer>
+        </FileRow>
+
+        <SectionHeader theme={theme}>
           <h2>Agreements</h2>
-        </div>
-        <div style={inputStyle}>
+        </SectionHeader>
+
+        <SingleInput>
           <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
             <input name="verifiable" type="checkbox" checked={verifiable} onChange={(e) => setVerifiable((e.target as HTMLInputElement).checked)} />
             I understand that all supplied data must be verifiable through official channels such as website and socials.
           </label>
-        </div>
-        <div style={inputStyle}>
+        </SingleInput>
+
+        <SingleInput>
           <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
             <input name="norefund" type="checkbox" checked={noRefund} onChange={(e) => setNoRefund((e.target as HTMLInputElement).checked)} />
             I understand that no refund shall be granted in case my Community Takeover order does not get approved.
           </label>
-        </div>
-        <div style={inputStyle}>
+        </SingleInput>
+
+        <SingleInput>
           <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
             <input name="rightReserve" type="checkbox" checked={rightReserve} onChange={(e) => setRightReserve((e.target as HTMLInputElement).checked)} />
             I understand and accept that MTH reserves the right to reject or modify the provided information.
           </label>
-        </div>
-        <div style={{ marginTop: 20, marginBottom: 10, padding: 14, backgroundColor: theme.colors.cardBackground, borderRadius: 12, border: `1px solid ${theme.colors.border}` }}>
+        </SingleInput>
+
+        <OrderSummary theme={theme}>
           <h2 style={{ marginBottom: 20 }}>Order Summary</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 14, marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${theme.colors.border}` }}>
+          <OrderGrid theme={theme}>
             <div>Product</div>
             <div style={{ textAlign: "right" }}>Price</div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 14, marginBottom: theme.spacing.extraLarge }}>
+
             <div>Profile Claim price</div>
             <div style={{ textAlign: "right" }}>0.01 ETH</div>
-          </div>
-          <div style={{ fontSize: 12 }}>ETA: Submission will be verified by MTH. Average processing time after receiving payment is less than 24H.</div>
-        </div>
+          </OrderGrid>
+          <OrderNote>ETA: Submission will be verified by MTH. Average processing time after receiving payment is less than 24H.</OrderNote>
+        </OrderSummary>
 
-        {/* <FormGroup theme={theme}>
-          <label htmlFor="username">Username</label>
-          <Input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Token display name"
-            required
-            disabled={isSubmitting}
-          />
-        </FormGroup> */}
-        <CoinbaseCheckout disabled={true} chargeCode="your_charge_code_here" />
+        <div style={{ width: '100%' }}>
+          <CoinbaseCheckout disabled={true} chargeCode="your_charge_code_here" />
+        </div>
 
         {statusMessage && (
           <Message theme={theme} type={messageType}>
@@ -548,38 +654,5 @@ const SubmitSocialsClaim: React.FC = () => {
   );
 };
 
-const sectionHeaderStyle: React.CSSProperties = {
-  marginTop: 30,
-  marginBottom: 10,
-  borderBottom: '1px solid #ccc',
-  paddingBottom: 6
-};
-const formIntroStyle: React.CSSProperties = {
-  borderRadius: 12,
-  paddingLeft: 14,
-  paddingRight: 14,
-  marginBottom: 20,
-  display: "flex",
-  flexDirection: "column",
-  color: '#a2a4a5ff',
-  gap: 8
-};
-const inputStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-  padding: "6px 10px",
-  color: '#a2a4a5ff',
-};
-const gridInputStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 8,
-}
-const innerInputStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-  padding: "6px 10px",
-};
+// ...existing code...
 export default SubmitSocialsClaim;
