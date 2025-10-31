@@ -76,6 +76,7 @@ const SearchInput = styled.input`
 
   @media (max-width: 600px) {
     width: 100%;
+    flex: none;
   }
 `;
 
@@ -128,6 +129,10 @@ const Card = styled.a`
     transform: translateY(-4px);
     box-shadow: ${({ theme }) => theme.boxShadow};
   }
+
+  @media (max-width: 700px) {
+    display: flex;
+  }
 `;
 
 const CardImage = styled.img`
@@ -138,7 +143,7 @@ const CardImage = styled.img`
   background: #eee;
 
   @media (max-width: 480px) {
-    height: 160px;
+    width: auto;
   }
 `;
 
@@ -156,6 +161,13 @@ const MetaRow = styled.div`
   margin-top: 6px;
   color: ${({ theme }) => theme.colors.dimmedWhite || '#666'};
   font-size: 0.85rem;
+`;
+
+const MetaRowSince = styled.div`
+  text-transform: capitalize;
+  @media (max-width: 700px) {
+    display: none;
+  }
 `;
 
 const NoResults = styled.p`
@@ -341,7 +353,7 @@ const TokensFeed: React.FC = () => {
                 </div>
                 <MetaRow theme={theme}>
                   <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
-                  <div style={{ textTransform: 'capitalize' }}>{selected} • since 2023</div>
+                  <MetaRowSince>{selected} • since 2023</MetaRowSince>
                 </MetaRow>
               </CardBody>
             </Card>

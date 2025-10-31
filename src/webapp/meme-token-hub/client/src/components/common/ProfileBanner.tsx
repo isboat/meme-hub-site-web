@@ -3,31 +3,33 @@ import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 
 interface ProfileBannerProps extends React.HTMLAttributes<HTMLDivElement> {
-  // 'primary' is the default, 'secondary' could be for less prominent actions
-  variant?: 'primary' | 'secondary';
-  // Allow passing className for external styling if needed (though styled-components handles most)
-  className?: string;
   imgUrl?: string;
+  logoUrl?: string;
 }
-
-const StyledProfileBanner = styled.div<ProfileBannerProps>`
+const StyledProfileBanner = styled.div<{ $imgUrl?: string }>`
   width: 100%;
-  min-height: 200px;
-  background-color: ${({ theme }) => theme.colors.cardBackground || '#f0f0f0'};
-
+  height: 200px;
+  background-image: url(${props => props.$imgUrl || '/token-default-banner.JPG'});
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  margin: ${({ theme }) => theme.spacing.large} 0;
   img {
-    width: 100%;
-  object-fit: cover;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
+    width: 110px;
+  border-radius: 8px;
   }
 
+  @media (max-width: 720px) {
+    height: 120px;
+    margin: ${({ theme }) => theme.spacing.medium} 0;
+  }
 `;
 
-const ProfileBanner: React.FC<ProfileBannerProps> = (props) => {
+const ProfileBanner: React.FC<ProfileBannerProps> = ({ imgUrl, logoUrl }) => {
   const theme = useTheme(); // Access the theme
-  return <StyledProfileBanner theme={theme} {...props}>
-    {props.imgUrl && <img src={props.imgUrl} alt="Profile Banner" />}
-    {!props.imgUrl && <img src="/token-default-banner.JPG" alt="Default Profile Banner" />}
+  
+  return <StyledProfileBanner theme={theme} $imgUrl={imgUrl || undefined}>
+      {logoUrl && <img src={logoUrl} alt="Profile Logo" />}
     </StyledProfileBanner>;
 };
 

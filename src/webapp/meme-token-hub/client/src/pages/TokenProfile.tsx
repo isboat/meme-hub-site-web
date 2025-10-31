@@ -29,7 +29,6 @@ const ProfileContainer = styled.div`
   box-sizing: border-box;
 
   @media (max-width: 720px) {
-    margin: ${({ theme }) => theme.spacing.medium} 12px;
     padding: ${({ theme }) => theme.spacing.small};
     border-radius: 8px;
   }
@@ -85,10 +84,9 @@ const Verification = styled.p`
 
 const EditProfileButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.small};
-  background-color: ${({ theme }) => theme.colors.primary};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary}E0;
-  }
+    background: #facc15;
+    color: #0f172a;
+    font-weight: bold;
 
   @media (max-width: 720px) {
     width: 100%;
@@ -134,26 +132,37 @@ const TabsRow = styled.div`
   /* allow horizontal scrolling on small screens */
   @media (max-width: 720px) {
     overflow-x: auto;
-    width: 100%;
-    padding: 6px 2px;
+    width: 300px;
+    padding: 6px 12px; /* extra side padding for touch */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: thin; /* Firefox */
+    flex-wrap: nowrap; /* keep items in a single row */
+    justify-content: flex-start; /* align start so left-most item is visible */
+    scroll-snap-type: x mandatory; /* optional: snap to items */
   }
-  &::-webkit-scrollbar { display: none; }
+
+  /* Ensure children do not shrink and participate in snap */
+  & > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
 `;
 
 const Content = styled.div`
   width: 100%;
+
+  @media (max-width: 720px) {
+    width: 90vw;
+  }
 `;
 
 // ...existing code...
 const tabs = [
-  { label: "Token", value: "token" },
   { label: "Community", value: "community" },
-  { label: "Hub Follow", value: "hubFollow" },
-  { label: "KOL Follows", value: "kolFollows" },
-  { label: "Links", value: "links" },
-  { label: "Token Chart", value: "token-chart" }
+  { label: "Token", value: "token" },
+  { label: "Hub Socials", value: "hubFollow" },
+  { label: "Followers", value: "kolFollows" },
+  { label: "Swaps", value: "links" }
 ];
 // ...existing code...
 
@@ -207,7 +216,7 @@ const TokenProfilePage: React.FC = () => {
               onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })}
               theme={theme}
             >
-              Claim Profile
+              Claim Community
             </EditProfileButton>
           )}
         </ProfileHeader>

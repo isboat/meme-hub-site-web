@@ -11,6 +11,8 @@ import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import axios from 'axios';
 import CoinbaseCheckout from '../../components/common/CoinbaseCheckout';
+import TwitterLoginButton from '../../components/twitter/TwitterLoginButton';
+import ProfileBanner from '../../components/common/ProfileBanner';
 
 const PageContainer = styled.div`
   width: 80%;
@@ -79,13 +81,6 @@ const Message = styled.p<MessageProps>`
     type === 'error' ? theme.colors.error : theme.colors.primary};
 `;
 
-const ProfileImagePreview = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  margin: ${({ theme }) => theme.spacing.medium} auto;
-`;
-
 const FileInputContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -137,12 +132,15 @@ const SubmitSocialsClaim: React.FC = () => {
   // New state for selected file and its preview URL
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageUrlPreview, setImageUrlPreview] = useState<string | null>(null); // For local preview
+  const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null);
+  const [logoUrlPreview, setLogoUrlPreview] = useState<string | null>(null); // For local preview
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref for triggering file input
+  const logoInputRef = useRef<HTMLInputElement>(null); // Ref for triggering logo input
 
   const { user: privyUser, authenticated } = usePrivy();
 
@@ -168,10 +166,11 @@ const SubmitSocialsClaim: React.FC = () => {
       setUserId(currentUser?._id || '');
       // Set the initial image preview to the user's current profile image
       if (tokenData.logoURI) {
-        setImageUrlPreview(tokenData.logoURI);
+        setLogoUrlPreview(tokenData.logoURI);
       } else {
-        setImageUrlPreview('/default-avatar.png'); // Default if no image
+        setLogoUrlPreview('/default-avatar.png'); // Default if no image
       }
+      setImageUrlPreview('/token-default-banner.JPG'); // Default if no image
     }
     setUserId(privyUser?.id || '');
   }, [tokenData]);
@@ -179,11 +178,11 @@ const SubmitSocialsClaim: React.FC = () => {
   // Clean up the object URL when component unmounts or new file is selected
   useEffect(() => {
     return () => {
-      if (imageUrlPreview && imageUrlPreview.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrlPreview);
+      if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(logoUrlPreview);
       }
     };
-  }, [imageUrlPreview]);
+  }, [logoUrlPreview]);
 
   if (!authenticated || !privyUser) {
     return (
@@ -244,6 +243,26 @@ const SubmitSocialsClaim: React.FC = () => {
       }
     }
   };
+  // Handle file selection
+  const handleLogoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setSelectedLogoFile(file);
+
+      // Create a URL for image preview
+      if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(logoUrlPreview); // Clean up previous blob URL
+      }
+      setLogoUrlPreview(URL.createObjectURL(file));
+    } else {
+      setSelectedLogoFile(null);
+      // If no file selected, revert to current profile image or default
+      setLogoUrlPreview('/token-default-banner.JPG'); // Revert to existing or default
+      if (logoUrlPreview && logoUrlPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(logoUrlPreview); // Clean up old blob if it exists
+      }
+    }
+  };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -276,6 +295,9 @@ const SubmitSocialsClaim: React.FC = () => {
 
       if (selectedFile) {
         formData.append('profileImageFile', selectedFile); // Append the file
+      }
+      if (selectedLogoFile) {
+        formData.append('profileLogoImageFile', selectedLogoFile); // Append the file
       }
       // If no new file is selected, the 'profileImageFile' will simply not be in FormData.
       // Your backend should handle this by either keeping the existing image or a default.
@@ -323,6 +345,25 @@ const SubmitSocialsClaim: React.FC = () => {
           <div>After submission, the request will be reviewed by MTH and you will be contacted via the provided admin/mod contact info.</div>
           <div>Make sure to fill out all the information truthfully and accurately. Incomplete or false information may lead to rejection of the request.</div>
         </div>
+
+        <div style={sectionHeaderStyle}>
+          <h2>Choose Audit Identity</h2>
+        </div>
+        <div style={gridInputStyle}>
+          <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
+            <div style={{ justifyContent: 'space-between', display: 'flex', marginBottom: 10 }}>
+              <div>MemeTokenHub Profile</div>
+              <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 5, fontSize: '0.7em' }}>Default</div>
+            </div>
+            <div style={{ fontSize: '0.8em' }}>Recommended - shows as MTH holder</div>
+          </div>
+          <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
+            <div>X (Twitter) Profile</div>
+            <div style={{ fontSize: '0.8em', marginRight: 20, marginBottom: 20 }}>Sign in with your @handle (demo)</div>
+            <TwitterLoginButton />
+          </div>
+        </div>
+        
         <div style={sectionHeaderStyle}>
           <h2>Token Info</h2>
         </div>
@@ -397,12 +438,11 @@ const SubmitSocialsClaim: React.FC = () => {
         <div style={sectionHeaderStyle}>
           <h2>Profile Image</h2>
         </div>
+          <div>
+            <ProfileBanner imgUrl={imageUrlPreview || '/token-default-banner.JPG'} logoUrl={logoUrlPreview || '/default-avatar.png'} />
+          </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
         <FileInputContainer theme={theme}>
-          <ProfileImagePreview
-            src={imageUrlPreview || '/default-avatar.png'} // Use imageUrlPreview for display
-            alt="Profile Preview"
-            theme={theme}
-          />
           <StyledFileInput
             type="file"
             id="profileImageUpload"
@@ -425,6 +465,31 @@ const SubmitSocialsClaim: React.FC = () => {
             </p>
           )}
         </FileInputContainer>
+          
+        <FileInputContainer theme={theme}>
+          <StyledFileInput
+            type="file"
+            id="profileLogoUpload"
+            accept="image/*" // Accept only image files
+            onChange={handleLogoFileChange}
+            ref={logoInputRef} // Connect ref to the hidden input
+            disabled={isSubmitting}
+          />
+          <CustomFileUploadButton
+            type="button" // Important: Prevent this button from submitting the form
+            onClick={() => logoInputRef.current?.click()} // Trigger the hidden file input
+            disabled={isSubmitting}
+            theme={theme}
+          >
+            {selectedLogoFile ? 'Change Logo Image' : 'Upload Logo Image'}
+          </CustomFileUploadButton>
+          {selectedLogoFile && (
+            <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
+              Selected: {selectedLogoFile.name}
+            </p>
+          )}
+        </FileInputContainer>
+        </div>
         <div style={sectionHeaderStyle}>
           <h2>Agreements</h2>
         </div>

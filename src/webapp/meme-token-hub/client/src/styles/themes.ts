@@ -17,6 +17,7 @@ export const darkTheme = {
       success: '#10b981',
       warning: '#ff9900',
       error: '#ef4444',
+      twitter: '#1DA1F2',
     },
     button: {
       size : {
