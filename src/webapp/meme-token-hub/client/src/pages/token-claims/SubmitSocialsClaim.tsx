@@ -10,9 +10,9 @@ import api from '../../api/api';
 import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import axios from 'axios';
-import CoinbaseCheckout from '../../components/common/CoinbaseCheckout';
 import TwitterLoginButton from '../../components/twitter/TwitterLoginButton';
 import ProfileBanner from '../../components/common/ProfileBanner';
+import CapsuleButton from '../../components/common/CapsuleButton';
 
 const PageContainer = styled.div`
   width: 80%;
@@ -127,6 +127,7 @@ const CHAINS = [
 /* Responsive helpers used in place of inline style objects */
 const SectionHeader = styled.div`
   margin-top: 30px;
+  color: ${({ theme }) => theme.colors.yellow};
   margin-bottom: 10px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   padding-bottom: 6px;
@@ -181,7 +182,7 @@ const FileRow = styled.div`
   flex-wrap: wrap;
 
   @media (max-width: 480px) {
-    flex-direction: column;
+    flex-direction: row;
   }
 `;
 
@@ -214,9 +215,6 @@ const OrderNote = styled.div`
   font-size: 12px;
 `;
 
-/* End of responsive helpers */
-
-// ...existing code...
 const SubmitSocialsClaim: React.FC = () => {
 
   const theme = useTheme();
@@ -446,8 +444,7 @@ const SubmitSocialsClaim: React.FC = () => {
       <Form onSubmit={handleSubmit} theme={theme}>
         <FormIntro theme={theme}>
           <div>Use this form to request a Community Takeover (updating the socials of a token to new ones).</div>
-          <div>After submission, the request will be reviewed by MTH and you will be contacted via the provided admin/mod contact info.</div>
-          <div>Make sure to fill out all the information truthfully and accurately. Incomplete or false information may lead to rejection of the request.</div>
+          <div>After submission, the request will be reviewed by MTH and you will be contacted via the provided contact info.</div>
         </FormIntro>
 
         <SectionHeader theme={theme}>
@@ -455,7 +452,7 @@ const SubmitSocialsClaim: React.FC = () => {
         </SectionHeader>
 
         <TwoColGrid>
-          <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
+          <div style={{ border: '2px solid ' + theme.colors.success, borderRadius: theme.borderRadius, padding: 10 }}>
             <div style={{ justifyContent: 'space-between', display: 'flex', marginBottom: 10 }}>
               <div>MemeTokenHub Profile</div>
               <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 5, fontSize: '0.7em' }}>Default</div>
@@ -465,7 +462,7 @@ const SubmitSocialsClaim: React.FC = () => {
 
           <div style={{ border: '1px solid ' + theme.colors.border, borderRadius: theme.borderRadius, padding: 10 }}>
             <div>X (Twitter) Profile</div>
-            <div style={{ fontSize: '0.8em', marginRight: 20, marginBottom: 20 }}>Sign in with your @handle (demo)</div>
+            <div style={{ fontSize: '0.8em', marginRight: 20, marginBottom: 20 }}>Sign in with your @handle</div>
             <TwitterLoginButton />
           </div>
         </TwoColGrid>
@@ -501,7 +498,7 @@ const SubmitSocialsClaim: React.FC = () => {
         </SingleInput>
 
         <SectionHeader theme={theme}>
-          <h2>Social Links</h2>
+          <h2>Official Links</h2>
         </SectionHeader>
 
         <TwoColGrid>
@@ -526,24 +523,18 @@ const SubmitSocialsClaim: React.FC = () => {
             <input id='reddit' name='reddit' type="text" placeholder='u/' value={reddit} onChange={(e) => setReddit(e.target.value)} />
           </InputInner>
           <InputInner>
+            <label htmlFor='telegramUsername'>Telegram Username</label>
+            <input id='telegramUsername' name='telegramUsername' type="text" placeholder=' ' value={telegramUsername} onChange={(e) => setTelegramUsername(e.target.value)} />
+          </InputInner>
+          <InputInner>
+            <label htmlFor='discordUsername'>Discord Username</label>
+            <input id='discordUsername' name='discordUsername' type="text" placeholder=' ' value={discordUsername} onChange={(e) => setDiscordUsername(e.target.value)} />
+          </InputInner>
+          <InputInner>
             <label htmlFor='other'>Other</label>
             <input id='other' name='other' type="text" placeholder='Link or @' value={other} onChange={(e) => setOther(e.target.value)} />
           </InputInner>
         </TwoColGrid>
-
-        <SectionHeader theme={theme}>
-          <h2>Admin/Mod Contact Info</h2>
-        </SectionHeader>
-
-        <SingleInput>
-          <label htmlFor='discordUsername'>Discord Username</label>
-          <input id='discordUsername' name='discordUsername' type="text" placeholder=' ' value={discordUsername} onChange={(e) => setDiscordUsername(e.target.value)} />
-        </SingleInput>
-
-        <SingleInput>
-          <label htmlFor='telegramUsername'>Telegram Username</label>
-          <input id='telegramUsername' name='telegramUsername' type="text" placeholder=' ' value={telegramUsername} onChange={(e) => setTelegramUsername(e.target.value)} />
-        </SingleInput>
 
         <SectionHeader theme={theme}>
           <h2>Profile Image</h2>
@@ -593,7 +584,7 @@ const SubmitSocialsClaim: React.FC = () => {
               disabled={isSubmitting}
               theme={theme}
             >
-              {selectedLogoFile ? 'Change Logo Image' : 'Upload Logo Image'}
+              {selectedLogoFile ? 'Change Logo' : 'Upload Logo'}
             </CustomFileUploadButton>
             {selectedLogoFile && (
               <p style={{ fontSize: '0.8em', color: theme.colors.placeholder }}>
@@ -641,7 +632,12 @@ const SubmitSocialsClaim: React.FC = () => {
         </OrderSummary>
 
         <div style={{ width: '100%' }}>
-          <CoinbaseCheckout disabled={true} chargeCode="your_charge_code_here" />
+          <CapsuleButton
+                  className="selected"
+                  onClick={(event) => { handleSubmit(event) }}>
+                  Pay via Helio
+                </CapsuleButton>
+          {/* <CoinbaseCheckout disabled={true} chargeCode="your_charge_code_here" /> */}
         </div>
 
         {statusMessage && (

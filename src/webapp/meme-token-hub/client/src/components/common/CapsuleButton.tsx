@@ -51,7 +51,7 @@ const StyledButton = styled.button<ButtonProps>`
   }
     /* on selected state */
   &.selected {
-    background: #facc15;
+    background: ${({ theme }) => theme.colors.yellow};
     color: #0f172a;
     font-weight: bold;
   }

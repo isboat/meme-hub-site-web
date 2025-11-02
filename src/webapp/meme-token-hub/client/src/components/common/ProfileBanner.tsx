@@ -16,6 +16,12 @@ const StyledProfileBanner = styled.div<{ $imgUrl?: string }>`
   margin: ${({ theme }) => theme.spacing.large} 0;
   img {
     width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: ${({ theme }) => theme.spacing.large};
+    border: 4px solid ${({ theme }) => theme.colors.cardBackground};
+  }
   border-radius: 8px;
   }
 

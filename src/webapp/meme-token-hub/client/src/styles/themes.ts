@@ -10,6 +10,7 @@ export const darkTheme = {
       capsuleButton: '#1e293b',
       white: '#ffffff',
       ticker: '#fbbf24',
+      yellow: '#facc15',
       secondary: '#6366f1',
       border: '#282829ff',
       footer: '#848585ff',
