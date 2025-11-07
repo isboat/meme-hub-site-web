@@ -2,24 +2,25 @@
   This file contains TypeScript types and interfaces for the token components
   used in the Meme Token Hub application.
 
-*/
+ */
 export interface UserTokenSocialsClaim {
   id: string;
   userId: string;
   tokenAddress: string;
   description: string;
   tokenName: string;
+  telegram: string;
   telegramUsername: string;
   discordUsername: string;
   twitter: string;
   reddit: string;
   website: string;
   bannerUrl: string;
+  logoUrl: string;
   chain: string;
   discord: string;
   others: string;
-  bannerUrl: string;  
-  status: string;
+  status: number; // e.g., 0 = pending, 1 = approved, 2 = rejected
   submittedAt: string;
   approvers: TokenSocialsClaimApprover[]; // Array of user IDs who approved the claim
 }

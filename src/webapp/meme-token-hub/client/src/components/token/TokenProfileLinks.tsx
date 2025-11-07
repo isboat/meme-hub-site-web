@@ -37,11 +37,11 @@ const SocialCircleLinksAnchor = styled.a`
   }
 `;
 
-const TokenProfileLinks: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
+const TokenProfileLinks: React.FC<TokenProfileProps> = ({ tokenSocials, tokenData }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>
-      <h3 style={{ color: theme.colors.primary }}>Connect With {tokenProfile?.profileName || tokenData?.name || '#Profilename'}</h3>
+      <h3 style={{ color: theme.colors.primary }}>Connect With {tokenSocials?.profileName || tokenData?.name || '#Profilename'}</h3>
       <p>Official Social Channels</p>
       <SocialCircleLinks>
         {tokenData?.links?.map((link) => (

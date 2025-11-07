@@ -2,7 +2,7 @@
 
 
 export interface TokenProfileProps {
-  tokenProfile: TokenProfile | null;
+  tokenSocials: UserTokenSocialsClaim | null;
   isCurrentUser: boolean;
   tokenData?: NetworkTokenData | null; // Optional token data for specific token profiles
 }

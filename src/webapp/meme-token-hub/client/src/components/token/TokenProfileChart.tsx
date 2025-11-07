@@ -47,14 +47,14 @@ const DexScreenerEmbed = styled.div`
   }
 `
 
-const TokenProfileChart: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
+const TokenProfileChart: React.FC<TokenProfileProps> = ({ tokenSocials, tokenData }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}>
       <DetailItem theme={theme}>
         <ProfileImage
-              src={tokenProfile?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
-              alt={`${tokenProfile?.profileName || tokenData?.name}'s profile`}
+              src={tokenSocials?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
+              alt={`${tokenSocials?.profileName || tokenData?.name}'s profile`}
               theme={theme}
             />
       </DetailItem>

@@ -12,12 +12,12 @@ const OverviewCard = styled.div`
   box-shadow: ${({ theme }) => theme.boxShadow};
 `;
 
-const TokenProfileKolFollows: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
+const TokenProfileKolFollows: React.FC<TokenProfileProps> = ({ tokenSocials, tokenData }) => {
   const theme = useTheme();
   return (
     <OverviewCard theme={theme}> 
     <h3>🤝 KOL Mentions</h3>
-    <p>@memealpha – "Watching this one closely" {tokenData?.name} {tokenProfile?.profileName}</p>
+    <p>@memealpha – "Watching this one closely" {tokenData?.name} {tokenSocials?.profileName}</p>
     <p>@solshiller – Featured $AMERICAPT in latest Space</p>
     </OverviewCard>
   );

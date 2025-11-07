@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
-import { NetworkTokenData, TokenProfile } from '../types';
+import { NetworkTokenData } from '../types';
 import { useApi } from '../hooks/useApi';
 import Button from '../components/common/Button';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -14,8 +14,8 @@ import TokenProfileCommunity from '../components/token/TokenProfileCommunity';
 import TokenProfileHubFollow from '../components/token/TokenProfileHubFollow';
 import TokenProfileKolFollows from '../components/token/TokenProfileKolFollows';
 import TokenProfileLinks from '../components/token/TokenProfileLinks';
-import TokenProfileChart from '../components/token/TokenProfileChart';
 import CapsuleButton from '../components/common/CapsuleButton';
+import { UserTokenSocialsClaim } from '../types/token-components';
 
 const ProfileContainer = styled.div`
   width: 100%;
@@ -156,6 +156,18 @@ const Content = styled.div`
   }
 `;
 
+const Ribbon = styled.div`
+  background-color: #fbbf24;
+  padding: 4px 12px;
+  color: #000000;
+  font-weight: bold;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: ${({ theme }) => theme.spacing.medium};
+  transform: rotate(-20deg);
+  
+`;
+
 // ...existing code...
 const tabs = [
   { label: "Community", value: "community" },
@@ -186,7 +198,7 @@ const TokenProfilePage: React.FC = () => {
   const { authenticated } = usePrivy();
   const [activeTab, setActiveTab] = useState('token');
 
-  const { data: profileUser, loading } = useApi<TokenProfile>(`/token-profile/${tokenAddr}`);
+  const { data: tokenSocials, loading } = useApi<UserTokenSocialsClaim>(`/token-profile/socials/${tokenAddr}`);
 
   if (loading) {
     return (
@@ -204,14 +216,16 @@ const TokenProfilePage: React.FC = () => {
     }
     return cls;
   };
+
+  const showRibbon = tokenSocials && tokenSocials.status === 0;  // pending = 0, approved = 1, rejected = 2
   return (
     <ProfileContainer theme={theme}>
       <TopRow theme={theme}>
         <ProfileHeader theme={theme}>
-          <Username theme={theme}>{(profileUser?.profileName || tokenData?.name || '#Profilename')}</Username>
-          <Verification theme={theme}>{profileUser?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
+          <Username theme={theme}>{(tokenSocials?.tokenName || tokenData?.name || '#Profilename')}</Username>
+          <Verification theme={theme}>{tokenSocials?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
 
-          {!profileUser && authenticated && (
+          {!tokenSocials && authenticated && (
             <EditProfileButton
               onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })}
               theme={theme}
@@ -222,13 +236,15 @@ const TokenProfilePage: React.FC = () => {
         </ProfileHeader>
 
         <ProfileImage
-          src={profileUser?.profileImage || tokenData?.logoURI || '/token-avatar.jpg'}
-          alt={`${profileUser?.profileName || tokenData?.name}'s profile`}
+          src={tokenSocials?.logoUrl || tokenData?.logoURI || '/token-avatar.jpg'}
+          alt={`${tokenSocials?.logoUrl || tokenData?.name}'s profile`}
           theme={theme}
         />
       </TopRow>
-
-      <Banner url={profileUser?.bannerImageUrl || '/token-default-banner.JPG'} theme={theme} />
+      
+      <Banner url={tokenSocials?.bannerUrl || '/token-default-banner.JPG'} theme={theme}>
+        {showRibbon && <Ribbon theme={theme}>PENDING REVIEW</Ribbon>}        
+      </Banner>
 
       <TabsRow theme={theme} aria-label="Profile tabs">
         {tabs.map(f => (
@@ -244,22 +260,19 @@ const TokenProfilePage: React.FC = () => {
 
       <Content>
         {activeTab === 'token' && (
-          <TokenProfileOverview tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileOverview tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'community' && (
-          <TokenProfileCommunity tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileCommunity tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'hubFollow' && (
-          <TokenProfileHubFollow tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileHubFollow tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'kolFollows' && (
-          <TokenProfileKolFollows tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileKolFollows tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
         )}
         {activeTab === 'links' && (
-          <TokenProfileLinks tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
-        )}
-        {activeTab === 'token-chart' && (
-          <TokenProfileChart tokenProfile={profileUser} tokenData={tokenData} isCurrentUser={true} />
+          <TokenProfileLinks tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
         )}
       </Content>
     </ProfileContainer>

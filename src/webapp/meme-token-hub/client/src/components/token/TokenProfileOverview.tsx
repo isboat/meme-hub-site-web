@@ -24,14 +24,6 @@ const Column = styled.div`
   width: 48%;
 `;
 
-const OverviewCard = styled.div`
-  text-align: left;
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  padding: ${({ theme }) => theme.spacing.medium};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-`;
-
 const DetailItem = styled.p`
   margin-bottom: ${({ theme }) => theme.spacing.small};
   span {
@@ -40,41 +32,31 @@ const DetailItem = styled.p`
   }
 `;
 
-const TokenProfileOverview: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
+const TokenProfileOverview: React.FC<TokenProfileProps> = ({ tokenSocials, tokenData }) => {
   const theme = useTheme();
   return (
     <>
-      <Row>
-        <Column theme={theme}>
-          <OverviewCard theme={theme}>
-            <DetailItem theme={theme}>
-              {tokenProfile?.description || 'Description Not provided'}
-            </DetailItem>
-            {/* Add more profile details as needed */}
-          </OverviewCard>
-        </Column>
-      </Row>
       <Row>
         <Column theme={theme}>
             <DetailItem theme={theme}>
               <span>Price (USD): </span> {tokenData?.price || '$0.01116'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Location:</span> {tokenProfile?.location || 'Private'}
+              <span>Location:</span> {tokenSocials?.location || 'Private'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Total Mentions:</span> {tokenProfile?.totalMentions || 'Not provided'}
+              <span>Total Mentions:</span> {tokenSocials?.totalMentions || 'Not provided'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Active since:</span> {tokenProfile?.createdAt ? new Date(tokenProfile.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
+              <span>Active since:</span> {tokenSocials?.createdAt ? new Date(tokenSocials.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
             </DetailItem>
             <DetailItem theme={theme}>
-              <span>Language:</span> {tokenProfile?.language || 'Not provided'}
+              <span>Language:</span> {tokenSocials?.language || 'Not provided'}
             </DetailItem>
         </Column>
         <Column theme={theme}>
             <h3>📢 Team Message</h3>
-            <p>{tokenProfile?.description || '"We’re here to bring wholesome chaos to the meme world. Expect NFTs, games, and weekly community burns."'}</p>
+            <p>{tokenSocials?.description || '"We’re here to bring wholesome chaos to the meme world. Expect NFTs, games, and weekly community burns."'}</p>
         </Column>
       </Row>
     </>

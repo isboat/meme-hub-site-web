@@ -20,27 +20,37 @@ const DetailItem = styled.p`
   }
 `;
 
-const TokenProfileCommunity: React.FC<TokenProfileProps> = ({ tokenProfile, tokenData }) => {
+const TokenProfileCommunity: React.FC<TokenProfileProps> = ({ tokenSocials, tokenData }) => {
   const theme = useTheme();
+  
+  const pending = tokenSocials && tokenSocials.status === 0;  // pending = 0, approved = 1, rejected = 2
   return (
-    <OverviewCard theme={theme}>   
-      <DetailItem theme={theme}>
-        <span>Category:</span> {'Unknown'}
-      </DetailItem>
-      <DetailItem theme={theme}>
-        <span>Location:</span> {tokenProfile?.location || tokenData?.id || 'Private'}
-      </DetailItem>
-      <DetailItem theme={theme}>
-        <span>Total Mentions:</span> {tokenProfile?.totalMentions || 'Not provided'}
-      </DetailItem>
-      <DetailItem theme={theme}>
-        <span>Active since:</span> {tokenProfile?.createdAt ? new Date(tokenProfile.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
-      </DetailItem>
-      <DetailItem theme={theme}>
-        <span>Language:</span> {tokenProfile?.language || 'Not provided'}
-      </DetailItem>
-      {/* Add more profile details as needed */}
-    </OverviewCard>
+    <>
+     {pending && 
+     <OverviewCard theme={theme} style={{ marginBottom: theme.spacing.medium }}>
+        <div style={{ border: '1px solid #fbbf24', padding: '8px', borderRadius: '4px', marginBottom: '8px' }}>⚠️ Pending — not yet verified</div>
+        <div style={{ color: '#92400e', margin: 0 }}>Once verification completes, this profile will go live.</div>
+      </OverviewCard>}
+
+      {!pending && <OverviewCard theme={theme}>
+        <DetailItem theme={theme}>
+          <span>Category:</span> {'Unknown'}
+        </DetailItem>
+        <DetailItem theme={theme}>
+          <span>Location:</span> {tokenSocials?.location || tokenData?.id || 'Private'}
+        </DetailItem>
+        <DetailItem theme={theme}>
+          <span>Total Mentions:</span> {tokenSocials?.totalMentions || 'Not provided'}
+        </DetailItem>
+        <DetailItem theme={theme}>
+          <span>Active since:</span> {tokenSocials?.createdAt ? new Date(tokenSocials.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'}
+        </DetailItem>
+        <DetailItem theme={theme}>
+          <span>Language:</span> {tokenSocials?.language || 'Not provided'}
+        </DetailItem>
+        {/* Add more profile details as needed */}
+      </OverviewCard>}
+    </>
   );
 };
 
