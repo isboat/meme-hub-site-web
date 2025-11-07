@@ -84,9 +84,29 @@ const Verification = styled.p`
 
 const EditProfileButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.small};
-    background: #facc15;
-    color: #0f172a;
-    font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #4ade80;
+  cursor: pointer;
+  font-weight: 800;
+
+  /* Green gradient, shadow and transitions from provided snippet */
+  background: linear-gradient(90deg, #34d399, #a3e635);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+  transition: transform .2s ease, box-shadow .2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(52, 211, 153, 0.28);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
 
   @media (max-width: 720px) {
     width: 100%;
@@ -152,23 +172,99 @@ const Content = styled.div`
   width: 100%;
 
   @media (max-width: 720px) {
-    width: 90vw;
   }
 `;
 
 const Ribbon = styled.div`
   background-color: #fbbf24;
-  padding: 4px 12px;
-  color: #000000;
-  font-weight: bold;
+  padding: 6px 14px;
+  color: #0b1220;
+  font-weight: 800;
   border-radius: 8px;
   display: inline-block;
   margin-bottom: ${({ theme }) => theme.spacing.medium};
-  transform: rotate(-20deg);
-  
+  transform: rotate(-8deg);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 `;
 
-// ...existing code...
+/* New styles for pending card layout */
+const PendingCard = styled.div`
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.colors.cardBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  margin: ${({ theme }) => theme.spacing.medium} 0;
+`;
+
+const BannerImage = styled.div<{ url?: string }>`
+  height: 180px;
+  background-image: url(${props => props.url || '/token-default-banner.JPG'});
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: 720px) {
+    height: 120px;
+  }
+`;
+
+const PendingMeta = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.medium};
+  align-items: flex-end;
+  padding: 12px;
+  padding-top: 18px;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+`;
+
+const Logo = styled.img`
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  object-fit: cover;
+  margin-left: 8px;
+  margin-top: -44px;
+  border: 3px solid ${({ theme }) => theme.colors.cardBackground};
+  box-shadow: 0 6px 18px rgba(2,6,23,0.35);
+
+  @media (max-width: 720px) {
+    width: 72px;
+    height: 72px;
+    margin-top: -36px;
+  }
+`;
+
+const TitleCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+`;
+
+const Muted = styled.span`
+  color: ${({ theme }) => theme.colors.placeholder};
+  font-size: 0.9rem;
+`;
+
+const SmallCard = styled.div`
+  background: transparent;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
 const tabs = [
   { label: "Community", value: "community" },
   { label: "Token", value: "token" },
@@ -176,7 +272,6 @@ const tabs = [
   { label: "Followers", value: "kolFollows" },
   { label: "Swaps", value: "links" }
 ];
-// ...existing code...
 
 const TokenProfilePage: React.FC = () => {
   const { tokenAddr } = useParams<{ tokenAddr: string }>();
@@ -220,64 +315,186 @@ const TokenProfilePage: React.FC = () => {
   const showRibbon = tokenSocials && tokenSocials.status === 0;  // pending = 0, approved = 1, rejected = 2
   return (
     <ProfileContainer theme={theme}>
-      <TopRow theme={theme}>
-        <ProfileHeader theme={theme}>
-          <Username theme={theme}>{(tokenSocials?.tokenName || tokenData?.name || '#Profilename')}</Username>
-          <Verification theme={theme}>{tokenSocials?.description || '✔️ Verified by MemeTokenHub.'}</Verification>
-
-          {!tokenSocials && authenticated && (
-            <EditProfileButton
-              onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })}
-              theme={theme}
-            >
-              Claim Community
-            </EditProfileButton>
-          )}
-        </ProfileHeader>
-
-        <ProfileImage
-          src={tokenSocials?.logoUrl || tokenData?.logoURI || '/token-avatar.jpg'}
-          alt={`${tokenSocials?.logoUrl || tokenData?.name}'s profile`}
-          theme={theme}
-        />
-      </TopRow>
+      {/* If profile is pending, render a card-style banner with ribbon and overlapping avatar */}
       
-      <Banner url={tokenSocials?.bannerUrl || '/token-default-banner.JPG'} theme={theme}>
-        {showRibbon && <Ribbon theme={theme}>PENDING REVIEW</Ribbon>}        
-      </Banner>
+        <div
+          className="relative overflow-hidden rounded-lg"
+          style={{
+            backgroundColor: theme.colors.cardBackground,
+            border: `1px solid ${theme.colors.border}`,
+            boxShadow: theme.boxShadow,
+          }}
+        >
+          {/* Banner */}
+          <div
+            id="ppBanner"
+            className="h-40 w-full rounded-t-md bg-cover bg-center"
+            style={{
+              backgroundImage: `url('${tokenSocials?.bannerUrl || tokenData?.bannerUrl || '/token-default-banner.JPG'}')`,
+            }}
+            aria-hidden
+          />
 
-      <TabsRow theme={theme} aria-label="Profile tabs">
-        {tabs.map(f => (
-          <CapsuleButton
-            key={f.value}
-            onClick={() => setActiveTab(f.value)}
-            className={addClass(f)}
+          {/* Ribbon */}
+          {showRibbon && (
+          <div
+            className="absolute left-4 top-4 px-3 py-1 rounded-md font-extrabold text-sm"
+            style={{
+              transform: 'rotate(-8deg)',
+              backgroundColor: theme.colors.yellow || '#fbbf24',
+              color: '#0b1220',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+            }}
           >
-            {f.label}
-          </CapsuleButton>
-        ))}
-      </TabsRow>
+            PENDING REVIEW
+          </div>
+          )}
 
-      <Content>
-        {activeTab === 'token' && (
-          <TokenProfileOverview tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
-        )}
-        {activeTab === 'community' && (
-          <TokenProfileCommunity tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
-        )}
-        {activeTab === 'hubFollow' && (
-          <TokenProfileHubFollow tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
-        )}
-        {activeTab === 'kolFollows' && (
-          <TokenProfileKolFollows tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
-        )}
-        {activeTab === 'links' && (
-          <TokenProfileLinks tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
-        )}
-      </Content>
+          {/* Meta (logo + title) */}
+          <div className="flex items-end gap-4 mt-6 px-4">
+            <img
+              id="ppLogo"
+              src={tokenSocials?.logoUrl || tokenData?.logoURI || '/token-avatar.jpg'}
+              alt={`${tokenSocials?.tokenName || tokenData?.name} logo`}
+              className="w-20 h-20 rounded-full ring-2"
+              style={{ boxShadow: '0 6px 18px rgba(2,6,23,0.35)', borderColor: theme.colors.border, marginTop: -28 }}
+            />
+
+            <div className="pb-1">
+              <div
+                id="ppTitle"
+                className="text-2xl font-extrabold truncate"
+                style={{ color: theme.colors.text }}
+                title={tokenSocials?.tokenName || tokenData?.name}
+              >
+                {(tokenSocials?.tokenName || tokenData?.name)} {tokenSocials?.ticker ? `(${tokenSocials.ticker})` : ''}
+              </div>
+              <div className="text-sm" style={{ color: theme.colors.placeholder }}>
+                Chain: <span id="ppChain">{tokenSocials?.addressDto?.chain?.name || tokenData?.addressDto?.chain?.name || 'Unknown'}</span>
+                {' · '}
+                Contract: <span id="ppContract" className="font-mono" style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                  {(tokenData?.address || tokenSocials?.tokenAddress)?.slice(0, 6) + '…' + (tokenData?.address || tokenSocials?.tokenAddress)?.slice(-6)}
+                </span>
+              </div>
+            </div>
+            {/* push the edit button to the right */}
+            <div className="ml-auto flex items-center">
+              {!tokenSocials && authenticated && (
+                <EditProfileButton
+                  onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })}
+                  theme={theme}
+                >
+                  Claim Community
+                </EditProfileButton>
+              )}
+            </div>
+          </div>
+
+          {/* Cards */}
+          <div className="mt-4 grid sm:grid-cols-2 gap-4 px-4 pb-4">
+            {showRibbon && (
+            <div
+              className="rounded-md p-4"
+              style={{
+                backgroundColor: theme.colors.cardBackground,
+                border: `1px solid ${theme.colors.border}`,
+              }}
+            >
+              <div className="font-semibold mb-2" style={{ color: theme.colors.text }}>Official Links</div>
+              <div className="text-sm space-y-1" style={{ color: theme.colors.text }}>
+                <div>
+                  Website:
+                  {tokenSocials?.website ? (
+                    <a id="ppWebsite" className="underline ml-1" href={tokenSocials.website} target="_blank" rel="noreferrer" style={{ color: theme.colors.success }}>
+                      {tokenSocials.website}
+                    </a>
+                  ) : (
+                    <span className="muted ml-1" style={{ color: theme.colors.placeholder }}>TBC</span>
+                  )}
+                </div>
+                <div>
+                  X Profile:
+                  {tokenSocials?.twitter ? (
+                    <a id="ppX" className="underline ml-1" href={tokenSocials.twitter} target="_blank" rel="noreferrer" style={{ color: theme.colors.success }}>
+                      {tokenSocials.twitter}
+                    </a>
+                  ) : (
+                    <span className="muted ml-1" style={{ color: theme.colors.placeholder }}>TBC</span>
+                  )}
+                </div>
+                <div>Telegram: <span className="muted" style={{ color: theme.colors.placeholder }}>{tokenSocials?.telegram || 'TBC'}</span></div>
+                <div>Discord: <span className="muted" style={{ color: theme.colors.placeholder }}>{tokenSocials?.discord || 'TBC'}</span></div>
+              </div>
+              
+              <p className="text-xs mt-2" style={{ color: theme.colors.placeholder }}>Links are TBC and disabled until this profile is approved.</p>
+              
+            </div>
+            )}
+            {showRibbon && (
+            <div
+              className="rounded-md p-4 flex flex-col"
+              style={{
+                backgroundColor: theme.colors.cardBackground,
+                border: `1px solid ${theme.colors.border}`,
+              }}
+            >
+              <div className="font-semibold mb-2" style={{ color: theme.colors.text }}>Status</div>
+              <div>
+                <span
+                  className="px-3 py-1 rounded-md font-semibold"
+                  style={{
+                    border: `1px solid ${theme.colors.warning}40`,
+                    backgroundColor: `${theme.colors.warning}14`,
+                    color: theme.colors.warning,
+                  }}
+                >
+                  Pending — not yet verified
+                </span>
+              </div>
+              <p className="text-xs mt-2" style={{ color: theme.colors.placeholder }}>Once verification completes, this profile will go live.</p>
+            </div>
+            )}
+          </div>
+          
+          {/* Tabs + Content integrated into same card for cohesive styling */}
+          <div className="mt-2 border-t" style={{ borderColor: theme.colors.border }}>
+            <div className="px-4 pt-4 pb-6">
+              <TabsRow theme={theme} aria-label="Profile tabs">
+                {tabs.map(f => (
+                  <CapsuleButton
+                    key={f.value}
+                    onClick={() => setActiveTab(f.value)}
+                    className={addClass(f)}
+                  >
+                    {f.label}
+                  </CapsuleButton>
+                ))}
+              </TabsRow>
+
+              <Content theme={theme} className="mt-4">
+                {activeTab === 'token' && (
+                  <TokenProfileOverview tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
+                )}
+                {activeTab === 'community' && (
+                  <TokenProfileCommunity tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
+                )}
+                {activeTab === 'hubFollow' && (
+                  <TokenProfileHubFollow tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
+                )}
+                {activeTab === 'kolFollows' && (
+                  <TokenProfileKolFollows tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
+                )}
+                {activeTab === 'links' && (
+                  <TokenProfileLinks tokenSocials={tokenSocials} tokenData={tokenData} isCurrentUser={true} />
+                )}
+              </Content>
+            </div>
+          </div>
+        </div>
+      
+
     </ProfileContainer>
-  );
-};
-
-export default TokenProfilePage;
-// ...existing code...
+   );
+ };
+ 
+ export default TokenProfilePage;
