@@ -34,53 +34,6 @@ const ProfileContainer = styled.div`
   }
 `;
 
-const TopRow = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.medium};
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spacing.small};
-
-  @media (max-width: 720px) {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: ${({ theme }) => theme.spacing.small};
-  }
-`;
-
-const ProfileHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  @media (max-width: 720px) {
-    align-items: center;
-  }
-`;
-
-const Username = styled.h1`
-  margin: 0 0 ${({ theme }) => theme.spacing.small} 0;
-  color: ${({ theme }) => theme.colors.text};
-  text-transform: capitalize;
-  font-size: 1.6rem;
-
-  @media (max-width: 480px) {
-    font-size: 1.25rem;
-  }
-`;
-
-const Verification = styled.p`
-  margin: 0;
-  font-size: 0.95rem;
-  color: ${({ theme }) => theme.colors.success};
-  max-width: 600px;
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-    padding: 0 8px;
-  }
-`;
 
 const EditProfileButton = styled(Button)`
   margin-top: ${({ theme }) => theme.spacing.small};
@@ -111,35 +64,6 @@ const EditProfileButton = styled(Button)`
   @media (max-width: 720px) {
     width: 100%;
     max-width: 280px;
-  }
-`;
-
-const ProfileImage = styled.img`
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-left: 12px;
-
-  @media (max-width: 720px) {
-    width: 96px;
-    height: 96px;
-    margin-left: 0;
-  }
-`;
-
-const Banner = styled.div<{ url?: string }>`
-  width: 100%;
-  height: 200px;
-  background-image: url(${props => props.url || '/token-default-banner.JPG'});
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-  margin: ${({ theme }) => theme.spacing.large} 0;
-
-  @media (max-width: 720px) {
-    height: 120px;
-    margin: ${({ theme }) => theme.spacing.medium} 0;
   }
 `;
 
@@ -175,95 +99,6 @@ const Content = styled.div`
   }
 `;
 
-const Ribbon = styled.div`
-  background-color: #fbbf24;
-  padding: 6px 14px;
-  color: #0b1220;
-  font-weight: 800;
-  border-radius: 8px;
-  display: inline-block;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
-  transform: rotate(-8deg);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-`;
-
-/* New styles for pending card layout */
-const PendingCard = styled.div`
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  margin: ${({ theme }) => theme.spacing.medium} 0;
-`;
-
-const BannerImage = styled.div<{ url?: string }>`
-  height: 180px;
-  background-image: url(${props => props.url || '/token-default-banner.JPG'});
-  background-size: cover;
-  background-position: center;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  @media (max-width: 720px) {
-    height: 120px;
-  }
-`;
-
-const PendingMeta = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.medium};
-  align-items: flex-end;
-  padding: 12px;
-  padding-top: 18px;
-  position: relative;
-  z-index: 2;
-
-  @media (max-width: 720px) {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 8px;
-  }
-`;
-
-const Logo = styled.img`
-  width: 88px;
-  height: 88px;
-  border-radius: 999px;
-  object-fit: cover;
-  margin-left: 8px;
-  margin-top: -44px;
-  border: 3px solid ${({ theme }) => theme.colors.cardBackground};
-  box-shadow: 0 6px 18px rgba(2,6,23,0.35);
-
-  @media (max-width: 720px) {
-    width: 72px;
-    height: 72px;
-    margin-top: -36px;
-  }
-`;
-
-const TitleCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-  overflow: hidden;
-`;
-
-const Muted = styled.span`
-  color: ${({ theme }) => theme.colors.placeholder};
-  font-size: 0.9rem;
-`;
-
-const SmallCard = styled.div`
-  background: transparent;
-  border-radius: 10px;
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-`;
 
 const tabs = [
   { label: "Community", value: "community" },
@@ -330,7 +165,7 @@ const TokenProfilePage: React.FC = () => {
             id="ppBanner"
             className="h-40 w-full rounded-t-md bg-cover bg-center"
             style={{
-              backgroundImage: `url('${tokenSocials?.bannerUrl || tokenData?.bannerUrl || '/token-default-banner.JPG'}')`,
+              backgroundImage: `url('${tokenSocials?.bannerUrl || '/token-default-banner.JPG'}')`,
             }}
             aria-hidden
           />
@@ -351,38 +186,40 @@ const TokenProfilePage: React.FC = () => {
           )}
 
           {/* Meta (logo + title) */}
-          <div className="flex items-end gap-4 mt-6 px-4">
+          <div id="logo-and-buttons" className="flex flex-col sm:flex-row sm:items-end gap-4 mt-6 px-4">
             <img
               id="ppLogo"
               src={tokenSocials?.logoUrl || tokenData?.logoURI || '/token-avatar.jpg'}
               alt={`${tokenSocials?.tokenName || tokenData?.name} logo`}
-              className="w-20 h-20 rounded-full ring-2"
-              style={{ boxShadow: '0 6px 18px rgba(2,6,23,0.35)', borderColor: theme.colors.border, marginTop: -28 }}
+              className="w-20 h-20 rounded-full ring-2 order-1 mx-auto sm:mx-0"
+              style={{ boxShadow: '0 6px 18px rgba(2,6,23,0.35)', borderColor: theme.colors.border }}
             />
 
-            <div className="pb-1">
+            <div className="pb-1 flex-1 min-w-0 order-2 text-center sm:text-left">
               <div
                 id="ppTitle"
-                className="text-2xl font-extrabold truncate"
+                className="text-2xl sm:text-2xl font-extrabold truncate"
                 style={{ color: theme.colors.text }}
                 title={tokenSocials?.tokenName || tokenData?.name}
               >
-                {(tokenSocials?.tokenName || tokenData?.name)} {tokenSocials?.ticker ? `(${tokenSocials.ticker})` : ''}
+                {(tokenSocials?.tokenName || tokenData?.name)}
               </div>
-              <div className="text-sm" style={{ color: theme.colors.placeholder }}>
-                Chain: <span id="ppChain">{tokenSocials?.addressDto?.chain?.name || tokenData?.addressDto?.chain?.name || 'Unknown'}</span>
+              <div className="text-sm mt-1" style={{ color: theme.colors.placeholder }}>
+                Chain: <span id="ppChain">{tokenData?.addressDto?.chain?.name || 'Unknown'}</span>
                 {' · '}
-                Contract: <span id="ppContract" className="font-mono" style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                Contract:{' '}
+                <span id="ppContract" className="font-mono" style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
                   {(tokenData?.address || tokenSocials?.tokenAddress)?.slice(0, 6) + '…' + (tokenData?.address || tokenSocials?.tokenAddress)?.slice(-6)}
                 </span>
               </div>
             </div>
-            {/* push the edit button to the right */}
-            <div className="ml-auto flex items-center">
+
+            <div className="order-3 w-full sm:w-auto sm:ml-4 mt-3 sm:mt-0 flex-shrink-0">
               {!tokenSocials && authenticated && (
                 <EditProfileButton
                   onClick={() => navigate('/submit-socials-claim', { state: { token: tokenData } })}
                   theme={theme}
+                  style={{ width: '100%' }}
                 >
                   Claim Community
                 </EditProfileButton>

@@ -10,114 +10,6 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import axios from 'axios';
 import TwitterLoginButton from '../../components/twitter/TwitterLoginButton';
 import ProfileBanner from '../../components/common/ProfileBanner';
-import CapsuleButton from '../../components/common/CapsuleButton';
-import styled from 'styled-components';
-
-const PageContainer = styled.div`
-  width: 80%;
-  margin: ${({ theme }) => theme.spacing.large} auto;
-  padding: ${({ theme }) => theme.spacing.medium};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  min-height: calc(100vh - 120px); /* Adjust for header/footer */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-
-  @media (max-width: 900px) {
-    width: calc(100% - 24px);
-    margin: ${({ theme }) => theme.spacing.medium};
-    padding: ${({ theme }) => theme.spacing.small};
-  }
-`;
-
-const Header = styled.h1`
-  text-align: center;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.large};
-  font-size: 1.5rem;
-
-  @media (max-width: 480px) {
-    font-size: 1.25rem;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.medium};
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.medium};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  box-shadow: ${({ theme }) => theme.boxShadow};
-  box-sizing: border-box;
-
-  @media (max-width: 480px) {
-    padding: ${({ theme }) => theme.spacing.small};
-  }
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 1em;
-  line-height: 1.5;
-  min-height: 100px;
-  resize: vertical;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.placeholder};
-  }
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}40;
-  }
-`;
-
-interface MessageProps {
-  type: 'success' | 'error' | '';
-}
-
-const Message = styled.p<MessageProps>`
-  text-align: center;
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  font-weight: bold;
-  color: ${({ type, theme }) =>
-    type === 'error' ? theme.colors.error : theme.colors.primary};
-`;
-
-const FileInputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.small};
-`;
-
-const StyledFileInput = styled.input`
-  display: none; /* Hide the default file input */
-`;
-
-const CustomFileUploadButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.small};
-  background-color: ${({ theme }) => theme.colors.secondary};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.secondary + 'E0'};
-  }
-
-  @media (max-width: 480px) {
-    width: 100%;
-  }
-`;
 
 const CHAINS = [
   "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
@@ -577,6 +469,44 @@ const SubmitSocialsClaim: React.FC = () => {
               }}
             />
             {errors.other && <div className="text-xs mt-1" style={{ color: theme.colors.error }}>{errors.other}</div>}
+          </label>
+
+          <label className="flex flex-col">
+            <span className="text-sm mb-1" style={{ color: theme.colors.text }}>Discord Username</span>
+            <input
+              id="discordUsername"
+              name="discordUsername"
+              type="text"
+              placeholder="Link or @"
+              value={discordUsername}
+              onChange={(e) => { setDiscordUsername(e.target.value); setErrors(prev => { const p = { ...prev }; delete p.discordUsername; return p; }); }}
+              className="p-2 rounded"
+              style={{
+                backgroundColor: theme.colors.background,
+                border: `1px solid ${theme.colors.border}`,
+                color: theme.colors.text
+              }}
+            />
+            {errors.discordUsername && <div className="text-xs mt-1" style={{ color: theme.colors.error }}>{errors.discordUsername}</div>}
+          </label>
+
+          <label className="flex flex-col">
+            <span className="text-sm mb-1" style={{ color: theme.colors.text }}>Telegram Username</span>
+            <input
+              id="telegramUsername"
+              name="telegramUsername"
+              type="text"
+              placeholder="Link or @"
+              value={telegramUsername}
+              onChange={(e) => { setTelegramUsername(e.target.value); setErrors(prev => { const p = { ...prev }; delete p.telegramUsername; return p; }); }}
+              className="p-2 rounded"
+              style={{
+                backgroundColor: theme.colors.background,
+                border: `1px solid ${theme.colors.border}`,
+                color: theme.colors.text
+              }}
+            />
+            {errors.telegramUsername && <div className="text-xs mt-1" style={{ color: theme.colors.error }}>{errors.telegramUsername}</div>}
           </label>
         </div>
 

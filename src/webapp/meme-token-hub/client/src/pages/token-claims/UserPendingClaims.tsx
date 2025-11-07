@@ -7,7 +7,6 @@ import { useApi } from '../../hooks/useApi';
 import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { UserTokenSocialsClaim } from '../../types/token-components';
-import CapsuleButton from '../../components/common/CapsuleButton';
 
 const UserPendingSocialsClaim: React.FC = () => {
   const theme = useTheme();
@@ -150,20 +149,11 @@ const UserPendingSocialsClaim: React.FC = () => {
                     >
                       {claim.tokenName}
                     </h3>
-                    <span className="text-xs text-gray-400 truncate" style={{ color: theme.colors.placeholder }}>
-                      {claim.ticker ? `(${claim.ticker})` : ''}
-                    </span>
                   </div>
 
                   <div className="mt-1 text-xs" style={{ color: theme.colors.placeholder }}>
-                    Chain: {claim.chainName || (claim.addressDto?.chain?.name ?? 'Unknown')}
+                    Chain: {claim.chain ?? 'Unknown'}
                   </div>
-
-                  {claim.createdAt && (
-                    <div className="mt-2 text-xs" style={{ color: theme.colors.placeholder }}>
-                      Submitted {new Date(claim.createdAt).toLocaleDateString()}
-                    </div>
-                  )}
                 </div>
 
                 <div className="ml-3 flex flex-col items-end gap-2">
