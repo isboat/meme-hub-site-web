@@ -8,7 +8,6 @@ import { useApi } from '../hooks/useApi';
 import api from '../api/api';
 import { useNavigate } from 'react-router';
 import CapsuleButton from '../components/common/CapsuleButton';
-import CapsuleSelect from '../components/common/CapsuleSelect';
 
 const PageContainer = styled.div`
   display: flex;
@@ -177,7 +176,7 @@ const NoResults = styled.p`
 `;
 
 // ...existing code...
-type SortType = "featured" | "az" | "since";
+//type SortType = "featured" | "az" | "since";
 
 const CHAIN_FILTERS = [
   { label: "All", value: "all" }
@@ -196,7 +195,7 @@ const TokensFeed: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [query, setQuery] = useState<string>("");
-  const [sort, setSort] = useState<SortType>("featured");
+  //const [sort, setSort] = useState<SortType>("featured");
   const [selected, setSelected] = useState('');
   const [isLoadingNetworkTokens, setIsLoadingNetworkTokens] = useState<boolean>(false);
 
@@ -216,6 +215,36 @@ const TokensFeed: React.FC = () => {
       setNetworkTokenData([]);
 
       const response = await api.get<NetworkTokenData[]>(`/memetoken/${network.chainIdentifier}/tokens`);
+      const tokensData = response.data;
+      if (tokensData) {
+        setNetworkTokenData(tokensData);
+      }
+      setIsLoadingNetworkTokens(false);
+    }
+  }
+  
+  const searchToken = async (event: React.ChangeEvent<HTMLInputElement>) : Promise<void> => {
+    event.preventDefault();
+    
+    const searchInputValue = event.currentTarget.value;
+    setQuery(searchInputValue);
+
+    const trimmed = searchInputValue.trim();
+    if (trimmed === "") {
+      setNetworkTokenData([]);
+      return;
+    }
+    // more than 4 characters to search
+    if (trimmed.length < 4) {
+      setNetworkTokenData([]);
+      return;
+    }
+    if (trimmed.length >= 4) {
+      setSelected("all");
+      setIsLoadingNetworkTokens(true);
+      setNetworkTokenData([]);
+
+      const response = await api.get<NetworkTokenData[]>(`/memetoken/search/${trimmed}`);
       const tokensData = response.data;
       if (tokensData) {
         setNetworkTokenData(tokensData);
@@ -299,12 +328,12 @@ const TokensFeed: React.FC = () => {
               type="search"
               placeholder="Search (doge, shib, pepe…)"
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={e => { searchToken(e); }}
               aria-label="Search tokens"
               theme={theme}
             />
 
-            <CapsuleSelect
+            {/* <CapsuleSelect
               value={sort}
               onChange={e => setSort(e.target.value as SortType)}
               aria-label="Sort tokens"
@@ -312,7 +341,7 @@ const TokensFeed: React.FC = () => {
               <option value="featured">Featured</option>
               <option value="az">A → Z</option>
               <option value="since">Newest</option>
-            </CapsuleSelect>
+            </CapsuleSelect> */}
           </ControlsRow>
 
           <FiltersRow aria-label="Filter by chain" theme={theme}>
