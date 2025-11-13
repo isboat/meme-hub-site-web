@@ -17,10 +17,24 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: Install dependencies (client)
+        working-directory: src/webapp/meme-token-hub/client
         run: npm ci
 
-      - name: Build
+      - name: Tailwind build (client)
+        working-directory: src/webapp/meme-token-hub/client
+        env:
+          VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
+          VITE_PRIVY_APP_SECRET: ${{ secrets.VITE_PRIVY_APP_SECRET }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+        run: npm run tailwind:build
+
+      - name: Build (client)
+        working-directory: src/webapp/meme-token-hub/client
+        env:
+          VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
+          VITE_PRIVY_APP_SECRET: ${{ secrets.VITE_PRIVY_APP_SECRET }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
         run: npm run build
 
       - name: Deploy to Azure Static Web Apps
@@ -29,7 +43,6 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"            # app root in repo
-          api_location: ""         # set to "" if you don't have an API folder
-          output_location: "dist"     # Vite build output
-          skip_app_build: true
+          app_location: "src/webapp/meme-token-hub/client"    # app root
+          api_location: ""                                    # adjust if you have an API folder
+          output_location: "src/webapp/meme-token-hub/client/dist" # build output
