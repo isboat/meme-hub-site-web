@@ -8,6 +8,7 @@ import { useApi } from '../hooks/useApi';
 import api from '../api/api';
 import { useNavigate } from 'react-router';
 import CapsuleButton from '../components/common/CapsuleButton';
+import { UserTokenSocialsClaim } from '../types/token-components';
 
 const PageContainer = styled.div`
   display: flex;
@@ -256,6 +257,8 @@ const TokensFeed: React.FC = () => {
 
   let { data: networkData, loading, error } = useApi<NetworkData[]>('/memetoken/networks');
 
+  let { data: communityTokens, loading: communityLoading, error: communityError } = useApi<UserTokenSocialsClaim[]>('/token-profile/socials');
+
   const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
 
   const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>) : Promise<void> => {
@@ -373,15 +376,15 @@ const TokensFeed: React.FC = () => {
     <PageContainer theme={theme}>
       <Inner>
         <TopSection theme={theme}>
-          <Header theme={theme}>Trending Coins</Header>
+          <Header theme={theme}>The social layer for meme tokens</Header>
           <p style={{ marginBottom: theme.spacing.medium, color: theme.colors.dimmedWhite }}>
-            The original OG, authentic meme coins — artwork first. Tap a card to view the full profile.
+            Claim your token, prove it’s you, keep links and updates transparent. Discover real community activity by network.
           </p>
 
           <ControlsRow theme={theme}>
             <SearchInput
               type="search"
-              placeholder="Search (doge, shib, pepe…)"
+              placeholder="Paste contract (e.g., 0x... or Solana base58) or type Member ID (e.g., MT-123456)"
               value={query}
               onChange={e => { searchToken(e); }}
               aria-label="Search tokens"
@@ -453,8 +456,200 @@ const TokensFeed: React.FC = () => {
           })}
         </Grid>
       </Inner>
+      <div id="communityTokens" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+        <CommunitySection theme={theme}>
+          <h3 style={{ marginTop: 0, marginBottom: 24, color: theme.colors.white }}>
+            Activity right now
+          </h3>
+
+          {communityLoading && (
+            <div style={{ textAlign: 'center', padding: '24px' }}>
+              <LoadingSpinner />
+              <p style={{ color: theme.colors.placeholder, marginTop: 12 }}>Loading community tokens...</p>
+            </div>
+          )}
+
+          {!communityLoading && communityError && (
+            <NoResults theme={theme}>Error loading community tokens.</NoResults>
+          )}
+
+          {!communityLoading && communityTokens && communityTokens.length === 0 && (
+            <NoResults theme={theme}>No community tokens found.</NoResults>
+          )}
+
+          {!communityLoading && communityTokens && communityTokens.length > 0 && (
+            <ActivityContainer theme={theme}>
+              {/* Verified Column */}
+              <Column>
+                <SectionKicker theme={theme}>Verified Communities</SectionKicker>
+                <List>
+                  {communityTokens
+                    .filter(c => mapStatus(c.status).key === 'verified')
+                    .map(c => (
+                      <ListItem
+                        key={c.id}
+                        theme={theme}
+                        onClick={() => navigate(`/token/${c.tokenAddress}`, { state: { token: c } })}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') navigate(`/token/${c.tokenAddress}`, { state: { token: c } });
+                        }}
+                      >
+                        <LogoImg
+                          src={c.logoUrl || 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%3E%3Crect%20rx%3D%228%22%20ry%3D%228%22%20width%3D%2248%22%20height%3D%2248%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E'}
+                          alt={`${c.tokenName} logo`}
+                        />
+                        <ItemContent>
+                          <ItemTitle>
+                            <strong>{c.tokenName}</strong>
+                          </ItemTitle>
+                          <ItemMeta>
+                            {c.chain} • {new Date(c.submitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </ItemMeta>
+                        </ItemContent>
+                      </ListItem>
+                    ))}
+                  {communityTokens.filter(c => mapStatus(c.status).key === 'verified').length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '24px', color: theme.colors.placeholder }}>
+                      No verified communities yet.
+                    </div>
+                  )}
+                </List>
+              </Column>
+
+              {/* Pending Column */}
+              <Column>
+                <SectionKicker theme={theme}>Pending Communities</SectionKicker>
+                <List>
+                  {communityTokens
+                    .filter(c => mapStatus(c.status).key === 'pending')
+                    .map(c => (
+                      <ListItem
+                        key={c.id}
+                        theme={theme}
+                        onClick={() => navigate(`/token/${c.tokenAddress}`, { state: { token: c } })}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') navigate(`/token/${c.tokenAddress}`, { state: { token: c } });
+                        }}
+                      >
+                        <LogoImg
+                          src={c.logoUrl || 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%3E%3Crect%20rx%3D%228%22%20ry%3D%228%22%20width%3D%2248%22%20height%3D%2248%22%20fill%3D%22%23e5e7eb%22%2F%3E%3C%2Fsvg%3E'}
+                          alt={`${c.tokenName} logo`}
+                        />
+                        <ItemContent>
+                          <ItemTitle>
+                            <strong>{c.tokenName}</strong>
+                          </ItemTitle>
+                          <ItemMeta>
+                            {c.chain} • {new Date(c.submitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </ItemMeta>
+                        </ItemContent>
+                      </ListItem>
+                    ))}
+                  {communityTokens.filter(c => mapStatus(c.status).key === 'pending').length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '24px', color: theme.colors.placeholder }}>
+                      No pending communities.
+                    </div>
+                  )}
+                </List>
+              </Column>
+            </ActivityContainer>
+          )}
+        </CommunitySection>
+      </div>
     </PageContainer>
   );
 };
 
 export default TokensFeed;
+
+const CommunitySection = styled.section`
+  background: ${({ theme }) => theme.colors.cardBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+`;
+
+const ActivityContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const SectionKicker = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.placeholder};
+`;
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: ${({ theme }) => theme.colors.background};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  transition: all 200ms ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.border};
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 600px) {
+    padding: 10px;
+    gap: 10px;
+  }
+`;
+
+const LogoImg = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  object-fit: cover;
+
+  @media (max-width: 600px) {
+    width: 40px;
+    height: 40px;
+  }
+`;
+
+const ItemContent = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const ItemTitle = styled.div`
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+`;
+
+const ItemMeta = styled.div`
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  margin-top: 4px;
+`;

@@ -54,7 +54,7 @@ const App: React.FC = () => {
       <Route path="/user-profile/:profileId" element={<Layout><UserProfilePage /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/kol-profiles" element={<Layout><KolProfiles /></Layout>} /> {/* Anonymous can view profiles */}
       <Route path="/tokens" element={<Layout><TokensFeed /></Layout>} /> {/* Anonymous can view profiles */}
-      <Route path="/" element={<Layout><Home /></Layout>} />
+      <Route path="/" element={<Layout><TokensFeed /></Layout>} />
       <Route path="/unclaimed-tokens" element={<Layout><UnclaimedTokensFeed /></Layout>} /> {/* <--- ADD NEW ROUTE */}
       <Route path="/token/:tokenAddr" element={<Layout><TokenProfilePage /></Layout>} />
       <Route path="/created-tokens" element={<Layout><CreatedTokensFeed /></Layout>} />
