@@ -156,7 +156,7 @@ export interface NetworkTokenData {
   priceChangeH24: number;
   listedAt: Date;
   isExpressListing: boolean;
-  status: number; // Assuming this is an enum or similar
+  status: number; // e.g., 0 = pending, 1 = approved, 2 = rejected
   launchedAt: Date;
   createdBy: string;
 }

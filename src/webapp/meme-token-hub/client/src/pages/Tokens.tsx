@@ -146,6 +146,61 @@ const CardImage = styled.img`
   }
 `;
 
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  @media (max-width: 480px) {
+    height: 100%;
+  }
+`;
+
+const StatusRibbon = styled.span<{ statusKey?: 'verified' | 'pending' | 'rejected' | '' }>`
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #07122a;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+  z-index: 10;
+
+  background: ${props =>
+    props.statusKey === 'verified'
+      ? 'linear-gradient(90deg,#a7f3d0,#34d399)'
+      : props.statusKey === 'rejected'
+      ? 'linear-gradient(90deg,#fecaca,#f97373)'
+      : props.statusKey === 'pending'
+      ? 'linear-gradient(90deg,#fef3c7,#f59e0b)'
+      : 'linear-gradient(90deg,#e5e7eb,#cbd5e1)'};
+`;
+
+// Helper: map numeric status to a readable key+label.
+// Adjust mapping here if backend uses different codes.
+const mapStatus = (s?: number | string | null) : { key: 'verified'|'pending'|'rejected'|'', label: string } => {
+  if (s == null) return { key: '', label: 'Unknown' };
+  const n = Number(s);
+  switch (n) {
+    case 2: // backend: 2 => verified
+      return { key: 'verified', label: 'Verified' };
+    case 3: // backend: 3 => rejected
+      return { key: 'rejected', label: 'Rejected' };
+    case 1: // backend: 1 => pending
+      return { key: 'pending', label: 'Pending' };
+    default:
+      return { key: '', label: String(s).toUpperCase() };
+  }
+};
+
 const CardBody = styled.div`
   padding: 10px;
   font-size: 0.9rem;
@@ -366,27 +421,36 @@ const TokensFeed: React.FC = () => {
         )}
 
         <Grid theme={theme}>
-          {networkTokenData.map(c => (
-            <Card
-              key={c.name}
-              onClick={() => navigateToTokenPage(c)}
-              role="link"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') navigateToTokenPage(c); }}
-              theme={theme}
-            >
-              <CardImage src={c.logoURI} alt={`${c.name} Banner`} />
-              <CardBody theme={theme}>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', textTransform: 'capitalize' }}>
-                  {c.name} <span style={{ fontWeight: 500, fontSize: '0.85rem' }}>({c.symbol})</span>
-                </div>
-                <MetaRow theme={theme}>
-                  <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
-                  <MetaRowSince>{selected} • since 2023</MetaRowSince>
-                </MetaRow>
-              </CardBody>
-            </Card>
-          ))}
+          {networkTokenData.map(c => {
+            const statusInfo = mapStatus(c.status);
+            return (
+             <Card
+               key={c.name}
+               onClick={() => navigateToTokenPage(c)}
+               role="link"
+               tabIndex={0}
+               onKeyDown={(e) => { if (e.key === 'Enter') navigateToTokenPage(c); }}
+               theme={theme}
+             >
+               <ImageWrapper>
+                 <CardImage src={c.logoURI} alt={`${c.name} Banner`} />
+                {statusInfo.key && <StatusRibbon statusKey={statusInfo.key}>
+                  {statusInfo.label}
+                </StatusRibbon>}
+               </ImageWrapper>
+
+               <CardBody theme={theme}>
+                 <div style={{ fontWeight: 700, fontSize: '0.95rem', textTransform: 'capitalize' }}>
+                   {c.name} <span style={{ fontWeight: 500, fontSize: '0.85rem' }}>({c.symbol})</span>
+                 </div>
+                 <MetaRow theme={theme}>
+                   <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
+                   <MetaRowSince>{selected} • since 2023</MetaRowSince>
+                 </MetaRow>
+               </CardBody>
+             </Card>
+            );
+          })}
         </Grid>
       </Inner>
     </PageContainer>
@@ -394,4 +458,3 @@ const TokensFeed: React.FC = () => {
 };
 
 export default TokensFeed;
-// ...existing code...
