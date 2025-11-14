@@ -505,7 +505,7 @@ const TokensFeed: React.FC = () => {
                             <strong>{c.tokenName}</strong>
                           </ItemTitle>
                           <ItemMeta>
-                            {c.chain} • {new Date(c.submitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            {c.chain} • {new Date(c.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </ItemMeta>
                         </ItemContent>
                       </ListItem>
@@ -544,7 +544,7 @@ const TokensFeed: React.FC = () => {
                             <strong>{c.tokenName}</strong>
                           </ItemTitle>
                           <ItemMeta>
-                            {c.chain} • {new Date(c.submitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            {c.chain} • {new Date(c.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </ItemMeta>
                         </ItemContent>
                       </ListItem>
