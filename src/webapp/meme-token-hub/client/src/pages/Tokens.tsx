@@ -190,11 +190,11 @@ const mapStatus = (s?: number | string | null) : { key: 'verified'|'pending'|'re
   if (s == null) return { key: '', label: 'Unknown' };
   const n = Number(s);
   switch (n) {
-    case 2: // backend: 2 => verified
+    case 1: // backend: 2 => verified
       return { key: 'verified', label: 'Verified' };
-    case 3: // backend: 3 => rejected
+    case 2: // backend: 3 => rejected
       return { key: 'rejected', label: 'Rejected' };
-    case 1: // backend: 1 => pending
+    case 0: // backend: 1 => pending
       return { key: 'pending', label: 'Pending' };
     default:
       return { key: '', label: String(s).toUpperCase() };
