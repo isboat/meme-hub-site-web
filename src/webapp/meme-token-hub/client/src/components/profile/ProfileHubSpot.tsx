@@ -66,9 +66,9 @@ const ProfileHubSpot: React.FC<ProfileProps> = ({ user, isCurrentUser }) => {
       <OverviewCard theme={theme} style={{display: verified? 'none': 'block'}}>
         <h3 style={{ color: theme.colors.error }}>🔒 Verified KOL Feature</h3>
         <p>Only Verified MemeTokenHub KOLs ($8/month) can activate the project promotion feature.</p><br />
-        <Button onClick={becomeVerified} style={{ backgroundColor: theme.colors.success }} disabled={verified || isSubmitting}>
+        {/* <Button onClick={becomeVerified} style={{ backgroundColor: theme.colors.success }} disabled={verified || isSubmitting}>
           Become Verified
-          </Button>
+          </Button> */}
 
           {statusMessage && (
           <Message theme={theme} type={messageType}>

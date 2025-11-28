@@ -23,6 +23,10 @@ import ClaimTokenProfile from './pages/claimsform';
 import UserProfilePage from './pages/UserProfilePage';
 import UserPendingSocialsClaim from './pages/token-claims/UserPendingClaims';
 import ApprovePendingSocialsClaim from './pages/token-claims/ApprovePendingClaims';
+import TwitterCallbackHandler from './components/twitter/TwitterCallbackHandler';
+import TwitterProfile from './components/twitter/TwitterProfile';
+import PostTweet from './components/twitter/PostTweet';
+import TwitterProfileVerification from './components/twitter/TwitterProfileVerification';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -62,6 +66,10 @@ const App: React.FC = () => {
       {/* Authenticated Routes */}
       {/* Route for submitting socials - adjust as per your backend route */}
       <Route path="/claims-form" element={<Layout><ClaimTokenProfile /></Layout>} />
+      <Route path="/twitter-callback" element={<Layout><TwitterCallbackHandler /></Layout>} />
+      <Route path="/twitter-profile" element={<Layout><TwitterProfile /></Layout>} />
+      <Route path="/twitter-tweets" element={<Layout><PostTweet /></Layout>} />
+      <Route path="/twitter-verification" element={<Layout><TwitterProfileVerification /></Layout>} />
 
 
       {authenticated ? (

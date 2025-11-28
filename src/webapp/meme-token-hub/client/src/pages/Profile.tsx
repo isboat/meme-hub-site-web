@@ -12,6 +12,7 @@ import ProfileActivity from '../components/profile/ProfileActivity';
 import ProfileHubSpot from '../components/profile/ProfileHubSpot';
 import ProfileHubSocials from '../components/profile/ProfileHubSocials';
 import CapsuleButton from '../components/common/CapsuleButton';
+import TwitterLoginButton from '../components/twitter/TwitterLoginButton';
 
 const ProfileContainer = styled.div`
   max-width: 70%;
@@ -77,16 +78,6 @@ const EditProfileButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary + 'E0'}; /* Slightly darker on hover */
-  }
-`;
-const VerifyXButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  background-color: ${({ theme }) => theme.colors.background};
-  margin-left: ${({ theme }) => theme.spacing.large};
-
-    &.glow {
-    box-shadow: 0 0 12px #4ade80;
-    border: 2px solid #4ade80;
   }
 `;
 
@@ -160,16 +151,13 @@ const Profile: React.FC = () => {
           </StatItem>
         </Stats>
         <div>
-          {profileUser && authenticated && (
-            <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
-              Edit Profile
-            </EditProfileButton>
+          {profileUser && authenticated && !profileUser.verified && (
+              <TwitterLoginButton callbackType='profileVerification' buttonText="Verify via Twitter"></TwitterLoginButton>
           )}
-
-          {profileUser && !profileUser.verified && (
-            <VerifyXButton className='glow' onClick={() => navigate('/update-profile')} theme={theme}>
-              Verify Your X Account
-            </VerifyXButton>
+          {profileUser && authenticated && (
+              <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
+                Edit Profile
+              </EditProfileButton>
           )}
         </div>
       </ProfileHeader>

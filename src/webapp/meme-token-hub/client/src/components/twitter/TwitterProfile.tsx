@@ -1,21 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { TwitterAuthContext } from './TwitterAuthContext';
+import React, { useEffect, useState } from 'react';
+import api from '../../api/api';
 
 const TwitterProfile: React.FC = () => {
-  const { accessToken } = useContext(TwitterAuthContext);
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-    if (accessToken) {
-      fetch('https://api.twitter.com/2/users/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-        .then(res => res.json())
-        .then(data => setProfile(data));
+    const token = localStorage.getItem("twitter_token");
+    if (token) {
+      api.get(`/twitter/users/me/${token}`)
+        .then(data => setProfile(data.data));
     }
-  }, [accessToken]);
+  }, []);
 
   if (!profile) return <div>Loading profile...</div>;
 
