@@ -9,6 +9,7 @@ import api from '../api/api';
 import { useNavigate } from 'react-router';
 import CapsuleButton from '../components/common/CapsuleButton';
 import { UserTokenSocialsClaim } from '../types/token-components';
+import { usePrivy } from '@privy-io/react-auth';
 
 const PageContainer = styled.div`
   display: flex;
@@ -179,15 +180,15 @@ const StatusRibbon = styled.span<{ statusKey?: 'verified' | 'pending' | 'rejecte
     props.statusKey === 'verified'
       ? 'linear-gradient(90deg,#a7f3d0,#34d399)'
       : props.statusKey === 'rejected'
-      ? 'linear-gradient(90deg,#fecaca,#f97373)'
-      : props.statusKey === 'pending'
-      ? 'linear-gradient(90deg,#fef3c7,#f59e0b)'
-      : 'linear-gradient(90deg,#e5e7eb,#cbd5e1)'};
+        ? 'linear-gradient(90deg,#fecaca,#f97373)'
+        : props.statusKey === 'pending'
+          ? 'linear-gradient(90deg,#fef3c7,#f59e0b)'
+          : 'linear-gradient(90deg,#e5e7eb,#cbd5e1)'};
 `;
 
 // Helper: map numeric status to a readable key+label.
 // Adjust mapping here if backend uses different codes.
-const mapStatus = (s?: number | string | null) : { key: 'verified'|'pending'|'rejected'|'', label: string } => {
+const mapStatus = (s?: number | string | null): { key: 'verified' | 'pending' | 'rejected' | '', label: string } => {
   if (s == null) return { key: '', label: 'Unknown' };
   const n = Number(s);
   switch (n) {
@@ -250,6 +251,17 @@ function fmtCap(n: number | undefined) {
 const TokensFeed: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  
+  const { authenticated } = usePrivy();
+
+  const handleGetStarted = () => {
+    navigate('/auth');
+  };
+
+  const handleProfile = () => {
+    navigate('/kol-profiles')
+  }
+
   const [query, setQuery] = useState<string>("");
   //const [sort, setSort] = useState<SortType>("featured");
   const [selected, setSelected] = useState('');
@@ -261,7 +273,7 @@ const TokensFeed: React.FC = () => {
 
   const [networkTokenData, setNetworkTokenData] = useState([] as NetworkTokenData[]);
 
-  const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>) : Promise<void> => {
+  const loadNetworkTokens = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
     const networkName = event.currentTarget.textContent?.trim().toLowerCase();
     if (!networkName) return;
@@ -280,10 +292,10 @@ const TokensFeed: React.FC = () => {
       setIsLoadingNetworkTokens(false);
     }
   }
-  
-  const searchToken = async (event: React.ChangeEvent<HTMLInputElement>) : Promise<void> => {
+
+  const searchToken = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     event.preventDefault();
-    
+
     const searchInputValue = event.currentTarget.value;
     setQuery(searchInputValue);
 
@@ -427,35 +439,95 @@ const TokensFeed: React.FC = () => {
           {networkTokenData.map(c => {
             const statusInfo = mapStatus(c.status);
             return (
-             <Card
-               key={c.name}
-               onClick={() => navigateToTokenPage(c)}
-               role="link"
-               tabIndex={0}
-               onKeyDown={(e) => { if (e.key === 'Enter') navigateToTokenPage(c); }}
-               theme={theme}
-             >
-               <ImageWrapper>
-                 <CardImage src={c.logoURI} alt={`${c.name} Banner`} />
-                {statusInfo.key && <StatusRibbon statusKey={statusInfo.key}>
-                  {statusInfo.label}
-                </StatusRibbon>}
-               </ImageWrapper>
+              <Card
+                key={c.name}
+                onClick={() => navigateToTokenPage(c)}
+                role="link"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter') navigateToTokenPage(c); }}
+                theme={theme}
+              >
+                <ImageWrapper>
+                  <CardImage src={c.logoURI} alt={`${c.name} Banner`} />
+                  {statusInfo.key && <StatusRibbon statusKey={statusInfo.key}>
+                    {statusInfo.label}
+                  </StatusRibbon>}
+                </ImageWrapper>
 
-               <CardBody theme={theme}>
-                 <div style={{ fontWeight: 700, fontSize: '0.95rem', textTransform: 'capitalize' }}>
-                   {c.name} <span style={{ fontWeight: 500, fontSize: '0.85rem' }}>({c.symbol})</span>
-                 </div>
-                 <MetaRow theme={theme}>
-                   <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
-                   <MetaRowSince>{selected} • since 2023</MetaRowSince>
-                 </MetaRow>
-               </CardBody>
-             </Card>
+                <CardBody theme={theme}>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', textTransform: 'capitalize' }}>
+                    {c.name} <span style={{ fontWeight: 500, fontSize: '0.85rem' }}>({c.symbol})</span>
+                  </div>
+                  <MetaRow theme={theme}>
+                    <div>Mkt Cap: {fmtCap(c.marketcap)}</div>
+                    <MetaRowSince>{selected} • since 2023</MetaRowSince>
+                  </MetaRow>
+                </CardBody>
+              </Card>
             );
           })}
         </Grid>
       </Inner>
+      <div id="explore" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+        <CommunitySection theme={theme}>
+
+          <h3 style={{ marginBottom: 24, color: theme.colors.white }}>
+            Explore Meme Token Hub
+          </h3>
+          <div id="explore-mth">
+            <ExploreMTHContainer theme={theme}>
+              <Pill theme={theme}>
+                <PillBody>
+                  <PillTitle theme={theme}>Live Feed</PillTitle>
+                </PillBody>
+                <PillActions>
+                  <PillButton onClick={() => navigate('/created-tokens')} theme={theme}>
+                    Watch Now
+                  </PillButton>
+                </PillActions>
+              </Pill>
+
+              {/* Join the Community Pill if not logged in */}
+              {!authenticated && (
+                <Pill theme={theme}>
+                  <PillBody>
+                    <PillTitle theme={theme}>Join the community as a member or dev</PillTitle>
+                  </PillBody>
+                  <PillActions>
+                    <PillButton onClick={handleGetStarted} theme={theme}>
+                      Join Now
+                    </PillButton>
+                  </PillActions>
+                </Pill>
+              )}
+
+              {/* Explore & Discover Pill */}
+              <Pill theme={theme}>
+                <PillBody>
+                  <PillTitle theme={theme}>Explore &amp; Discover</PillTitle>
+                </PillBody>
+                <PillActions>
+                  <PillButton onClick={handleProfile} theme={theme}>
+                    View KOL Profiles
+                  </PillButton>
+                </PillActions>
+              </Pill>
+
+              {/* Upcoming Launches Pill */}
+              <Pill theme={theme}>
+                <PillBody>
+                  <PillTitle theme={theme}>Upcoming Launches</PillTitle>
+                </PillBody>
+                <PillActions>
+                  <PillButton onClick={() => navigate('/created-tokens')} theme={theme}>
+                    View Launches
+                  </PillButton>
+                </PillActions>
+              </Pill>
+            </ExploreMTHContainer>
+          </div>
+        </CommunitySection >
+      </div>
       <div id="communityTokens" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
         <CommunitySection theme={theme}>
           <h3 style={{ marginTop: 0, marginBottom: 24, color: theme.colors.white }}>
@@ -652,4 +724,76 @@ const ItemMeta = styled.div`
   font-size: 0.8rem;
   color: #aaaaaa;
   margin-top: 4px;
+`;
+
+const ExploreMTHContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Pill = styled.div`
+  background: ${({ theme }) => theme.colors.cardBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 200ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.boxShadow};
+    border-color: ${({ theme }) => theme.colors.success};
+  }
+`;
+
+const PillBody = styled.div`
+  flex: 1;
+`;
+
+const PillTitle = styled.h4`
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
+  line-height: 1.4;
+`;
+
+const PillActions = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+`;
+
+const PillButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(90deg, #34d399, #a3e635);
+  color: #07122a;
+  font-weight: 800;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 200ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 `;
