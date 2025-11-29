@@ -284,7 +284,7 @@ const SubmitSocialsClaim: React.FC = () => {
           <div className="border rounded-md p-3" style={{ border: `1px solid ${theme.colors.border}` }}>
             <div className="font-medium mb-2">X (Twitter) Profile</div>
             <div className="text-sm mb-3">Sign in with your @handle</div>
-            <TwitterLoginButton />
+            <TwitterLoginButton callbackType="profileVerification" buttonText="Sign in with Twitter" />
           </div>
         </div>
 

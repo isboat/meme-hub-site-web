@@ -1,6 +1,7 @@
 import React, { useState }from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../../api/api';
+import { TwitterCallbackProps } from './twitter-props';
 
 const TwitterProfileVerification: React.FC = () => {
   // use state for verifying

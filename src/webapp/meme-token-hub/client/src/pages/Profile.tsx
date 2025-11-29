@@ -138,8 +138,11 @@ const Profile: React.FC = () => {
           theme={theme}
         />
         <Username theme={theme}>{profileUser.profileName || '#Profilename'}</Username>
-        <Verification theme={theme}>{profileUser.description || '✔️ Verified by MemeTokenHub.'}</Verification>
- 
+        <div>{profileUser.description}</div>
+
+        {profileUser && authenticated && profileUser.verified && (
+        <Verification theme={theme}>✔️ Verified by MTH</Verification>
+        )}
         <Stats theme={theme}>
           <StatItem theme={theme}>
             <span>{profileUser.followers.length}</span>

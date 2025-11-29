@@ -1,9 +1,7 @@
 import React from 'react';
-import { useTheme } from '../../context/ThemeContext';
-import { TwitterCallbackProps } from 'twitter-props';
+import { TwitterCallbackProps } from './twitter-props';
 
 const TwitterLoginButton: React.FC<TwitterCallbackProps> = ({ callbackType, buttonText }) => {
-  const theme = useTheme();
 
   const handleLogin = async () => {
     const clientId = (import.meta.env as any).VITE_TWITTER_CLIENT_ID || '';
@@ -36,19 +34,21 @@ const TwitterLoginButton: React.FC<TwitterCallbackProps> = ({ callbackType, butt
   };
 
   const base64UrlEncode = (buffer: ArrayBuffer): string => {
-    return Buffer.from(buffer)
-      .toString("base64")
-      .replace(/=/g, "")
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_");
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    // btoa outputs base64; then make it URL-safe and remove padding
+    return btoa(binary).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
   }
-
+  
   const generateCodeVerifier = (): string => {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
     return base64UrlEncode(array.buffer);
   }
-
+  
   const generateCodeChallenge = async (verifier: string): Promise<string> => {
     const encoder = new TextEncoder();
     const data = encoder.encode(verifier);

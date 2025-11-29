@@ -142,6 +142,9 @@ const UserProfilePage: React.FC = () => {
         />
         <Username theme={theme}>{profileUser.username}</Username>
         <Bio theme={theme}>{profileUser.description || 'No bio available.'}</Bio>
+        {profileUser && profileUser.verified && (
+        <div>✔️ Verified by MTH</div>
+        )}
 
         <Stats theme={theme}>
           <StatItem theme={theme}>
