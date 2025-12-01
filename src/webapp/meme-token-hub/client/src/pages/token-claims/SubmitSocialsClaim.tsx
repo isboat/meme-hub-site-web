@@ -15,6 +15,8 @@ const CHAINS = [
   "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
 ];
 
+const STORAGE_ITEM = "submitsocialtokendata";
+
 const SubmitSocialsClaim: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -60,8 +62,29 @@ const SubmitSocialsClaim: React.FC = () => {
     !authenticated
   );
 
-  const tokenData = (location.state as { token?: NetworkTokenData })?.token;
+  let tokenData = (location.state as { token?: NetworkTokenData })?.token;
+  const twitterAuthSuccess = (location.state as { twitterAuthSuccess?: boolean })?.twitterAuthSuccess;
 
+  // save tokenData to local storage
+  if(tokenData) 
+  {
+    localStorage.setItem(STORAGE_ITEM, JSON.stringify(tokenData));
+  }
+  // load tokenData from local storage if not in location state
+  else {
+    const storedData = localStorage.getItem(STORAGE_ITEM);
+    if(storedData) {
+      try {
+        const parsedData: NetworkTokenData = JSON.parse(storedData);
+        tokenData = parsedData;
+      } catch(err) {
+        console.error('Failed to parse stored token data:', err);
+      }
+      localStorage.removeItem(STORAGE_ITEM);
+    }
+  }
+
+  let noTokenData = "";
   useEffect(() => {
     if (tokenData) {
       setTokenName(tokenData.name || '');
@@ -72,6 +95,10 @@ const SubmitSocialsClaim: React.FC = () => {
       setUserId(currentUser?._id || '');
       setLogoUrlPreview(tokenData.logoURI || '/default-avatar.png');
       setImageUrlPreview('/token-default-banner.JPG');
+    }
+    else 
+    {
+      noTokenData = "No token data provided. Please start the claim process again.";
     }
     setUserId(privyUser?.id || '');
   }, [tokenData, currentUser, privyUser]);
@@ -92,6 +119,19 @@ const SubmitSocialsClaim: React.FC = () => {
         <h1 className="text-2xl font-semibold mb-4" style={{ color: theme.colors.primary }}>Submit Claim</h1>
         <p className="font-semibold" style={{ color: theme.colors.error }}>You must be logged in to access this page.</p>
         <Button onClick={() => navigate('/auth')} className="mt-4">Log In</Button>
+      </div>
+    );
+  }
+
+  if(noTokenData) {
+    return (
+      <div
+        className="w-full max-w-4xl mx-auto p-6 min-h-[calc(100vh-120px)] flex flex-col items-center"
+        style={{ backgroundColor: theme.colors.background, color: theme.colors.text }}
+      >
+        <h1 className="text-2xl font-semibold mb-4" style={{ color: theme.colors.primary }}>Submit Claim</h1>
+        <p className="font-semibold" style={{ color: theme.colors.error }}>{noTokenData}</p>
+        <Button onClick={() => navigate('/')} className="mt-4">Start Claim Process</Button>
       </div>
     );
   }
@@ -273,18 +313,23 @@ const SubmitSocialsClaim: React.FC = () => {
         </section>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="border rounded-md p-3" style={{ border: `2px solid ${theme.colors.success}` }}>
+          <div className="border rounded-md p-3" style={{ border: `2px solid ${ !twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
             <div className="flex justify-between mb-2">
               <div className="font-medium">MemeTokenHub Profile</div>
+              {!twitterAuthSuccess &&
               <div className="text-xs px-2 py-1 rounded" style={{ border: `1px solid ${theme.colors.border}` }}>Default</div>
+              }
             </div>
             <div className="text-sm">Recommended - shows as MTH holder</div>
           </div>
 
-          <div className="border rounded-md p-3" style={{ border: `1px solid ${theme.colors.border}` }}>
+          <div className="border rounded-md p-3" style={{ border: `1px solid ${ twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
             <div className="font-medium mb-2">X (Twitter) Profile</div>
             <div className="text-sm mb-3">Sign in with your @handle</div>
-            <TwitterLoginButton callbackType="profileVerification" buttonText="Sign in with Twitter" />
+            {twitterAuthSuccess && <div className="text-green-600 mb-2">Twitter authentication successful!</div>}
+            {!twitterAuthSuccess &&
+            <TwitterLoginButton callbackType="submitSocialAuth" buttonText="Sign in with Twitter" />
+            }
           </div>
         </div>
 

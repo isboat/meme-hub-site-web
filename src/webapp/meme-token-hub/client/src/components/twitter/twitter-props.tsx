@@ -1,4 +1,4 @@
 export interface TwitterCallbackProps {
-  callbackType: 'profileVerification' | 'submitSocialTweet',
+  callbackType: 'profileVerification' | 'submitSocialTweet' | 'submitSocialAuth',
   buttonText?: string
 }

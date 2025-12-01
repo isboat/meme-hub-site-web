@@ -27,6 +27,7 @@ import TwitterCallbackHandler from './components/twitter/TwitterCallbackHandler'
 import TwitterProfile from './components/twitter/TwitterProfile';
 import PostTweet from './components/twitter/PostTweet';
 import TwitterProfileVerification from './components/twitter/TwitterProfileVerification';
+import TwitterSubmitSocialAuth from './components/twitter/TwitterSubmitSocialAuth';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -70,6 +71,7 @@ const App: React.FC = () => {
       <Route path="/twitter-profile" element={<Layout><TwitterProfile /></Layout>} />
       <Route path="/twitter-tweets" element={<Layout><PostTweet /></Layout>} />
       <Route path="/twitter-verification" element={<Layout><TwitterProfileVerification /></Layout>} />
+      <Route path="/twitter-submit-social-auth" element={<Layout><TwitterSubmitSocialAuth /></Layout>} />
 
 
       {authenticated ? (
