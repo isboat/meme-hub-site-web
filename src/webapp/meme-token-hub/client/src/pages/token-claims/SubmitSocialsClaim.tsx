@@ -64,7 +64,7 @@ const SubmitSocialsClaim: React.FC = () => {
 
   let tokenData = (location.state as { token?: NetworkTokenData })?.token;
   const twitterAuthSuccess = (location.state as { twitterAuthSuccess?: boolean })?.twitterAuthSuccess;
-
+  
   // save tokenData to local storage
   if(tokenData) 
   {
@@ -255,6 +255,7 @@ const SubmitSocialsClaim: React.FC = () => {
       formData.append('other', other);
       formData.append('discordUsername', discordUsername);
       formData.append('telegramUsername', telegramUsername);
+      formData.append('twitterAuthSuccess', twitterAuthSuccess);
 
       if (selectedFile) formData.append('profileImageFile', selectedFile);
       if (selectedLogoFile) formData.append('profileLogoImageFile', selectedLogoFile);
@@ -267,9 +268,11 @@ const SubmitSocialsClaim: React.FC = () => {
         setMessageType('error');
         setStatusMessage('Failed to submit claim. Please try again later.');
       } else {
+        var claimId = response?.data?.claimId;
         setMessageType('success');
         setStatusMessage('Token Claim submitted successfully!');
-        setTimeout(() => navigate(`/user-pending-socials-claims`), 1500);
+
+        setTimeout(() => navigate(`/user-pending-socials-claims/${claimId}`), 1500);
       }
     } catch (err: unknown) {
       console.error('Profile update error:', err);
