@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { usePrivy } from '@privy-io/react-auth';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,6 +12,17 @@ import axios from 'axios';
 import TwitterLoginButton from '../../components/twitter/TwitterLoginButton';
 import ProfileBanner from '../../components/common/ProfileBanner';
 
+const CommunityRole = styled.div`
+    /* on selected state */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &.selected {
+      border-color: #4ade80;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, .3);
+      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, .2), #050814);
+    }
+`;
+
 const CHAINS = [
   "Ethereum", "Solana", "Base", "BNB Chain", "Polygon", "Arbitrum", "Others"
 ];
@@ -22,6 +34,7 @@ const SubmitSocialsClaim: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [communityRoles, setCommunityRoles] = useState<string[]>([]);
   const [tokenName, setTokenName] = useState('');
   const [bio, setBio] = useState('');
   const [userId, setUserId] = useState('');
@@ -64,20 +77,19 @@ const SubmitSocialsClaim: React.FC = () => {
 
   let tokenData = (location.state as { token?: NetworkTokenData })?.token;
   const twitterAuthSuccess = (location.state as { twitterAuthSuccess?: boolean })?.twitterAuthSuccess;
-  
+
   // save tokenData to local storage
-  if(tokenData) 
-  {
+  if (tokenData) {
     localStorage.setItem(STORAGE_ITEM, JSON.stringify(tokenData));
   }
   // load tokenData from local storage if not in location state
   else {
     const storedData = localStorage.getItem(STORAGE_ITEM);
-    if(storedData) {
+    if (storedData) {
       try {
         const parsedData: NetworkTokenData = JSON.parse(storedData);
         tokenData = parsedData;
-      } catch(err) {
+      } catch (err) {
         console.error('Failed to parse stored token data:', err);
       }
       localStorage.removeItem(STORAGE_ITEM);
@@ -96,8 +108,7 @@ const SubmitSocialsClaim: React.FC = () => {
       setLogoUrlPreview(tokenData.logoURI || '/default-avatar.png');
       setImageUrlPreview('/token-default-banner.JPG');
     }
-    else 
-    {
+    else {
       noTokenData = "No token data provided. Please start the claim process again.";
     }
     setUserId(privyUser?.id || '');
@@ -123,7 +134,7 @@ const SubmitSocialsClaim: React.FC = () => {
     );
   }
 
-  if(noTokenData) {
+  if (noTokenData) {
     return (
       <div
         className="w-full max-w-4xl mx-auto p-6 min-h-[calc(100vh-120px)] flex flex-col items-center"
@@ -189,6 +200,7 @@ const SubmitSocialsClaim: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    if (!communityRoles || communityRoles.length === 0) newErrors.communityRoles = 'At least one community role must be selected';
     if (!tokenName.trim()) newErrors.tokenName = 'Token name is required';
     if (!chain.trim()) newErrors.chain = 'Chain is required';
     if (!tokenAddress.trim()) newErrors.tokenAddress = 'Token address is required';
@@ -221,6 +233,31 @@ const SubmitSocialsClaim: React.FC = () => {
     return true;
   };
 
+  const handleCommunityRoleChange = (role: string, e: React.ChangeEvent<HTMLLabelElement>) => {
+
+    let communityRolesVal = [...(communityRoles || [])];
+    if (!role) return;
+    if (!communityRolesVal) {
+      communityRolesVal = [role];
+    }
+
+    if (!communityRolesVal.includes(role)) {
+      communityRolesVal = [...communityRolesVal, role];
+    }
+    else {
+      communityRolesVal = communityRolesVal.filter(r => r !== role);
+    }
+    setCommunityRoles(communityRolesVal);
+    console.log('Selected community roles:', communityRolesVal);
+
+    // if communityRolesval contains role, add "selected" class to label element
+    if (communityRolesVal.includes(role)) {
+      e.currentTarget.classList.add('selected');
+    } else {
+      e.currentTarget.classList.remove('selected');
+    }
+  };
+
   const handleSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e && typeof (e as any).preventDefault === 'function') (e as any).preventDefault();
 
@@ -240,8 +277,8 @@ const SubmitSocialsClaim: React.FC = () => {
         setIsSubmitting(false);
         return;
       }
-       
-       const formData = new FormData();
+
+      const formData = new FormData();
       formData.append('tokenName', tokenName);
       formData.append('description', bio);
       formData.append('userId', userId);
@@ -256,6 +293,7 @@ const SubmitSocialsClaim: React.FC = () => {
       formData.append('discordUsername', discordUsername);
       formData.append('telegramUsername', telegramUsername);
       formData.append('twitterAuthSuccess', twitterAuthSuccess);
+      formData.append('communityRoles', communityRoles.join(','));
 
       if (selectedFile) formData.append('profileImageFile', selectedFile);
       if (selectedLogoFile) formData.append('profileLogoImageFile', selectedLogoFile);
@@ -315,29 +353,82 @@ const SubmitSocialsClaim: React.FC = () => {
           <h2 className="text-lg font-semibold" style={{ color: theme.colors.yellow }}>Choose Audit Identity</h2>
         </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <div className="border rounded-md p-3" style={{ border: `2px solid ${ !twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
-            <div className="flex justify-between mb-2">
-              <div className="font-medium">MemeTokenHub Profile</div>
-              {!twitterAuthSuccess &&
-              <div className="text-xs px-2 py-1 rounded" style={{ border: `1px solid ${theme.colors.border}` }}>Default</div>
-              }
-            </div>
-            <div className="text-sm">Recommended - shows as MTH holder</div>
-          </div>
 
-          <div className="border rounded-md p-3" style={{ border: `1px solid ${ twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
-            <div className="font-medium mb-2">X (Twitter) Profile</div>
-            <div className="text-sm mb-3">Sign in with your @handle</div>
-            {twitterAuthSuccess && <div className="text-green-600 mb-2">Twitter authentication successful!</div>}
-            {!twitterAuthSuccess &&
-            <TwitterLoginButton callbackType="submitSocialAuth" buttonText="Sign in with Twitter" />
-            }
-          </div>
+        <div id="step1" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <h2 className="text-lg font-semibold text-yellow-300">Step 1 — Who are you in relation to this token/community?</h2>
+          <p className="muted text-xs mb-3">
+            Please choose your role in relation to this token or community. This will be used in the audit trail (e.g. “Website updated by Community Manager”).
+          </p>
+
+          <CommunityRole className="border rounded-md p-3" onClick={(e) => handleCommunityRoleChange('dev', e)} style={{ border: `2px solid ${!twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
+            <div className="flex justify-between mb-2">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">🛠️</div>
+                <div>
+                  <div className="font-semibold text-sm">Developer / Dev</div>
+                  <div className="muted text-[11px]">You deployed or actively develop the contract / token.</div>
+                </div>
+                <div className="role-check">✔</div>
+              </div>
+            </div>
+          </CommunityRole>
+
+          <CommunityRole className="border rounded-md p-3" onClick={(e) => handleCommunityRoleChange('officialx', e)} style={{ border: `2px solid ${!twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
+            <div className="flex justify-between mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">✅</div>
+                  <div>
+                    <div className="font-semibold text-sm">Official Token X Account Holder</div>
+                    <div className="muted text-[11px]">
+                      You control the main token profile on X. This carries the strongest weight when paired with the verification tweet.
+                    </div>
+                  </div>
+                  <div className="role-check">✔</div>
+                </div>
+            </div>
+          </CommunityRole>
+          <CommunityRole className="border rounded-md p-3" onClick={(e) => handleCommunityRoleChange('teamrep', e)} style={{ border: `2px solid ${!twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
+            <div className="flex justify-between mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">🤝</div>
+                  <div>
+                    <div className="font-semibold text-sm">Team Representative</div>
+                    <div className="muted text-[11px]">Recognised as part of the core team (non-dev, non-CM).</div>
+                  </div>
+                  <div className="role-check">✔</div>
+                </div>
+            </div>
+          </CommunityRole>
+          <CommunityRole className="border rounded-md p-3" onClick={(e) => handleCommunityRoleChange('cm', e)} style={{ border: `2px solid ${!twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
+            <div className="flex justify-between mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">📣</div>
+                  <div>
+                    <div className="font-semibold text-sm">Community Manager</div>
+                    <div className="muted text-[11px]">You run the comms (Telegram / Discord / X) for the token.</div>
+                  </div>
+                  <div className="role-check">✔</div>
+                </div>
+            </div>
+          </CommunityRole>
+          <CommunityRole className="border rounded-md p-3" onClick={(e) => handleCommunityRoleChange('mod', e)} style={{ border: `2px solid ${!twitterAuthSuccess ? theme.colors.success : theme.colors.border}` }}>
+            <div className="flex justify-between mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">🛡️</div>
+                  <div>
+                    <div className="font-semibold text-sm">Community Moderator</div>
+                    <div className="muted text-[11px]">You help moderate chats and keep official info visible.</div>
+                  </div>
+                  <div className="role-check">✔</div>
+                </div>
+            </div>
+          </CommunityRole>
         </div>
+          {errors.communityRoles && <div className="text-xs mt-1" style={{ color: theme.colors.error }}>{errors.communityRoles}</div>}
 
         <section className="mb-3 pb-2" style={{ borderBottom: `1px solid ${theme.colors.border}` }}>
-          <h3 className="text-lg font-semibold">Token Info</h3>
+          <br /><br />
+          <h2 className="text-lg font-semibold text-yellow-300">Step 2 - Token Info & Visuals</h2>
         </section>
 
         <div className="flex flex-col gap-3 mb-4">
@@ -645,9 +736,8 @@ const SubmitSocialsClaim: React.FC = () => {
             onClick={(e) => handleSubmit(e)}
             disabled={isSubmitting}
             aria-busy={isSubmitting}
-            className={`w-full md:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 rounded-[10px] font-extrabold text-white transition-transform duration-200 ${
-              isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-0.5'
-            }`}
+            className={`w-full md:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 rounded-[10px] font-extrabold text-white transition-transform duration-200 ${isSubmitting ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-0.5'
+              }`}
             style={{
               // Tailwind-like gradient + border color from provided CSS
               background: 'linear-gradient(90deg, #34d399, #a3e635)',
