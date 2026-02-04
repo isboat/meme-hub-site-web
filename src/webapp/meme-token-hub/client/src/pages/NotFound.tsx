@@ -28,7 +28,7 @@ const Message = styled.p`
 `;
 
 const StyledLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.primary};
   text-decoration: underline;
   &:hover {
     color: ${({ theme }) => theme.colors.primary};

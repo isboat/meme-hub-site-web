@@ -14,7 +14,7 @@ const SubmitSocialsTweet: React.FC = () => {
   const [error, setError] = useState<string>('');
   const { claimId } = useParams<{ claimId: string }>();
 
-  const { data: submittedClaim, loading, error: apiError } = useApi<any>(`/token-profile/pending-tokenclaims/${claimId}`);
+  const { data: submittedClaim, loading } = useApi<any>(`/token-profile/pending-tokenclaims/${claimId}`);
 
   const handlePost = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();

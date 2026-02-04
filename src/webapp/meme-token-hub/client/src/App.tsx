@@ -29,6 +29,7 @@ import TwitterProfile from './components/twitter/TwitterProfile';
 import PostTweet from './components/twitter/PostTweet';
 import TwitterProfileVerification from './components/twitter/TwitterProfileVerification';
 import TwitterSubmitSocialAuth from './components/twitter/TwitterSubmitSocialAuth';
+import TwitterManualPost from './pages/token-claims/TwitterManualPost';
 
 const App: React.FC = () => {
   const { ready, authenticated } = usePrivy();
@@ -79,6 +80,7 @@ const App: React.FC = () => {
         <>
           <Route path="/submit-socials-claim" element={<Layout><SubmitSocialsClaim /></Layout>} />
           <Route path="/submit-socials-tweet/:claimId" element={<Layout><SubmitSocialsTweet /></Layout>} />
+          <Route path="/copy-tweet-content" element={<Layout><TwitterManualPost /></Layout>} />
           <Route path="/approve-socials-claims/:tokenClaimId" element={<Layout><ApprovePendingSocialsClaim /></Layout>} />
           <Route path="/user-pending-socials-claims" element={<Layout><UserPendingSocialsClaim /></Layout>} />
           <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />

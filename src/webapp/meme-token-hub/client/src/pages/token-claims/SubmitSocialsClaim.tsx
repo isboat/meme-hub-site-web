@@ -9,7 +9,6 @@ import api from '../../api/api';
 import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import axios from 'axios';
-import TwitterLoginButton from '../../components/twitter/TwitterLoginButton';
 import ProfileBanner from '../../components/common/ProfileBanner';
 
 const CommunityRole = styled.div`
@@ -19,7 +18,7 @@ const CommunityRole = styled.div`
     &.selected {
       border-color: #4ade80;
       box-shadow: 0 0 0 2px rgba(34, 197, 94, .3);
-      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, .2), #050814);
+      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, .5), #050814);
     }
 `;
 
@@ -233,7 +232,7 @@ const SubmitSocialsClaim: React.FC = () => {
     return true;
   };
 
-  const handleCommunityRoleChange = (role: string, e: React.ChangeEvent<HTMLLabelElement>) => {
+  const handleCommunityRoleChange = (role: string, e: React.MouseEvent<HTMLDivElement>) => {
 
     let communityRolesVal = [...(communityRoles || [])];
     if (!role) return;
@@ -292,13 +291,12 @@ const SubmitSocialsClaim: React.FC = () => {
       formData.append('other', other);
       formData.append('discordUsername', discordUsername);
       formData.append('telegramUsername', telegramUsername);
-      formData.append('twitterAuthSuccess', twitterAuthSuccess);
       formData.append('communityRoles', communityRoles.join(','));
 
       if (selectedFile) formData.append('profileImageFile', selectedFile);
       if (selectedLogoFile) formData.append('profileLogoImageFile', selectedLogoFile);
 
-      const response = await api.post<User>('/token-profile/submit-socials', formData, {
+      const response = await api.post<any>('/token-profile/submit-socials', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
@@ -306,11 +304,11 @@ const SubmitSocialsClaim: React.FC = () => {
         setMessageType('error');
         setStatusMessage('Failed to submit claim. Please try again later.');
       } else {
-        var claimId = response?.data?.claimId;
-        setMessageType('success');
+        setMessageType('success'); 
         setStatusMessage('Token Claim submitted successfully!');
 
-        setTimeout(() => navigate(`/user-pending-socials-claims/${claimId}`), 1500);
+        // navigate to copy tweet content page after 2 seconds
+        setTimeout(() => navigate(`/copy-tweet-content`, { state: { token: tokenData, communityRoles, mthid: response.data } }), 2000);
       }
     } catch (err: unknown) {
       console.error('Profile update error:', err);
@@ -368,7 +366,6 @@ const SubmitSocialsClaim: React.FC = () => {
                   <div className="font-semibold text-sm">Developer / Dev</div>
                   <div className="muted text-[11px]">You deployed or actively develop the contract / token.</div>
                 </div>
-                <div className="role-check">✔</div>
               </div>
             </div>
           </CommunityRole>
@@ -383,7 +380,6 @@ const SubmitSocialsClaim: React.FC = () => {
                       You control the main token profile on X. This carries the strongest weight when paired with the verification tweet.
                     </div>
                   </div>
-                  <div className="role-check">✔</div>
                 </div>
             </div>
           </CommunityRole>
@@ -395,7 +391,6 @@ const SubmitSocialsClaim: React.FC = () => {
                     <div className="font-semibold text-sm">Team Representative</div>
                     <div className="muted text-[11px]">Recognised as part of the core team (non-dev, non-CM).</div>
                   </div>
-                  <div className="role-check">✔</div>
                 </div>
             </div>
           </CommunityRole>
@@ -407,7 +402,6 @@ const SubmitSocialsClaim: React.FC = () => {
                     <div className="font-semibold text-sm">Community Manager</div>
                     <div className="muted text-[11px]">You run the comms (Telegram / Discord / X) for the token.</div>
                   </div>
-                  <div className="role-check">✔</div>
                 </div>
             </div>
           </CommunityRole>
@@ -419,7 +413,6 @@ const SubmitSocialsClaim: React.FC = () => {
                     <div className="font-semibold text-sm">Community Moderator</div>
                     <div className="muted text-[11px]">You help moderate chats and keep official info visible.</div>
                   </div>
-                  <div className="role-check">✔</div>
                 </div>
             </div>
           </CommunityRole>
