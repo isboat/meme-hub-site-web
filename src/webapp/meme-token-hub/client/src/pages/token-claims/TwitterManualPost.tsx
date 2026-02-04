@@ -43,7 +43,8 @@ const TwitterManualPost: React.FC = () => {
         cm: 'Community Manager'
     };
 
-    const getRoleNames = (roles: any[]) => {
+    const getRoleNames = (roles: (keyof typeof roleMap)[] | undefined) => {
+        if (!roles) return [];
         return roles.map(r => roleMap[r] || r);
     }
 
