@@ -15,21 +15,63 @@ import CapsuleButton from '../components/common/CapsuleButton';
 import TwitterLoginButton from '../components/twitter/TwitterLoginButton';
 
 const ProfileContainer = styled.div`
-  max-width: 70%;
-  margin: ${({ theme }) => theme.spacing.large} auto;
-  padding: ${({ theme }) => theme.spacing.medium};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.large};
   background-color: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  box-shadow: ${({ theme }) => theme.boxShadow};
   color: ${({ theme }) => theme.colors.text};
-  text-align: center; /* Center content for error/loading states */
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: ${({ theme }) => theme.spacing.medium};
+  }
+`;
+
+const Inner = styled.div`
+  width: 100%;
+  max-width: 1200px;
+`;
+
+const ProfileCard = styled.div`
+  relative overflow-hidden rounded-lg;
+  background-color: ${({ theme }) => theme.colors.cardBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+`;
+
+const BannerImage = styled.div`
+  height: 160px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.border};
+  background-size: cover;
+  background-position: center;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  @media (max-width: 480px) {
+    height: 120px;
+  }
 `;
 
 const ProfileHeader = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.large};
+  sm:flex-direction: row;
+  sm:items-end;
+  gap: ${({ theme }) => theme.spacing.medium};
+  margin-top: ${({ theme }) => theme.spacing.large};
+  padding: 0 ${({ theme }) => theme.spacing.medium} ${({ theme }) => theme.spacing.medium};
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 const ProfileImage = styled.img`
@@ -37,47 +79,115 @@ const ProfileImage = styled.img`
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
-  border: 3px solid ${({ theme }) => theme.colors.primary};
+  ring: 2px;
+  border: 2px solid ${({ theme }) => theme.colors.border};
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.35);
+  margin-top: -28px;
+  order: 1;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: 640px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
-const Username = styled.h1`
-  font-size: 2.5em;
-  margin-bottom: ${({ theme }) => theme.spacing.small};
+const ProfileInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+  order: 2;
+  text-align: left;
+
+  @media (max-width: 640px) {
+    text-align: center;
+  }
+`;
+
+const ProfileTitle = styled.h1`
+  font-size: 1.875rem;
+  font-weight: 800;
+  margin: 0 0 ${({ theme }) => theme.spacing.small} 0;
   color: ${({ theme }) => theme.colors.text};
+  word-break: break-word;
 `;
 
-const Verification = styled.p`
-  font-size: 1em;
-  color: ${({ theme }) => theme.colors.success};
-  text-align: center;
-  max-width: 600px;
-  margin-bottom: ${({ theme }) => theme.spacing.medium};
+const ProfileDescription = styled.p`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.placeholder};
+  margin: 0 0 ${({ theme }) => theme.spacing.small} 0;
+`;
+
+const ProfileMeta = styled.div`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.placeholder};
+  margin-top: ${({ theme }) => theme.spacing.small};
+`;
+
+const ProfileActions = styled.div`
+  order: 3;
+  width: 100%;
+  sm:width: auto;
+  sm:ml-4;
+  mt-3;
+  sm:mt-0;
+  flex-shrink: 0;
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.small};
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    margin-top: ${({ theme }) => theme.spacing.medium};
+
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 const Stats = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.large};
-  margin-top: ${({ theme }) => theme.spacing.medium};
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: ${({ theme }) => theme.spacing.medium};
+  margin-top: ${({ theme }) => theme.spacing.large};
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const StatItem = styled.div`
   text-align: center;
+  padding: ${({ theme }) => theme.spacing.medium};
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
   span {
     display: block;
-    font-weight: bold;
+    font-weight: 800;
+    font-size: 1.5rem;
     color: ${({ theme }) => theme.colors.primary};
+    margin-bottom: ${({ theme }) => theme.spacing.small};
   }
+
   small {
     color: ${({ theme }) => theme.colors.placeholder};
+    font-size: 0.85rem;
   }
 `;
 
-const EditProfileButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  background-color: ${({ theme }) => theme.colors.primary};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary + 'E0'}; /* Slightly darker on hover */
+const TabsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.small};
+  margin: ${({ theme }) => theme.spacing.large} 0;
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    margin: ${({ theme }) => theme.spacing.medium} 0;
   }
 `;
 
@@ -100,96 +210,114 @@ const Profile: React.FC = () => {
   if (loading) {
     return (
       <ProfileContainer theme={theme}>
-        <LoadingSpinner />
-        <p>Loading profile... {authenticated}</p>
+        <Inner>
+          <LoadingSpinner />
+          <p style={{ marginTop: theme.spacing.medium }}>Loading profile...</p>
+        </Inner>
       </ProfileContainer>
     );
   }
 
-  // Handle error (including 404 specifically)
-  if (error != null && error.indexOf("status code 404") > -1) {    
+  if (error != null && error.indexOf("status code 404") > -1) {
     return (
       <ProfileContainer theme={theme}>
-        <p style={{ color: theme.colors.text }}>
-          It looks like you haven't set up your profile yet.
-        </p>
-        <Button onClick={() => navigate('/create-profile')} style={{ marginTop: theme.spacing.medium }}>
-          Create Your Profile
-        </Button>
+        <Inner style={{ textAlign: 'center' }}>
+          <p style={{ color: theme.colors.text, marginBottom: theme.spacing.medium }}>
+            It looks like you haven't set up your profile yet.
+          </p>
+          <Button onClick={() => navigate('/create-profile')}>
+            Create Your Profile
+          </Button>
+        </Inner>
       </ProfileContainer>
     );
   }
 
-  // If profileUser is null/undefined after loading and no specific error, it means profile not found
   if (!profileUser) {
     return (
       <ProfileContainer theme={theme}>
-        <p style={{ color: theme.colors.text }}>Profile data is unavailable.</p>
+        <Inner style={{ textAlign: 'center' }}>
+          <p style={{ color: theme.colors.text }}>Profile data is unavailable.</p>
+        </Inner>
       </ProfileContainer>
     );
   }
 
   return (
     <ProfileContainer theme={theme}>
-      <ProfileHeader theme={theme}>
-        <ProfileImage
-          src={profileUser.profileImage  || '/default-avatar.JPG'}
-          alt={`${profileUser.profileName}'s profile`}
-          theme={theme}
-        />
-        <Username theme={theme}>{profileUser.profileName || '#Profilename'}</Username>
-        <div>{profileUser.description}</div>
+      <Inner>
+        <ProfileCard theme={theme}>
+          <BannerImage theme={theme} />
 
-        {profileUser && authenticated && profileUser.verified && (
-        <Verification theme={theme}>✔️ Verified by MTH</Verification>
-        )}
-        <Stats theme={theme}>
-          <StatItem theme={theme}>
-            <span>{profileUser.followers.length}</span>
-            <small>Followers</small>
-          </StatItem>
-          <StatItem theme={theme}>
-            <span>{profileUser.following.length}</span>
-            <small>Following</small>
-          </StatItem>
-        </Stats>
+          <ProfileHeader theme={theme}>
+            <ProfileImage
+              src={profileUser.profileImage || '/default-avatar.JPG'}
+              alt={`${profileUser.profileName}'s profile`}
+              theme={theme}
+            />
+
+            <ProfileInfo theme={theme}>
+              <ProfileTitle theme={theme}>{profileUser.profileName || '#Profilename'}</ProfileTitle>
+              <ProfileDescription theme={theme}>{profileUser.description}</ProfileDescription>
+
+              {profileUser && authenticated && profileUser.verified && (
+                <div style={{ color: theme.colors.success, fontSize: '0.9rem', fontWeight: 600 }}>
+                  ✔️ Verified by MTH
+                </div>
+              )}
+
+              <ProfileMeta theme={theme}>
+                <div style={{ marginTop: theme.spacing.small }}>
+                  {profileUser.followers.length} Followers • {profileUser.following.length} Following
+                </div>
+              </ProfileMeta>
+            </ProfileInfo>
+
+            <ProfileActions theme={theme}>
+              {profileUser && authenticated && !profileUser.verified && (
+                <TwitterLoginButton callbackType="profileVerification" buttonText="Verify" />
+              )}
+              {profileUser && authenticated && (
+                <Button onClick={() => navigate('/update-profile')} variant="primary">
+                  Edit Profile
+                </Button>
+              )}
+            </ProfileActions>
+          </ProfileHeader>
+
+          <Stats theme={theme}>
+            <StatItem theme={theme}>
+              <span>{profileUser.followers.length}</span>
+              <small>Followers</small>
+            </StatItem>
+            <StatItem theme={theme}>
+              <span>{profileUser.following.length}</span>
+              <small>Following</small>
+            </StatItem>
+          </Stats>
+        </ProfileCard>
+
+        <TabsContainer theme={theme}>
+          {tabs.map(f => (
+            <CapsuleButton
+              key={f.value}
+              onClick={() => setActiveTab(f.value)}
+              className={activeTab === f.value ? 'selected' : ''}
+              theme={theme}
+            >
+              {f.label}
+            </CapsuleButton>
+          ))}
+        </TabsContainer>
+
         <div>
-          {profileUser && authenticated && !profileUser.verified && (
-              <TwitterLoginButton callbackType='profileVerification' buttonText="Verify via Twitter"></TwitterLoginButton>
-          )}
-          {profileUser && authenticated && (
-              <EditProfileButton onClick={() => navigate('/update-profile')} theme={theme}>
-                Edit Profile
-              </EditProfileButton>
-          )}
+          {activeTab === 'overview' && <ProfileOverview user={profileUser} />}
+          {activeTab === 'activity' && <ProfileActivity user={profileUser} />}
+          {activeTab === 'hubSpot' && <ProfileHubSpot user={profileUser} />}
+          {activeTab === 'hubSocials' && <ProfileHubSocials user={profileUser} />}
+          {activeTab === 'polls' && <ProfileActivity user={profileUser} />}
         </div>
-      </ProfileHeader>
-
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '16px' }} aria-label="Filter by chain">
-        {tabs.map(f => (
-          <CapsuleButton key={f.value} onClick={() => setActiveTab(f.value)} className={activeTab === f.value ? 'selected' : ''}>
-            {f.label}
-          </CapsuleButton>
-        ))}
-      </div>
-
-      <div>
-        {activeTab === 'overview' && (
-          <ProfileOverview user={profileUser} isCurrentUser={true} />
-        )}
-        {activeTab === 'activity' && (
-          <ProfileActivity user={profileUser} isCurrentUser={true} />
-        )}
-        {activeTab === 'hubSpot' && (
-          <ProfileHubSpot user={profileUser} isCurrentUser={true} />
-        )}
-        {activeTab === 'hubSocials' && (
-          <ProfileHubSocials user={profileUser} isCurrentUser={true} />
-        )}
-        {activeTab === 'polls' && (
-          <ProfileActivity user={profileUser} isCurrentUser={true} />
-        )}
-      </div>
+      </Inner>
     </ProfileContainer>
   );
 };
