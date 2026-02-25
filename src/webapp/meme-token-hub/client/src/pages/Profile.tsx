@@ -303,7 +303,6 @@ const Profile: React.FC = () => {
               key={f.value}
               onClick={() => setActiveTab(f.value)}
               className={activeTab === f.value ? 'selected' : ''}
-              theme={theme}
             >
               {f.label}
             </CapsuleButton>
@@ -311,11 +310,11 @@ const Profile: React.FC = () => {
         </TabsContainer>
 
         <div>
-          {activeTab === 'overview' && <ProfileOverview user={profileUser} />}
-          {activeTab === 'activity' && <ProfileActivity user={profileUser} />}
-          {activeTab === 'hubSpot' && <ProfileHubSpot user={profileUser} />}
-          {activeTab === 'hubSocials' && <ProfileHubSocials user={profileUser} />}
-          {activeTab === 'polls' && <ProfileActivity user={profileUser} />}
+          {activeTab === 'overview' && <ProfileOverview user={profileUser} isCurrentUser={authenticated && privyUser?.id === profileUser.id} />}
+          {activeTab === 'activity' && <ProfileActivity user={profileUser} isCurrentUser={authenticated && privyUser?.id === profileUser.id} />}
+          {activeTab === 'hubSpot' && <ProfileHubSpot user={profileUser} isCurrentUser={authenticated && privyUser?.id === profileUser.id} />}
+          {activeTab === 'hubSocials' && <ProfileHubSocials user={profileUser} isCurrentUser={authenticated && privyUser?.id === profileUser.id} />}
+          {activeTab === 'polls' && <ProfileActivity user={profileUser} isCurrentUser={authenticated && privyUser?.id === profileUser.id} />}
         </div>
       </Inner>
     </ProfileContainer>

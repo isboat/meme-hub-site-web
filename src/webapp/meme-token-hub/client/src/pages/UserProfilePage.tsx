@@ -351,7 +351,7 @@ const UserProfilePage: React.FC = () => {
                 )
               )}
               {isCurrentUserProfile && (
-                <Button onClick={() => navigate('/update-profile')} theme={theme}>
+                <Button onClick={() => navigate('/update-profile')}>
                   Edit Profile
                 </Button>
               )}
@@ -365,7 +365,6 @@ const UserProfilePage: React.FC = () => {
               key={f.value}
               onClick={() => setActiveTab(f.value as 'overview' | 'follows' | 'links')}
               className={activeTab === f.value ? 'selected' : ''}
-              theme={theme}
             >
               {f.label}
             </CapsuleButton>
@@ -374,13 +373,17 @@ const UserProfilePage: React.FC = () => {
 
         <ContentContainer theme={theme}>
           {activeTab === 'overview' && (
-            <ProfileOverview user={profileUser} />
+            <ProfileOverview user={profileUser} isCurrentUser={isCurrentUserProfile} />
           )}
           {activeTab === 'follows' && (
-            <ProfileFollows userId={profileUser._id} />
+            <ProfileFollows userId={profileUser.id} isCurrentUser={isCurrentUserProfile} />
           )}
           {activeTab === 'links' && (
-            <ProfileHubSocials user={profileUser} header="Social Links" />
+            <ProfileHubSocials 
+              user={profileUser} 
+              header="Social Links"
+              isCurrentUser={isCurrentUserProfile}
+            />
           )}
         </ContentContainer>
       </Inner>
