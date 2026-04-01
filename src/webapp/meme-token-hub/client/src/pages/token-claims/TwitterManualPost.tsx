@@ -53,8 +53,7 @@ const TwitterManualPost: React.FC = () => {
         const addr = tokenData?.address ? `CA: ${tokenData.address}` : '';
         const mthid = `MTH Claim ID: ${mthidState?.id || 'N/A'}`;
         const roles = `Role(s): ${communityRolesState?.length ? getRoleNames(communityRolesState).join(', ') : 'None'}`;
-        const handle = tokenData?.socialHandle ? `@${tokenData.socialHandle}` : '';
-        const defaultMsg = `I am the official representative for ${name} ${handle}\n${addr}\n${mthid}\n${roles}\nThis is to confirm the official community socials. Verify at memeTokenHub.fun! #MemeTokenHub #CommunityToken`;
+        const defaultMsg = `official profile claim submitted on @memeTokenHub fun\n Token: ${name}\n\n${addr}\n\n ${mthid}\n\nhttps://memeTokenHub.fun/tokens/${tokenData?.address} \n\n ${roles}\n #MemeTokenHub #CommunityToken`;
         setMessage(defaultMsg);
     }, [tokenData, mthidState, communityRolesState]);
     if (!authenticated || !privyUser) {

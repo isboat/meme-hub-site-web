@@ -228,7 +228,8 @@ const ContentContainer = styled.div`
 const tabs = [
   { label: "Overview", value: "overview" },
   { label: "Follows", value: "follows" },
-  { label: "Links", value: "links" }
+  { label: "Links", value: "links" },
+  { label: ".", value: "links" }
 ];
 
 const UserProfilePage: React.FC = () => {
